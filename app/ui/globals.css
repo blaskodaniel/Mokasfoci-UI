@@ -1,0 +1,86 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+:root {
+  --bg-color: #151c2c;
+  --bg-color-second: #182237;
+  --bg-color-navbar: rgba(0, 0, 0, 0.1);
+  --text-color: #ededed;
+  --text-color-second: #b7bac1;
+  --main-color: #00abf0;
+  --logo-color: #fff;
+  --box-shadow-color: hsla(220, 32%, 8%, 0.3);
+  --sidebar-width: 5.5rem;
+  --navbar-height: 5.5rem;
+}
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  scroll-behavior: smooth;
+}
+
+html {
+  font-size: 62.5%; /* 1rem = 10px */
+  overflow-x: hidden;
+  color-scheme: dark light;
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+body {
+  min-height: 100svh;
+  font-size: 1.6rem; /* 16px */
+  font-family: "Poppins", sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin-block-end: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+input,
+button,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+p {
+  text-wrap: pretty;
+  max-width: 62ch;
+  margin-bottom: 2rem;
+}
