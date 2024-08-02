@@ -1,5 +1,10 @@
 const MatchesPage = () => {
-  return <div>Matches page</div>;
+  return (
+    <>
+      <h1>Matches</h1>
+      <div>Matches page</div>
+    </>
+  );
 };
 
 export default MatchesPage;

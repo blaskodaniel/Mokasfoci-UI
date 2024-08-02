@@ -1,18 +1,19 @@
+import { Layout, LayoutContent, LayoutMenu } from "@ui/dashboard/layout.style";
 import Navbar from "@ui/dashboard/navbar/navbar";
 import Sidebar from "@ui/dashboard/sidebar/sidebar";
 import { ReactNode } from "react";
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <div>
-      <div>
+    <Layout>
+      <LayoutMenu>
         <Sidebar />
-      </div>
-      <div>
+      </LayoutMenu>
+      <LayoutContent>
         <Navbar />
         {children}
-      </div>
-    </div>
+      </LayoutContent>
+    </Layout>
   );
 };
 
