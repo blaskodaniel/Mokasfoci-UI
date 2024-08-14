@@ -4,15 +4,15 @@
   --bg-color: #151c2c;
   --bg-color-second: #182237;
   --bg-color-third: #1d2942;
-  --bg-color-navbar: rgba(0, 0, 0, 0.1);
-
+  --bg-color-navbar: #0000001a;
+  --button-color-blue: #1b3c87;
   --text-color: #ededed;
   --text-color-second: #b7bac1;
   --main-color: #00abf0;
   --logo-color: #fff;
   --color-green: #358639;
   --color-yellow: #af8800;
-  --color-red: #c93030;
+  --color-red: #c73232;
   --color-gray: #d5dbd5;
   --color-black-thin: #000000a3;
   --box-shadow-color: hsla(220, 32%, 8%, 0.3);

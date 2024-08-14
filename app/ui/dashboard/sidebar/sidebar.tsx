@@ -10,6 +10,8 @@ import {
   UserRole,
 } from "./sidebar.style";
 import { MdLogout } from "react-icons/md";
+import { removeUserTokenFromCookie } from "util/commons";
+import { redirect } from "next/navigation";
 
 const Sidebar = () => {
   return (
@@ -33,9 +35,17 @@ const Sidebar = () => {
           );
         })}
       </ul>
-      <LogoutButton>
-        <MdLogout size={20} /> Logout
-      </LogoutButton>
+      <form
+        action={async () => {
+          "use server";
+          removeUserTokenFromCookie();
+          redirect("/login");
+        }}
+      >
+        <LogoutButton>
+          <MdLogout size={20} /> Logout
+        </LogoutButton>
+      </form>
     </Container>
   );
 };

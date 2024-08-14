@@ -6,6 +6,7 @@ import styled from "styled-components";
 export const Container = styled.div`
   position: sticky;
   height: 100svh;
+  font-size: 1.5rem;
 `;
 
 export const UserInfo = styled.div`
@@ -59,6 +60,7 @@ export const LogoutButton = styled.button`
   margin: 5px 0;
   width: 100%;
   cursor: pointer;
+  color: white;
   background: none;
 
   &:hover {
