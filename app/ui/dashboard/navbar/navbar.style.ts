@@ -11,7 +11,7 @@ export const Container = styled.div`
   margin-bottom: 15px;
 `;
 export const Title = styled.div`
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   color: var(--text-color-second);
   text-transform: capitalize;
 `;

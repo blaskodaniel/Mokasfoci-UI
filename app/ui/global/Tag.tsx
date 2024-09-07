@@ -29,7 +29,6 @@ const Tag = ({
 export const TagItem = styled.span<{ type: string }>`
   border-radius: 5px;
   padding: 5px;
-  font-size: 1.4rem;
   color: white;
   background-color: ${({ type }) => type};
 `;

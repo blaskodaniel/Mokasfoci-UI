@@ -1,16 +1,26 @@
-import { groupService } from "services/group-service";
-import { PageTitle } from "@ui/global/CommonStyles";
-import { CreateForm } from "./createForm";
+import GroupTable from "./table";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { GetGroupsAction, GetTeamsAction } from "services/actions";
 
 const GroupsPage = async () => {
-  const groups = await groupService.getGroups();
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["groups"],
+    queryFn: GetGroupsAction,
+  });
+  await queryClient.prefetchQuery({
+    queryKey: ["teams"],
+    queryFn: GetTeamsAction,
+  });
 
   return (
-    <>
-      <PageTitle>Groups</PageTitle>
-      <pre>{JSON.stringify(groups, null, 4)}</pre>
-      <CreateForm />
-    </>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <GroupTable filteredColumnNames={["_id", "name"]} />
+    </HydrationBoundary>
   );
 };
 

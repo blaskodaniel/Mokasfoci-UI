@@ -44,7 +44,6 @@ export const LoginError = styled.p<{
 }>`
   color: var(--color-red);
   margin-bottom: 10px;
-  font-size: 1.3rem;
   width: 100%;
   padding-left: 2px;
   ${({ margintop }) => margintop && `margin-top: ${margintop}px;`}
@@ -52,7 +51,6 @@ export const LoginError = styled.p<{
 `;
 export const LoginLabel = styled.label`
   margin-bottom: 5px;
-  font-size: 1.3rem;
   padding-left: 3px;
   width: 100%;
 `;

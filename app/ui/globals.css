@@ -1,26 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
 
-:root {
-  --bg-color: #151c2c;
-  --bg-color-second: #182237;
-  --bg-color-third: #1d2942;
-  --bg-color-navbar: #0000001a;
-  --button-color-blue: #1b3c87;
-  --text-color: #ededed;
-  --text-color-second: #b7bac1;
-  --main-color: #00abf0;
-  --logo-color: #fff;
-  --color-green: #358639;
-  --color-yellow: #af8800;
-  --color-red: #c73232;
-  --color-gray: #d5dbd5;
-  --color-black-thin: #000000a3;
-  --box-shadow-color: hsla(220, 32%, 8%, 0.3);
-  --sidebar-width: 5.5rem;
-  --navbar-height: 5.5rem;
+@layer base {
+  :root {
+    --background: 222, 35%, 13%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 10% 20%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+
+    --bg-color: hsl(222, 35%, 13%);
+    --bg-color-second: hsl(221, 39%, 15%);
+    --bg-color-third: hsl(221, 39%, 19%);
+    --bg-color-navbar: hsla(0, 0%, 0%, 0.102);
+    --button-color-blue: hsl(222, 67%, 32%);
+    --text-color: #ededed;
+    --text-color-second: #b7bac1;
+    --main-color: #00abf0;
+    --logo-color: #fff;
+    --color-green: #358639;
+    --color-yellow: #af8800;
+    --color-red: #c73232;
+    --color-gray: #d5dbd5;
+    --color-black-thin: #000000a3;
+    --box-shadow-color: hsla(220, 32%, 8%, 0.3);
+    --sidebar-width: 5.5rem;
+    --navbar-height: 5.5rem;
+  }
 }
 
-*,
+/* *,
 *::after,
 *::before {
   margin: 0;
@@ -32,7 +63,6 @@
 }
 
 html {
-  font-size: 62.5%; /* 1rem = 10px */
   overflow-x: hidden;
   color-scheme: dark light;
   -moz-text-size-adjust: none;
@@ -42,7 +72,6 @@ html {
 
 body {
   min-height: 100svh;
-  font-size: 1.6rem; /* 16px */
   font-family: "Poppins", sans-serif;
   background: var(--bg-color);
   color: var(--text-color);
@@ -90,4 +119,13 @@ p {
   text-wrap: pretty;
   max-width: 62ch;
   margin-bottom: 2rem;
+} */
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

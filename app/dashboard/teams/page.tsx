@@ -12,6 +12,7 @@ const TeamsPage = async () => {
     queryKey: ["teams"],
     queryFn: GetTeamsAction,
   });
+
   return (
     <>
       <h1>Teams</h1>

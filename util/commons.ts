@@ -17,7 +17,7 @@ export function setUserTokenToCookie(token: string) {
 export function getUserTokenFromCookie() {
   const cookieStore = cookies();
 
-  return cookieStore.get(COOKIE_NAME);
+  return cookieStore.get(COOKIE_NAME)?.value;
 }
 
 export function removeUserTokenFromCookie() {

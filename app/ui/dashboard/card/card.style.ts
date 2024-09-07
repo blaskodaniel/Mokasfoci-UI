@@ -20,14 +20,13 @@ export const DataPart = styled.div`
   gap: 10px;
 `;
 export const DataTitle = styled.div`
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   font-weight: 500;
 `;
 export const DataValue = styled.div`
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 800;
 `;
 export const DataInfo = styled.div`
-  font-size: 1rem;
   font-weight: 300;
 `;

@@ -4,7 +4,29 @@ import { revalidatePath } from "next/cache";
 import ErrorHandler from "./error-handler";
 import { teamService } from "./team-service";
 import { Team } from "./types";
-import { groupService } from "./group-service";
+import { groupService } from "./services";
+
+export async function GetGroupsAction() {
+  try {
+    const data = await groupService.getGroups();
+    return data.data;
+  } catch (error: unknown) {
+    const errorMsg = ErrorHandler(error);
+    return { error: errorMsg };
+  }
+}
+
+export async function DeleteGroupAction(groupId: string, refreshPath?: string) {
+  try {
+    await groupService.deleteGroup(groupId);
+
+    refreshPath && revalidatePath(refreshPath);
+    return true;
+  } catch (error: unknown) {
+    const errorMsg = ErrorHandler(error);
+    return { error: errorMsg };
+  }
+}
 
 export async function GetTeamsAction() {
   try {

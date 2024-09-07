@@ -6,7 +6,6 @@ import styled from "styled-components";
 export const Container = styled.div`
   position: sticky;
   height: 100svh;
-  font-size: 1.5rem;
 `;
 
 export const UserInfo = styled.div`
@@ -21,18 +20,16 @@ export const UserInfo = styled.div`
   }
 `;
 export const UserName = styled.span`
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
 `;
 export const UserRole = styled.span`
-  font-size: 1.5rem;
   font-weight: 300;
 `;
 
 export const Category = styled.span`
   color: var(--text-color-second);
   font-weight: bold;
-  font-size: 1.3rem;
   margin: 10px 0;
 `;
 
