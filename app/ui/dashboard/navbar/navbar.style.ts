@@ -9,6 +9,12 @@ export const Container = styled.div`
   background-color: var(--bg-color-second);
   border-radius: 10px;
   margin-bottom: 15px;
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 `;
 export const Title = styled.div`
   font-size: 1.5rem;

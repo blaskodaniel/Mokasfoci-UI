@@ -27,7 +27,6 @@ const DropDownCell = ({ getValue, row, column, table }: ColumnProps) => {
 
   const onChange = (e: string | null) => {
     setValue(e);
-    console.log(e);
     table.options.meta?.updateData(row.index, column.id, e);
   };
 

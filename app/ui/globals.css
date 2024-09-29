@@ -46,8 +46,7 @@
     --color-gray: #d5dbd5;
     --color-black-thin: #000000a3;
     --box-shadow-color: hsla(220, 32%, 8%, 0.3);
-    --sidebar-width: 5.5rem;
-    --navbar-height: 5.5rem;
+    --sidebar-width: 250px;
   }
 }
 

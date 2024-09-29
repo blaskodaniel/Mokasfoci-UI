@@ -1,47 +1,48 @@
 import Image from "next/image";
-import { SideBarMenu } from "./sidebar-menu";
-import MenuLink from "./sidebar-menu-link";
 import {
-  Category,
   Container,
+  IconInMobile,
   LogoutButton,
   UserInfo,
   UserName,
   UserRole,
 } from "./sidebar.style";
 import { MdLogout } from "react-icons/md";
-import { removeUserTokenFromCookie } from "util/commons";
-import { redirect } from "next/navigation";
+import { SideBarMenuData } from "./sidebar-menu-data";
+import SideBarCategory from "./sidebar-category";
+import { logOut } from "services/actions";
+import { Dispatch, SetStateAction } from "react";
+import { IoIosArrowBack } from "react-icons/io";
 
-const Sidebar = () => {
+const Sidebar = ({
+  setIsOpenSidebar,
+}: {
+  setIsOpenSidebar: Dispatch<SetStateAction<string>>;
+}) => {
   return (
     <Container>
-      <UserInfo>
-        <Image src="/avatar.png" alt="avatar" width={50} height={50} />
-        <div>
-          <UserName>Daniel</UserName>
-          <UserRole>Administrator</UserRole>
-        </div>
-      </UserInfo>
-      <ul>
-        {SideBarMenu.map((category) => {
-          return (
-            <li key={category.title}>
-              <Category>{category.title}</Category>
-              {category.list.map((menu) => {
-                return <MenuLink key={menu.title} menu={menu} />;
-              })}
-            </li>
-          );
-        })}
-      </ul>
-      <form
-        action={async () => {
-          "use server";
-          removeUserTokenFromCookie();
-          redirect("/login");
-        }}
-      >
+      <div>
+        <UserInfo>
+          <Image src="/avatar.png" alt="avatar" width={50} height={50} />
+          <div>
+            <UserName>Daniel</UserName>
+            <UserRole>Administrator</UserRole>
+          </div>
+          <IconInMobile>
+            <IoIosArrowBack
+              size={30}
+              onClick={() => setIsOpenSidebar("false")}
+            />
+          </IconInMobile>
+        </UserInfo>
+        <ul>
+          {SideBarMenuData.map((menu, i) => {
+            return <SideBarCategory key={i} menuItem={menu} />;
+          })}
+        </ul>
+      </div>
+
+      <form action={logOut}>
         <LogoutButton>
           <MdLogout size={20} /> Logout
         </LogoutButton>

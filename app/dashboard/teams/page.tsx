@@ -1,10 +1,10 @@
-import TeamsTable from "@ui/dashboard/teams/TeamsTable";
 import {
   dehydrate,
   QueryClient,
   HydrationBoundary,
 } from "@tanstack/react-query";
 import { GetTeamsAction } from "services/actions";
+import TeamsTable from "./table";
 
 const TeamsPage = async () => {
   const queryClient = new QueryClient();
@@ -15,9 +15,8 @@ const TeamsPage = async () => {
 
   return (
     <>
-      <h1>Teams</h1>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <TeamsTable />
+        <TeamsTable filteredColumnNames={["name"]} />
       </HydrationBoundary>
     </>
   );

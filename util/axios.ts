@@ -6,8 +6,6 @@ const axiosOptions: AxiosRequestConfig = {
   withCredentials: true,
 };
 
-console.log("IS_DEV:", IS_DEV);
-
 export const axios = ax.create({
   ...axiosOptions,
   baseURL: IS_DEV ? "http://localhost:8000/api" : `${BASE_URL}/api`,

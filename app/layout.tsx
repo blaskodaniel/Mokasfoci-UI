@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "@ui/globals.css";
 import StyledComponentsRegistry from "lib/registry";
 import QueryProvider from "util/queryClient-provider";
+import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,6 +19,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Head>
+        <meta charSet="UTF-8" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
+        />
+      </Head>
       <body className={inter.className}>
         <QueryProvider>
           <StyledComponentsRegistry>{children}</StyledComponentsRegistry>

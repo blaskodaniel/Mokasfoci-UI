@@ -2,8 +2,9 @@ import { BiNetworkChart } from "react-icons/bi";
 import { GiSoccerField, GiSoccerKick } from "react-icons/gi";
 import { IoSettingsOutline } from "react-icons/io5";
 import { RiDashboard2Line, RiTeamLine } from "react-icons/ri";
+import { SideBarElement } from "./sidebar-types";
 
-export const SideBarMenu = [
+export const SideBarMenuData: SideBarElement[] = [
   {
     list: [
       {
@@ -14,7 +15,10 @@ export const SideBarMenu = [
     ],
   },
   {
-    title: "Game",
+    category: {
+      title: "Game",
+      icon: <BiNetworkChart />,
+    },
     list: [
       {
         title: "Groups",
@@ -39,7 +43,10 @@ export const SideBarMenu = [
     ],
   },
   {
-    title: "Configs",
+    category: {
+      title: "Configs",
+      icon: <BiNetworkChart />,
+    },
     list: [
       {
         title: "Settings",
@@ -49,7 +56,10 @@ export const SideBarMenu = [
     ],
   },
   {
-    title: "Analytics",
+    category: {
+      title: "Analytics",
+      icon: <BiNetworkChart />,
+    },
     list: [
       {
         title: "Logs",

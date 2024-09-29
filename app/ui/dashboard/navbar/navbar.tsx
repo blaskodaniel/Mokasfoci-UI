@@ -3,16 +3,29 @@
 import { usePathname } from "next/navigation";
 import { Container, Menu, Title } from "./navbar.style";
 import { MdLogout } from "react-icons/md";
+import { IoIosMenu } from "react-icons/io";
+import { Dispatch, SetStateAction } from "react";
+import { IconInMobile } from "../sidebar/sidebar.style";
 
-const Navbar = () => {
+const Navbar = ({
+  setIsOpenSidebar,
+}: {
+  setIsOpenSidebar: Dispatch<SetStateAction<string>>;
+}) => {
   const pathname = usePathname();
   return (
     <Container>
-      <Title>{pathname.split("/").pop()}</Title>
+      <div>
+        <IconInMobile>
+          <IoIosMenu size={30} onClick={() => setIsOpenSidebar("true")} />
+        </IconInMobile>
+        <Title>{pathname.split("/").pop()}</Title>
+      </div>
+
       <Menu>
-        <button>
+        {/* <button>
           <MdLogout size={20} /> Logout
-        </button>
+        </button> */}
       </Menu>
     </Container>
   );

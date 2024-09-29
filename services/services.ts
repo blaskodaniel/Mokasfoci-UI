@@ -7,6 +7,8 @@ export const teamService = {
     await axios.get("/team/all"),
   createTeam: async (team: Team): Promise<AxiosResponse<boolean>> =>
     await axios.post("/admin/team", team),
+  deleteTeam: async (teamId: string): Promise<AxiosResponse<boolean>> =>
+    await axios.delete(`/admin/team/${teamId}`),
 };
 
 export const groupService = {

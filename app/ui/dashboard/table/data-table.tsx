@@ -60,7 +60,6 @@ function DataTable<TData, TValue>({
       matchTypes: Object.keys(MatchType),
       matchStatuses: Object.keys(MatchStatus),
       updateData: (rowIndex: number, columnIndex: string, value: any) => {
-        console.log("updateData", rowIndex, columnIndex, value);
         setTableData((prev) =>
           prev.map((row, index) =>
             index === rowIndex

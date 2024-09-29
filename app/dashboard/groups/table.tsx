@@ -93,8 +93,6 @@ const GroupTable = ({
     return <div>Something went wrong. Please try again later.</div>;
   }
 
-  console.table(groupsData);
-
   return (
     <>
       <PageTitle>Groups</PageTitle>

@@ -1,7 +1,7 @@
-import { cookies } from "next/headers";
 import { COOKIE_NAME } from "./config";
 
-export function setUserTokenToCookie(token: string) {
+export async function setUserTokenToCookie(token: string) {
+  const { cookies } = await import("next/headers");
   const cookieStore = cookies();
 
   cookieStore.set({
@@ -14,13 +14,15 @@ export function setUserTokenToCookie(token: string) {
   });
 }
 
-export function getUserTokenFromCookie() {
+export async function getUserTokenFromCookie() {
+  const { cookies } = await import("next/headers");
   const cookieStore = cookies();
 
   return cookieStore.get(COOKIE_NAME)?.value;
 }
 
-export function removeUserTokenFromCookie() {
+export async function removeUserTokenFromCookie() {
+  const { cookies } = await import("next/headers");
   const cookieStore = cookies();
 
   cookieStore.delete(COOKIE_NAME);
