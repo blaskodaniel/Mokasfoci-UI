@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { COOKIE_NAME } from "./config";
 
 export async function setUserTokenToCookie(token: string) {
@@ -14,12 +15,11 @@ export async function setUserTokenToCookie(token: string) {
   });
 }
 
-export async function getUserTokenFromCookie() {
+export const getUserTokenFromCookie = cache(async () => {
   const { cookies } = await import("next/headers");
-  const cookieStore = cookies();
 
-  return cookieStore.get(COOKIE_NAME)?.value;
-}
+  return cookies().get(COOKIE_NAME)?.value ?? null;
+});
 
 export async function removeUserTokenFromCookie() {
   const { cookies } = await import("next/headers");
