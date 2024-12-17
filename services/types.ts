@@ -9,6 +9,7 @@ export type Group = {
 export type Team = {
   _id: string;
   name: string;
+  groupId: string;
   flag: string;
   win?: number;
   draw?: number;
@@ -17,6 +18,13 @@ export type Team = {
   getgoal?: number;
   kickgoal?: number;
   active?: boolean;
+};
+
+export type CreateTeamPostBody = {
+  name: string;
+  groupId: string;
+  flag: string;
+  active: boolean;
 };
 
 export type LoginType = {
@@ -40,3 +48,9 @@ export type Match = {
   outcome?: MatchOutcome;
   externalID?: string;
 };
+
+export interface ITableActionsProps<T> {
+  rowData: T;
+  onEdit: (row: T) => void;
+  onDelete: (row: T) => void;
+}

@@ -8,17 +8,24 @@ import { useToast } from "@/components/ui/use-toast";
 import {
   DeleteAction,
   DeleteGroupAction,
+  DeleteTeamAction,
   GetTeamsAction,
+  updateTeamAction,
 } from "services/actions";
 import { Team } from "services/types";
 import { TeamColumns } from "./columns";
-import { teamService } from "services/services";
+import { useMediaQuery } from "hooks/useMediaQuery";
+import { Breakpoints } from "util/responsive";
+import CreateTeamDialog from "./createDialog";
+import { useDialog } from "store/useDialog";
 
 const TeamsTable = ({
   filteredColumnNames,
 }: {
   filteredColumnNames?: string[];
 }) => {
+  const { onOpen } = useDialog();
+  const isDesktop = useMediaQuery(`(min-width: ${Breakpoints.tablet})`);
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const {
@@ -32,23 +39,46 @@ const TeamsTable = ({
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) =>
-      DeleteAction(id, teamService.deleteTeam, "/dashboard/teams"),
+    mutationFn: (id: string) => DeleteTeamAction(id, "/dashboard/teams"),
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
     },
   });
 
-  const onEdit = useCallback(async (value: string) => {
-    console.log("onEdit: ", value);
-  }, []);
+  const updateMutation = useMutation({
+    mutationFn: ({ id, body }: { id: string; body: Team }) =>
+      updateTeamAction(id, body),
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ["teams"] });
+    },
+  });
+
+  const onEdit = useCallback(
+    async (team: Team) => {
+      updateMutation.mutate(
+        {
+          id: team._id,
+          body: team,
+        },
+        {
+          onSuccess: () => {
+            console.log("Update successfully");
+            toast({
+              description: "Update successfully",
+            });
+          },
+        }
+      );
+    },
+    [toast, updateMutation]
+  );
 
   const onDelete = useCallback(
-    async (groupId: string) => {
-      deleteMutation.mutate(groupId, {
+    async (id: string) => {
+      console.log("Delete team: ", id);
+      deleteMutation.mutate(id, {
         onSuccess: () => {
           toast({
-            variant: "destructive",
             description: "The team is deleted",
           });
         },
@@ -58,8 +88,8 @@ const TeamsTable = ({
   );
 
   const columns = useMemo(
-    () => TeamColumns({ onEdit, onDelete }),
-    [onDelete, onEdit]
+    () => TeamColumns({ onEdit, onDelete, isMobile: !isDesktop }),
+    [onDelete, onEdit, isDesktop]
   );
 
   if (teamsLoading) {
@@ -78,7 +108,14 @@ const TeamsTable = ({
           data={teamsData as Team[]}
           columns={columns}
           filteredColumnNames={filteredColumnNames}
+          hideColumns={{
+            win: false,
+            draw: false,
+            loss: false,
+          }}
+          onOpenDialog={onOpen}
         />
+        <CreateTeamDialog />
       </div>
     </>
   );

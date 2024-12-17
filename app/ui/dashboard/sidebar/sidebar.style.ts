@@ -93,9 +93,10 @@ export const LogoutButton = styled.button`
   }
 `;
 
-export const List = styled.div<{ isopen: boolean; elemtsCount: number }>`
-  opacity: ${({ isopen }) => (isopen ? 1 : 0)};
-  height: ${({ isopen, elemtsCount }) => (isopen ? elemtsCount * 50 : 0)}px;
+export const List = styled.div<{ isopen: string; elemtscount: number }>`
+  opacity: ${({ isopen }) => (isopen === "true" ? 1 : 0)};
+  height: ${({ isopen, elemtscount }) =>
+    isopen === "true" ? elemtscount * 50 : 0}px;
   overflow: hidden;
   transition: all 0.4s ease;
 `;

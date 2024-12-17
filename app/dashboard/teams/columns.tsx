@@ -5,15 +5,19 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Team } from "services/types";
 import EditableCell from "./editableCell";
 import SwitchCell from "@ui/dashboard/table/switchCell";
+import DesktopActions from "@ui/dashboard/table/desktop-actions";
+import MobileActions from "@ui/dashboard/table/mobile-actions";
 
 interface ITeamColumnProps {
-  onEdit: (id: string) => void;
+  onEdit: (team: Team) => void;
   onDelete: (id: string) => void;
+  isMobile: boolean;
 }
 
 export const TeamColumns = ({
   onEdit,
   onDelete,
+  isMobile,
 }: ITeamColumnProps): ColumnDef<Team>[] => [
   {
     accessorKey: "_id",
@@ -27,6 +31,11 @@ export const TeamColumns = ({
   {
     accessorKey: "flag",
     header: "Flag",
+    cell: EditableCell,
+  },
+  {
+    accessorKey: "groupid",
+    header: "GroupId",
     cell: EditableCell,
   },
   {
@@ -66,30 +75,24 @@ export const TeamColumns = ({
   },
   {
     id: "actions",
+    enableHiding: false,
     cell: ({ row }) => {
-      const group = row.original;
-
+      const editedRow = row.original;
+      if (!isMobile) {
+        return (
+          <DesktopActions
+            onEdit={onEdit}
+            onDelete={(row) => onDelete(row._id)}
+            rowData={editedRow}
+          />
+        );
+      }
       return (
-        <div className="flex space-x-2 justify-end">
-          <Button
-            color="primary"
-            variant="outline"
-            onClick={() => {
-              console.log("Edit group", group);
-              onEdit(group._id);
-            }}
-          >
-            Save
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={() => {
-              onDelete(group._id);
-            }}
-          >
-            Delete
-          </Button>
-        </div>
+        <MobileActions
+          onEdit={onEdit}
+          onDelete={(row) => onDelete(row._id)}
+          rowData={editedRow}
+        />
       );
     },
   },

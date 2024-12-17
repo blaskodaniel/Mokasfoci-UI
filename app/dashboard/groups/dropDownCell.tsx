@@ -35,9 +35,13 @@ const DropDownCell = ({ getValue, row, column, table }: ColumnProps) => {
   }, [wintemid]);
 
   return (
-    <Select defaultValue={wintemid} onValueChange={onChange} value={value}>
+    <Select
+      defaultValue={wintemid ?? undefined}
+      onValueChange={onChange}
+      value={value ?? undefined}
+    >
       <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Team name" />
+        <SelectValue placeholder="Choose a team..." />
       </SelectTrigger>
       <SelectContent>
         {teams.map((team) => (

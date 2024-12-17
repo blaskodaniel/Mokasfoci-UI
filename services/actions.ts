@@ -2,9 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import ErrorHandler from "./error-handler";
-import { teamService } from "./team-service";
-import { Team } from "./types";
-import { groupService } from "./services";
+import { CreateTeamPostBody, Group, Match, Team } from "./types";
+import { groupService, teamService } from "./services";
 import { AxiosResponse } from "axios";
 import { removeUserTokenFromCookie } from "util/commons";
 import { redirect } from "next/navigation";
@@ -31,6 +30,44 @@ export async function DeleteGroupAction(groupId: string, refreshPath?: string) {
   }
 }
 
+export async function DeleteTeamAction(id: string, refreshPath?: string) {
+  try {
+    await teamService.deleteTeam(id);
+
+    refreshPath && revalidatePath(refreshPath);
+    return true;
+  } catch (error: unknown) {
+    const errorMsg = ErrorHandler(error);
+    return { error: errorMsg };
+  }
+}
+
+export async function createGroupAction(groupname: string) {
+  await groupService.createGroup(groupname as string);
+  revalidatePath("/dashboard/groups");
+}
+
+export async function createMatchAction(body: Omit<Match, "_id">) {
+  // TODO
+}
+
+export async function createTeamAction(body: CreateTeamPostBody) {
+  await teamService.createTeam(body);
+  revalidatePath("/dashboard/teams");
+}
+
+export async function updateGroupAction(id: string, body: Omit<Group, "_id">) {
+  console.log("updateGroupAction: ", id, body);
+  await groupService.updateGroup(id, body);
+  revalidatePath("/dashboard/groups");
+}
+
+export async function updateTeamAction(id: string, body: Omit<Team, "_id">) {
+  console.log("updateTeamAction: ", id, body);
+  await teamService.updateTeam(id, body);
+  revalidatePath("/dashboard/groups");
+}
+
 export async function DeleteAction(
   id: string,
   deleteRequest: (id: string) => Promise<AxiosResponse<boolean>>,
@@ -55,37 +92,6 @@ export async function GetTeamsAction() {
     return { error: errorMsg };
   }
 }
-
-export async function CreateTeamsAction(team: Team) {
-  try {
-    const data = await teamService.createTeam(team);
-    return data.data;
-  } catch (error: unknown) {
-    const errorMsg = ErrorHandler(error);
-    return { error: errorMsg };
-  }
-}
-
-export const onSubmitCreateTeam = async (formdata: FormData) => {
-  "use server";
-  const name = formdata.get("name");
-  const flag = formdata.get("flag");
-  if (name && flag) {
-    await teamService.createTeam({
-      name: name as string,
-      flag: flag as string,
-    });
-    revalidatePath("/dashboard/teams");
-  }
-};
-
-export const createGroupAction = async (predata: any, formdata: FormData) => {
-  const groupname = formdata.get("groupname");
-  if (groupname) {
-    await groupService.createGroups(groupname as string);
-    revalidatePath("/dashboard/groups");
-  }
-};
 
 export const logOut = async () => {
   removeUserTokenFromCookie();

@@ -1,19 +1,22 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { Group } from "services/types";
 import EditableCell from "./editableCell";
 import DropDownCell from "./dropDownCell";
+import MobileActions from "@ui/dashboard/table/mobile-actions";
+import DesktopActions from "@ui/dashboard/table/desktop-actions";
 
 interface IGroupColumnProps {
-  onEdit: (id: string) => void;
+  onEdit: (group: Group) => void;
   onDelete: (id: string) => void;
+  isMobile: boolean;
 }
 
 export const GroupColumns = ({
   onEdit,
   onDelete,
+  isMobile,
 }: IGroupColumnProps): ColumnDef<Group>[] => [
   {
     accessorKey: "_id",
@@ -31,30 +34,24 @@ export const GroupColumns = ({
   },
   {
     id: "actions",
+    enableHiding: false,
     cell: ({ row }) => {
-      const group = row.original;
-
+      const editedGroup = row.original;
+      if (!isMobile) {
+        return (
+          <DesktopActions
+            onEdit={onEdit}
+            onDelete={(row) => onDelete(row._id)}
+            rowData={editedGroup}
+          />
+        );
+      }
       return (
-        <div className="flex space-x-2 justify-end">
-          <Button
-            color="primary"
-            variant="outline"
-            onClick={() => {
-              console.log("Edit group", group);
-              onEdit(group._id);
-            }}
-          >
-            Save
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={() => {
-              onDelete(group._id);
-            }}
-          >
-            Delete
-          </Button>
-        </div>
+        <MobileActions
+          onEdit={onEdit}
+          onDelete={(row) => onDelete(row._id)}
+          rowData={editedGroup}
+        />
       );
     },
   },

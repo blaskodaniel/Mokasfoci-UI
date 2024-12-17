@@ -5,7 +5,8 @@ import { Match } from "services/types";
 import DropDownCell from "./dropDownCell";
 import EditableCell from "./editableCell";
 import { Button } from "@/components/ui/button";
-import { MatchStatus, MatchType } from "util/enums";
+import { MatchOutcome, MatchStatus, MatchType } from "util/enums";
+import { DatePickerCell } from "@ui/dashboard/table/datePickerCell";
 
 export const MatchColumns: ColumnDef<Match>[] = [
   {
@@ -62,12 +63,20 @@ export const MatchColumns: ColumnDef<Match>[] = [
   {
     accessorKey: "date",
     header: "Date",
-    cell: EditableCell,
+    cell: DatePickerCell,
   },
   {
     accessorKey: "outcome",
     header: "Outcome",
-    cell: EditableCell,
+    cell: ({ getValue, row, column, table }) =>
+      DropDownCell({
+        getValue,
+        row,
+        column,
+        table,
+        data: Object.keys(MatchOutcome),
+        property: "outcome",
+      }),
   },
   {
     id: "actions",

@@ -1,7 +1,7 @@
 "use server";
 
 import { AxiosError } from "axios";
-import { LoginFormSchema } from "lib/definitions";
+import { LoginFormSchema } from "lib/form-definitions";
 import { redirect } from "next/navigation";
 import { authService } from "services/auth-service";
 import { setUserTokenToCookie } from "util/commons";

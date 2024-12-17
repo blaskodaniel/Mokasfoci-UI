@@ -12,8 +12,8 @@ export const axios = ax.create({
 });
 
 axios.interceptors.request.use(
-  (config) => {
-    const token = getUserTokenFromCookie();
+  async (config) => {
+    const token = await getUserTokenFromCookie();
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }

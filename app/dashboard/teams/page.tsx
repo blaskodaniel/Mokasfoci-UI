@@ -16,7 +16,7 @@ const TeamsPage = async () => {
   return (
     <>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <TeamsTable filteredColumnNames={["name"]} />
+        <TeamsTable filteredColumnNames={["name", "groupid"]} />
       </HydrationBoundary>
     </>
   );

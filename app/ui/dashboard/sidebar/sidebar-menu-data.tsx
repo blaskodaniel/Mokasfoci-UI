@@ -6,13 +6,12 @@ import { SideBarElement } from "./sidebar-types";
 
 export const SideBarMenuData: SideBarElement[] = [
   {
-    list: [
-      {
-        title: "Dashboard",
-        path: "/dashboard",
-        icon: <RiDashboard2Line />,
-      },
-    ],
+    category: {
+      title: "Dashboard",
+      path: "/dashboard",
+      icon: <RiDashboard2Line />,
+    },
+    list: [],
   },
   {
     category: {

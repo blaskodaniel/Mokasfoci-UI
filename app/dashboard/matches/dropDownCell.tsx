@@ -17,6 +17,7 @@ interface ColumnProps {
   column: Column<Match, unknown>;
   table: Table<Match>;
   data?: any[];
+  placeholder?: string;
   property?: string;
 }
 
@@ -26,6 +27,7 @@ const DropDownCell = ({
   column,
   table,
   data = [],
+  placeholder = "Please select",
   property,
 }: ColumnProps) => {
   const team = getValue() || null;
@@ -54,9 +56,9 @@ const DropDownCell = ({
   }, [table.options.meta?.teams, data]);
 
   return (
-    <Select defaultValue={defaultValue || team._id}>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Team name" />
+    <Select defaultValue={defaultValue || team?._id}>
+      <SelectTrigger className="w-[150px]">
+        <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>{renderOptions()}</SelectContent>
     </Select>

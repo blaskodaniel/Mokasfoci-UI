@@ -7,6 +7,7 @@ import {
   getFilteredRowModel,
   RowData,
   useReactTable,
+  VisibilityState,
 } from "@tanstack/react-table";
 
 import {
@@ -17,10 +18,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { HiOutlinePlus } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { Team } from "services/types";
 import Filter, { ColumnFilterType } from "./filter";
 import { MatchStatus, MatchType } from "util/enums";
+import { Button } from "@/components/ui/button";
+import HideColumnsDropdown from "./hideColumnsDropdown";
+import AddButton from "./add-button";
 
 declare module "@tanstack/table-core" {
   interface TableMeta<TData extends RowData> {
@@ -36,6 +41,8 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   teams?: Team[];
   filteredColumnNames?: string[];
+  hideColumns?: Record<string, boolean>;
+  onOpenDialog?: () => void;
 }
 
 function DataTable<TData, TValue>({
@@ -43,8 +50,14 @@ function DataTable<TData, TValue>({
   columns,
   teams,
   filteredColumnNames,
+  hideColumns,
+  onOpenDialog,
 }: DataTableProps<TData, TValue>) {
   const [tableData, setTableData] = useState(data);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    _id: false,
+    ...hideColumns,
+  });
   const [columnFilters, setColumnFilters] = useState<ColumnFilterType[]>([]);
 
   const table = useReactTable({
@@ -52,9 +65,11 @@ function DataTable<TData, TValue>({
     columns,
     state: {
       columnFilters,
+      columnVisibility,
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
     meta: {
       teams: teams || [],
       matchTypes: Object.keys(MatchType),
@@ -71,6 +86,10 @@ function DataTable<TData, TValue>({
     },
   });
 
+  const onDialog = () => {
+    onOpenDialog && onOpenDialog();
+  };
+
   useEffect(() => {
     setTableData(data);
   }, [data]);
@@ -78,7 +97,7 @@ function DataTable<TData, TValue>({
   return (
     <>
       {filteredColumnNames && filteredColumnNames?.length > 0 && (
-        <div className="flex gap-3 mb-4">
+        <div className="flex flex-wrap gap-3 mb-4">
           {filteredColumnNames?.map((filter) => {
             return (
               <Filter
@@ -89,6 +108,9 @@ function DataTable<TData, TValue>({
               />
             );
           })}
+
+          <HideColumnsDropdown table={table} />
+          {onOpenDialog && <AddButton onDialog={onDialog} />}
         </div>
       )}
 
