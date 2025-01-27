@@ -1,12 +1,5 @@
 import { Switch } from "@/components/ui/switch";
-import { Column, Row, Table } from "@tanstack/react-table";
-
-interface ColumnProps<T> {
-  getValue: () => any;
-  row: Row<T>;
-  column: Column<T, unknown>;
-  table: Table<T>;
-}
+import { ColumnProps } from "./types";
 
 const SwitchCell = <T,>({ getValue, row, column, table }: ColumnProps<T>) => {
   const onChange = (checked: boolean) => {

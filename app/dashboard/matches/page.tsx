@@ -1,20 +1,26 @@
-import { PageTitle } from "@ui/global/CommonStyles";
-import { matchService } from "services/match-service";
-import { teamService } from "services/team-service";
-import { MatchColumns } from "./columns";
-import DataTable from "@ui/dashboard/table/data-table";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { GetMatchAction, GetTeamsAction } from "services/actions";
+import MatchTable from "./table";
 
 const MatchesPage = async () => {
-  const matches = await matchService.getMatches();
-  const teams = await teamService.getTeams();
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["matches"],
+    queryFn: GetMatchAction,
+  });
+  await queryClient.prefetchQuery({
+    queryKey: ["teams"],
+    queryFn: GetTeamsAction,
+  });
 
   return (
-    <>
-      <PageTitle>Matches</PageTitle>
-      <div className="py-5">
-        <DataTable data={matches} columns={MatchColumns} teams={teams.data} />
-      </div>
-    </>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <MatchTable filteredColumnNames={["_id"]} />
+    </HydrationBoundary>
   );
 };
 

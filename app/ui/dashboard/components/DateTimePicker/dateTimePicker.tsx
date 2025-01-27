@@ -1,3 +1,5 @@
+"use client";
+
 import { Button, buttonVariants } from "@/components/ui/button";
 import type { CalendarProps } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
@@ -750,6 +752,7 @@ const DateTimePicker = React.forwardRef<
     const [displayDate, setDisplayDate] = React.useState<Date | undefined>(
       value ?? undefined
     );
+
     /**
      * carry over the current time when a user clicks a new day
      * instead of resetting to 00:00
@@ -848,7 +851,7 @@ const DateTimePicker = React.forwardRef<
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0">
+        <PopoverContent className="w-auto p-0 pointer-events-auto">
           <Calendar
             mode="single"
             selected={displayDate}

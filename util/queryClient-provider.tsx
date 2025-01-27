@@ -12,8 +12,8 @@ function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 6 * 1000,
-        refetchInterval: 6 * 1000,
+        staleTime: 2 * 1000,
+        refetchInterval: 2 * 1000,
       },
     },
   });

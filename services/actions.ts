@@ -2,8 +2,15 @@
 
 import { revalidatePath } from "next/cache";
 import ErrorHandler from "./error-handler";
-import { CreateTeamPostBody, Group, Match, Team } from "./types";
-import { groupService, teamService } from "./services";
+import {
+  CreateMatchPostBody,
+  CreateTeamPostBody,
+  Group,
+  Match,
+  Team,
+  UpdateMatchBody,
+} from "./types";
+import { groupService, matchService, teamService } from "./services";
 import { AxiosResponse } from "axios";
 import { removeUserTokenFromCookie } from "util/commons";
 import { redirect } from "next/navigation";
@@ -42,13 +49,31 @@ export async function DeleteTeamAction(id: string, refreshPath?: string) {
   }
 }
 
+export async function DeleteMatchAction(id: string, refreshPath?: string) {
+  try {
+    await matchService.deleteMatch(id);
+
+    refreshPath && revalidatePath(refreshPath);
+    return true;
+  } catch (error: unknown) {
+    const errorMsg = ErrorHandler(error);
+    return { error: errorMsg };
+  }
+}
+
 export async function createGroupAction(groupname: string) {
   await groupService.createGroup(groupname as string);
   revalidatePath("/dashboard/groups");
 }
 
-export async function createMatchAction(body: Omit<Match, "_id">) {
-  // TODO
+export async function createMatchAction(body: CreateMatchPostBody) {
+  await matchService.createMatch(body);
+  revalidatePath("/dashboard/matches");
+}
+
+export async function updateMatchAction(match: Match) {
+  await matchService.updateMatch(match, match._id);
+  revalidatePath("/dashboard/matches");
 }
 
 export async function createTeamAction(body: CreateTeamPostBody) {
@@ -86,6 +111,16 @@ export async function DeleteAction(
 export async function GetTeamsAction() {
   try {
     const data = await teamService.getTeams();
+    return data.data;
+  } catch (error: unknown) {
+    const errorMsg = ErrorHandler(error);
+    return { error: errorMsg };
+  }
+}
+
+export async function GetMatchAction() {
+  try {
+    const data = await matchService.getMatches();
     return data.data;
   } catch (error: unknown) {
     const errorMsg = ErrorHandler(error);

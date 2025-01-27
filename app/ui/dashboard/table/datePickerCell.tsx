@@ -1,17 +1,30 @@
 "use client";
+import { DateTimePicker } from "@ui/dashboard/components/DateTimePicker/dateTimePicker";
+import React, { useState } from "react";
+import { ColumnProps } from "./types";
 
-import { DateTimePicker } from "@ui/global/dateTimePicker";
-import * as React from "react";
+const DatePickerCell = <T,>({
+  getValue,
+  column,
+  row,
+  table,
+}: ColumnProps<T>) => {
+  const [date, setDate] = useState<Date | undefined>(new Date(getValue()));
 
-export function DatePickerCell() {
-  const [date, setDate] = React.useState<Date | undefined>(undefined);
+  const onChange = (newDate: Date | undefined) => {
+    setDate(newDate);
+    table.options.meta?.updateData(row.index, column.id, newDate);
+  };
+
   return (
     <DateTimePicker
       value={date}
-      onChange={setDate}
+      onChange={onChange}
       granularity="minute"
-      displayFormat={{ hour24: "MMM dd - HH:mm" }}
+      displayFormat={{ hour24: "MMM dd. HH:mm" }}
       className="w-[180px]"
     />
   );
-}
+};
+
+export default DatePickerCell;

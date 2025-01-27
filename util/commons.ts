@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { COOKIE_NAME } from "./config";
+import { MatchOutcome } from "./enums";
 
 export async function setUserTokenToCookie(token: string) {
   const { cookies } = await import("next/headers");
@@ -27,3 +28,9 @@ export async function removeUserTokenFromCookie() {
 
   cookieStore.delete(COOKIE_NAME);
 }
+
+export const mapEnumToObjectArray = (enumType: any) =>
+  Object.entries(enumType).map(([key, value]) => ({
+    key: value,
+    value: key,
+  }));

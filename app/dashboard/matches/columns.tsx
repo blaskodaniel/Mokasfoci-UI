@@ -6,9 +6,22 @@ import DropDownCell from "./dropDownCell";
 import EditableCell from "./editableCell";
 import { Button } from "@/components/ui/button";
 import { MatchOutcome, MatchStatus, MatchType } from "util/enums";
-import { DatePickerCell } from "@ui/dashboard/table/datePickerCell";
+import DatePickerCell from "@ui/dashboard/table/datePickerCell";
+import { mapEnumToObjectArray } from "util/commons";
+import DesktopActions from "@ui/dashboard/table/desktop-actions";
+import MobileActions from "@ui/dashboard/table/mobile-actions";
 
-export const MatchColumns: ColumnDef<Match>[] = [
+interface IMatchColumnProps {
+  onEdit: (match: Match) => void;
+  onDelete: (id: string) => void;
+  isMobile: boolean;
+}
+
+export const MatchColumns = ({
+  onEdit,
+  onDelete,
+  isMobile,
+}: IMatchColumnProps): ColumnDef<Match>[] => [
   {
     accessorKey: "teamA",
     header: "Team A",
@@ -43,7 +56,7 @@ export const MatchColumns: ColumnDef<Match>[] = [
         row,
         column,
         table,
-        data: Object.keys(MatchType),
+        data: mapEnumToObjectArray(MatchType),
         property: "type",
       }),
   },
@@ -56,7 +69,7 @@ export const MatchColumns: ColumnDef<Match>[] = [
         row,
         column,
         table,
-        data: Object.keys(MatchStatus),
+        data: mapEnumToObjectArray(MatchStatus),
         property: "status",
       }),
   },
@@ -74,35 +87,30 @@ export const MatchColumns: ColumnDef<Match>[] = [
         row,
         column,
         table,
-        data: Object.keys(MatchOutcome),
+        data: mapEnumToObjectArray(MatchOutcome),
         property: "outcome",
       }),
   },
   {
     id: "actions",
+    enableHiding: false,
     cell: ({ row }) => {
-      const group = row.original;
-
+      const editedMatch = row.original;
+      if (!isMobile) {
+        return (
+          <DesktopActions
+            onEdit={onEdit}
+            onDelete={(row) => onDelete(row._id)}
+            rowData={editedMatch}
+          />
+        );
+      }
       return (
-        <div className="flex space-x-2 justify-end">
-          <Button
-            color="primary"
-            variant="outline"
-            onClick={() => {
-              console.log("Edit group", group);
-            }}
-          >
-            Save
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={() => {
-              console.log("Delete group", group);
-            }}
-          >
-            Delete
-          </Button>
-        </div>
+        <MobileActions
+          onEdit={onEdit}
+          onDelete={(row) => onDelete(row._id)}
+          rowData={editedMatch}
+        />
       );
     },
   },

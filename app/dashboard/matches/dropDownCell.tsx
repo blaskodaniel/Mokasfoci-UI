@@ -30,17 +30,22 @@ const DropDownCell = ({
   placeholder = "Please select",
   property,
 }: ColumnProps) => {
-  const team = getValue() || null;
+  const value = getValue() || null;
+
   const defaultValue = useMemo(
     () => (property && data.length > 0 ? row.getValue(property) : null),
     [property, data.length, row]
   );
 
+  const onChange = (e: string | null) => {
+    table.options.meta?.updateData(row.index, column.id, e);
+  };
+
   const renderOptions = useCallback(() => {
     if (data.length > 0) {
-      return data.map((d, i) => (
-        <SelectItem key={i} value={d}>
-          {d}
+      return data.map((d) => (
+        <SelectItem key={d.key} value={d.key}>
+          {d.value}
         </SelectItem>
       ));
     }
@@ -56,7 +61,10 @@ const DropDownCell = ({
   }, [table.options.meta?.teams, data]);
 
   return (
-    <Select defaultValue={defaultValue || team?._id}>
+    <Select
+      onValueChange={onChange}
+      defaultValue={defaultValue?.toString() || value?._id || value?.toString()}
+    >
       <SelectTrigger className="w-[150px]">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

@@ -27,11 +27,20 @@ export type CreateTeamPostBody = {
   active: boolean;
 };
 
+export type CreateMatchPostBody = {
+  teamA?: string;
+  teamB?: string;
+  date?: Date;
+};
+
+export type UpdateMatchBody = Omit<Match, "_id | externalID | timer">;
+
 export type LoginType = {
   data: { token: string };
 };
 
 export type Match = {
+  _id: string;
   teamA?: string;
   teamB?: string;
   goalA?: number;
@@ -39,7 +48,7 @@ export type Match = {
   oddsAwin?: number;
   oddsDraw?: number;
   oddsBwin?: number;
-  date?: string;
+  date?: Date;
   type: MatchType;
   timer?: boolean;
   location?: string;

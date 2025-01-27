@@ -12,4 +12,13 @@ export const matchService = {
       return [];
     }
   },
+  createMatch: async (): Promise<Match | null> => {
+    try {
+      const response = await axios.post("/match");
+      return response.data;
+    } catch (error: unknown) {
+      ErrorHandler(error);
+      return null;
+    }
+  },
 };

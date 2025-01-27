@@ -15,3 +15,9 @@ export const CreateTeamSchema = z.object({
   groupId: z.string(),
   active: z.boolean().default(false).optional(),
 });
+
+export const CreateMatchSchema = z.object({
+  teamA: z.string(),
+  teamB: z.string(),
+  date: z.date(),
+});

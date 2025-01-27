@@ -1,6 +1,13 @@
 import { AxiosResponse } from "axios";
 import { axios } from "../util/axios";
-import { CreateTeamPostBody, Group, Team } from "./types";
+import {
+  CreateMatchPostBody,
+  CreateTeamPostBody,
+  Group,
+  Match,
+  Team,
+  UpdateMatchBody,
+} from "./types";
 
 export const teamService = {
   getTeams: async (): Promise<AxiosResponse<Team[]>> =>
@@ -26,4 +33,16 @@ export const groupService = {
     await axios.patch(`/admin/group/${groupId}`, groupBody),
   createGroup: async (name: string): Promise<AxiosResponse<Group>> =>
     await axios.post("/admin/group", { name }),
+};
+
+export const matchService = {
+  getMatches: async (): Promise<AxiosResponse<Match[]>> =>
+    await axios.get("/match/all"),
+  createMatch: async (
+    body: CreateMatchPostBody
+  ): Promise<AxiosResponse<boolean>> => await axios.post("/match", body),
+  updateMatch: async (body: Match, id: string) =>
+    await axios.patch(`/match/${id}`, body),
+  deleteMatch: async (matchId: string): Promise<AxiosResponse<boolean>> =>
+    await axios.delete(`/match/${matchId}`),
 };
