@@ -3,5 +3,5 @@ import { LoginType } from "./types";
 
 export const authService = {
   login: async (username: string, password: string): Promise<LoginType> =>
-    await axios.post("/auth/login", { username, password }),
+    await axios.post("/auth/admin/login", { username, password }),
 };

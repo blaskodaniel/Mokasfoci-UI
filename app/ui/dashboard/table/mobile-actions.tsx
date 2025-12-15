@@ -11,6 +11,7 @@ import { ITableActionsProps } from "services/types";
 function MobileActions<T>({
   onEdit,
   onDelete,
+  onCalculation,
   rowData,
 }: ITableActionsProps<T>) {
   return (
@@ -29,9 +30,18 @@ function MobileActions<T>({
         >
           Save
         </DropdownMenuItem>
+        {onCalculation && (
+          <DropdownMenuItem
+            onClick={() => {
+              onCalculation?.(rowData);
+            }}
+          >
+            Kalkuláció
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem
           onClick={() => {
-            onDelete(rowData);
+            onDelete?.(rowData);
           }}
         >
           Delete

@@ -21,3 +21,8 @@ export enum MatchOutcome {
   draw = "x",
   away = "2",
 }
+
+export enum Roles {
+  player = "player",
+  admin = "admin",
+}

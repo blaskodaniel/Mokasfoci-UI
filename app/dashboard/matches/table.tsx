@@ -17,6 +17,7 @@ import { Match, Team } from "services/types";
 import { useCallback, useMemo } from "react";
 import { MatchColumns } from "./columns";
 import { useMediaQuery } from "hooks/useMediaQuery";
+import { gameService } from "services/services";
 
 const MatchTable = ({
   filteredColumnNames,
@@ -44,6 +45,15 @@ const MatchTable = ({
   } = useQuery({
     queryKey: ["teams"],
     queryFn: GetTeamsAction,
+  });
+
+  const calculateScoreByMatchMutation = useMutation({
+    mutationFn: (matchId: string) =>
+      // Call the game service to calculate score by match
+      gameService.calculateScoreByMatch(matchId),
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ["matches"] });
+    },
   });
 
   const updateMutation = useMutation({
@@ -93,9 +103,29 @@ const MatchTable = ({
     [deleteMutation, toast]
   );
 
+  const onCalculation = useCallback(
+    async (match: Match) => {
+      console.log("Calculate match: ", match);
+      calculateScoreByMatchMutation.mutate(match._id, {
+        onSuccess: () => {
+          toast({
+            description: "The match is calculated",
+          });
+        },
+        onError: (error) => {
+          toast({
+            description: `Error calculating the match", ${error}`,
+          });
+        },
+      });
+    },
+    [calculateScoreByMatchMutation, toast]
+  );
+
   const columns = useMemo(
-    () => MatchColumns({ onEdit, onDelete, isMobile: !isDesktop }),
-    [onDelete, onEdit, isDesktop]
+    () =>
+      MatchColumns({ onEdit, onDelete, onCalculation, isMobile: !isDesktop }),
+    [onDelete, onEdit, onCalculation, isDesktop]
   );
 
   const teams = teamsData as Team[];

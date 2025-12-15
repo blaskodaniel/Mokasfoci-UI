@@ -21,3 +21,16 @@ export const CreateMatchSchema = z.object({
   teamB: z.string(),
   date: z.date(),
 });
+
+export const CreateUserSchema = z
+  .object({
+    username: z.string().min(1, "You need to add at least one character"),
+    password: z.string().min(1, "You need to add at least one character"),
+    passwordAgain: z.string().min(1, "You need to add at least one character"),
+    email: z.string().email("Invalid email address"),
+    isAdmin: z.boolean().default(false),
+  })
+  .refine((data) => data.password === data.passwordAgain, {
+    message: "Passwords don't match",
+    path: ["passwordAgain"],
+  });

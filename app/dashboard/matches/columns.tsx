@@ -14,18 +14,30 @@ import MobileActions from "@ui/dashboard/table/mobile-actions";
 interface IMatchColumnProps {
   onEdit: (match: Match) => void;
   onDelete: (id: string) => void;
+  onCalculation?: (match: Match) => void;
   isMobile: boolean;
 }
 
 export const MatchColumns = ({
   onEdit,
   onDelete,
+  onCalculation,
   isMobile,
 }: IMatchColumnProps): ColumnDef<Match>[] => [
   {
     accessorKey: "teamA",
     header: "Team A",
     cell: DropDownCell,
+  },
+  {
+    accessorKey: "goalA",
+    header: "Goals A",
+    cell: EditableCell,
+  },
+  {
+    accessorKey: "goalB",
+    header: "Goals B",
+    cell: EditableCell,
   },
   {
     accessorKey: "teamB",
@@ -101,6 +113,7 @@ export const MatchColumns = ({
           <DesktopActions
             onEdit={onEdit}
             onDelete={(row) => onDelete(row._id)}
+            onCalculation={onCalculation}
             rowData={editedMatch}
           />
         );
@@ -108,6 +121,7 @@ export const MatchColumns = ({
       return (
         <MobileActions
           onEdit={onEdit}
+          onCalculation={onCalculation}
           onDelete={(row) => onDelete(row._id)}
           rowData={editedMatch}
         />

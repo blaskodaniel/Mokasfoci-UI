@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useDialog } from "store/useDialog";
 import { useForm } from "react-hook-form";
-import { CreateTeamSchema, CreatGroupSchema } from "lib/form-definitions";
+import { CreateMatchSchema, CreateUserSchema } from "lib/form-definitions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -20,25 +20,37 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { IoSaveOutline } from "react-icons/io5";
-import { createTeamAction } from "services/actions";
 import { toast } from "@/components/ui/use-toast";
+import { DateTimePicker } from "@ui/dashboard/components/DateTimePicker/dateTimePicker";
+import { Team } from "services/types";
+import { createUserAction } from "services/actions";
 import { Switch } from "@/components/ui/switch";
 
-const CreateTeamDialog = () => {
-  const form = useForm<z.infer<typeof CreateTeamSchema>>({
-    resolver: zodResolver(CreateTeamSchema),
+const CreateUserDialog = () => {
+  const form = useForm<z.infer<typeof CreateUserSchema>>({
+    resolver: zodResolver(CreateUserSchema),
     defaultValues: {
-      name: "",
-      flag: "",
-      groupId: "",
-      active: false,
+      username: "",
+      email: "",
+      password: "",
+      passwordAgain: "",
+      isAdmin: false,
     },
   });
   const { isOpen, onClose } = useDialog();
 
-  const handleSubmit = async (values: z.infer<typeof CreateTeamSchema>) => {
-    await createTeamAction({ ...values, active: !!values.active });
+  const handleSubmit = async (values: z.infer<typeof CreateUserSchema>) => {
+    console.log({ ...values });
+    const { username, password, email, isAdmin } = values;
+    await createUserAction({ username, password, email, isAdmin });
     form.reset(form.getValues());
     onClose();
     toast({
@@ -47,22 +59,28 @@ const CreateTeamDialog = () => {
   };
 
   return (
-    <Dialog onOpenChange={onClose} open={isOpen} modal defaultOpen={isOpen}>
+    <Dialog
+      onOpenChange={onClose}
+      open={isOpen}
+      modal={false}
+      defaultOpen={isOpen}
+    >
+      {isOpen && <div className="fixed inset-0 bg-black/50 z-40"></div>}
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create new group</DialogTitle>
+          <DialogTitle>Create new user</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
             <FormField
               control={form.control}
-              name="name"
+              name="username"
               render={({ field }) => {
                 return (
                   <FormItem className="mb-3">
-                    <FormLabel>Team name</FormLabel>
+                    <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="team name" {...field} />
+                      <Input placeholder="username" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -71,13 +89,13 @@ const CreateTeamDialog = () => {
             />
             <FormField
               control={form.control}
-              name="groupId"
+              name="email"
               render={({ field }) => {
                 return (
                   <FormItem className="mb-3">
-                    <FormLabel>Group</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="group" {...field} />
+                      <Input placeholder="email" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -86,13 +104,13 @@ const CreateTeamDialog = () => {
             />
             <FormField
               control={form.control}
-              name="flag"
+              name="password"
               render={({ field }) => {
                 return (
                   <FormItem className="mb-3">
-                    <FormLabel>Flag</FormLabel>
+                    <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input placeholder="flag" {...field} />
+                      <Input placeholder="password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -101,11 +119,26 @@ const CreateTeamDialog = () => {
             />
             <FormField
               control={form.control}
-              name="active"
+              name="passwordAgain"
+              render={({ field }) => {
+                return (
+                  <FormItem className="mb-3">
+                    <FormLabel>Password again</FormLabel>
+                    <FormControl>
+                      <Input placeholder="password again" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="isAdmin"
               render={({ field }) => {
                 return (
                   <FormItem className="mb-3 flex gap-3 items-center">
-                    <FormLabel className="mt-2">Active</FormLabel>
+                    <FormLabel className="mt-2">Admin</FormLabel>
                     <FormControl>
                       <Switch
                         checked={field.value}
@@ -132,4 +165,4 @@ const CreateTeamDialog = () => {
   );
 };
 
-export default CreateTeamDialog;
+export default CreateUserDialog;

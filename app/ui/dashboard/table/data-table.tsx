@@ -4,10 +4,12 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   getFilteredRowModel,
   RowData,
   useReactTable,
   VisibilityState,
+  SortingState,
 } from "@tanstack/react-table";
 
 import {
@@ -54,6 +56,7 @@ function DataTable<TData, TValue>({
   onOpenDialog,
 }: DataTableProps<TData, TValue>) {
   const [tableData, setTableData] = useState(data);
+  const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     _id: false,
     ...hideColumns,
@@ -66,22 +69,42 @@ function DataTable<TData, TValue>({
     state: {
       columnFilters,
       columnVisibility,
+      sorting,
     },
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    getSortedRowModel: getSortedRowModel(),
     meta: {
       teams: teams || [],
       matchTypes: Object.keys(MatchType),
       matchStatuses: Object.keys(MatchStatus),
       updateData: (rowIndex: number, columnIndex: string, value: any) => {
-        setTableData((prev) =>
-          prev.map((row, index) =>
-            index === rowIndex
-              ? { ...prev[rowIndex], [columnIndex]: value }
-              : row
-          )
-        );
+        if (columnIndex.split(".").length > 1) {
+          const [first, second] = columnIndex.split(".");
+          setTableData((prev) =>
+            prev.map((row, index) =>
+              index === rowIndex
+                ? {
+                    ...prev[rowIndex],
+                    [first]: {
+                      ...(prev as any)[rowIndex][first],
+                      [second]: value,
+                    },
+                  }
+                : row
+            )
+          );
+        } else {
+          setTableData((prev) =>
+            prev.map((row, index) =>
+              index === rowIndex
+                ? { ...prev[rowIndex], [columnIndex]: value }
+                : row
+            )
+          );
+        }
       },
     },
   });

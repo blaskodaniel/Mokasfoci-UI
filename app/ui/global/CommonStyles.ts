@@ -1,6 +1,7 @@
 "use client";
 
 import styled from "styled-components";
+import Image from "next/image";
 
 export const Title = styled.h2`
   color: var(--text-color-second);
@@ -13,4 +14,9 @@ export const PageTitle = styled.h1`
   color: var(--text-color);
   font-weight: 600;
   margin-bottom: 15px;
+`;
+
+export const AvatarImg = styled(Image)`
+  object-fit: cover;
+  border-radius: 50%;
 `;

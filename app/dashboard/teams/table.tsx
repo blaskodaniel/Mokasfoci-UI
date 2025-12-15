@@ -6,8 +6,6 @@ import DataTable from "@ui/dashboard/table/data-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 import {
-  DeleteAction,
-  DeleteGroupAction,
   DeleteTeamAction,
   GetTeamsAction,
   updateTeamAction,
