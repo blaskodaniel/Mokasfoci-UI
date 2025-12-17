@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import { axios } from "../util/axios";
 import {
   Config,
+  Coupon,
   CreateMatchPostBody,
   CreateTeamPostBody,
   Group,
@@ -76,4 +77,14 @@ export const gameService = {
     matchId: string
   ): Promise<AxiosResponse<boolean>> =>
     await axios.get(`/admin/calculation/${matchId}`),
+  getAllCoupons: async (): Promise<
+    AxiosResponse<{ success: boolean; data: Coupon[] }>
+  > => await axios.get("/admin/coupons"),
+  updateCoupon: async (
+    couponId: string,
+    body: Partial<Coupon>
+  ): Promise<AxiosResponse<boolean>> =>
+    await axios.patch(`/admin/coupon/${couponId}`, body),
+  deleteCoupon: async (couponId: string): Promise<AxiosResponse<boolean>> =>
+    await axios.delete(`/admin/coupon/${couponId}`),
 };

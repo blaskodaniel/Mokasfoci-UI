@@ -1,4 +1,10 @@
-import { MatchOutcome, MatchStatus, MatchType } from "util/enums";
+import {
+  CouponStatus,
+  CouponType,
+  MatchOutcome,
+  MatchStatus,
+  MatchType,
+} from "util/enums";
 
 export type Group = {
   _id: string;
@@ -41,8 +47,8 @@ export type LoginType = {
 
 export type Match = {
   _id: string;
-  teamA?: string;
-  teamB?: string;
+  teamA?: Team;
+  teamB?: Team;
   goalA?: number;
   goalB?: number;
   oddsAwin?: number;
@@ -119,3 +125,17 @@ export type UserCreateBody = {
 };
 
 export type Config = Record<string, any>;
+
+export interface Coupon {
+  _id: string;
+  userid: User;
+  matchid: Match;
+  amount: number;
+  odds: number;
+  totalWin: number;
+  success: boolean;
+  status: CouponStatus;
+  outcome: MatchOutcome;
+  date: string;
+  type: CouponType;
+}

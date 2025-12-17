@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import ErrorHandler from "./error-handler";
 import {
+  Coupon,
   CreateMatchPostBody,
   CreateTeamPostBody,
   Group,
@@ -14,6 +15,7 @@ import {
 } from "./types";
 import {
   configService,
+  gameService,
   groupService,
   matchService,
   teamService,
@@ -189,3 +191,32 @@ export const logOut = async () => {
   removeUserTokenFromCookie();
   redirect("/login");
 };
+
+export async function GetAllCouponsAction() {
+  try {
+    const { data } = await gameService.getAllCoupons();
+    console.log("GetAllCouponsAction: ", data);
+    return data;
+  } catch (error: unknown) {
+    console.log("GetAllCouponsAction error: ", error);
+    const errorMsg = ErrorHandler(error);
+    return { error: errorMsg };
+  }
+}
+
+export async function updateCouponAction(
+  couponId: string,
+  body: Partial<Coupon>
+) {
+  await gameService.updateCoupon(couponId, body);
+}
+
+export async function DeleteCouponAction(couponId: string) {
+  try {
+    await gameService.deleteCoupon(couponId);
+    return true;
+  } catch (error: unknown) {
+    const errorMsg = ErrorHandler(error);
+    return { error: errorMsg };
+  }
+}

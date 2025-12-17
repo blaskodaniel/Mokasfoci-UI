@@ -26,3 +26,16 @@ export enum Roles {
   player = "player",
   admin = "admin",
 }
+
+export enum CouponStatus {
+  inactive = "inactive",
+  active = "active",
+  closed = "closed",
+  inprogress = "inprogress",
+  processed = "processed",
+}
+
+export enum CouponType {
+  outcomeBet = "outcomeBet",
+  notBetFine = "notBetFine",
+}

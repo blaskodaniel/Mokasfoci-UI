@@ -2,6 +2,8 @@ import { BiNetworkChart } from "react-icons/bi";
 import { GiSoccerField, GiSoccerKick } from "react-icons/gi";
 import { IoSettingsOutline } from "react-icons/io5";
 import { RiDashboard2Line, RiTeamLine } from "react-icons/ri";
+import { PiNewspaperClippingLight } from "react-icons/pi";
+
 import { SideBarElement } from "./sidebar-types";
 
 export const SideBarMenuData: SideBarElement[] = [
@@ -38,6 +40,11 @@ export const SideBarMenuData: SideBarElement[] = [
         title: "Players",
         path: "/dashboard/users",
         icon: <GiSoccerKick />,
+      },
+      {
+        title: "Coupons",
+        path: "/dashboard/coupons",
+        icon: <PiNewspaperClippingLight />,
       },
     ],
   },

@@ -16,10 +16,33 @@ export async function setUserTokenToCookie(token: string) {
   });
 }
 
-export const getUserTokenFromCookie = cache(async () => {
+// Server-side cookie getter
+export const getServerTokenFromCookie = cache(async () => {
   const { cookies } = await import("next/headers");
-
   return cookies().get(COOKIE_NAME)?.value ?? null;
+});
+
+// Client-side cookie getter
+export const getClientTokenFromCookie = (): string | null => {
+  if (typeof window === "undefined") return null;
+
+  const cookieValue = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(`${COOKIE_NAME}=`))
+    ?.split("=")[1];
+  return cookieValue ?? null;
+};
+
+// Universal cookie getter (for backwards compatibility)
+export const getUserTokenFromCookie = cache(async () => {
+  // Check if we're on the client side
+  if (typeof window !== "undefined") {
+    // Client side - use document.cookie
+    return getClientTokenFromCookie();
+  }
+
+  // Server side - use Next.js cookies
+  return await getServerTokenFromCookie();
 });
 
 export async function removeUserTokenFromCookie() {
