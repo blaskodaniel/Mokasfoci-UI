@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { PageTitle } from "@ui/global/CommonStyles";
 import DataTable from "@ui/dashboard/table/data-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -10,6 +10,7 @@ import { useDialog } from "store/useDialog";
 import { useMediaQuery } from "hooks/useMediaQuery";
 import { Breakpoints } from "util/responsive";
 import { CouponColumns } from "./columns";
+import { Input } from "@/components/ui/input";
 import { DeleteCouponAction, updateCouponAction } from "services/actions";
 import { gameService } from "services/services";
 
@@ -19,8 +20,10 @@ const CouponTable = ({
   filteredColumnNames: string[];
 }) => {
   const isDesktop = useMediaQuery(`(min-width: ${Breakpoints.tablet})`);
+  const { onOpen } = useDialog();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [searchTerm, setSearchTerm] = useState("");
 
   const {
     data: couponsData,
@@ -87,6 +90,40 @@ const CouponTable = ({
     [onDelete, onEdit, isDesktop]
   );
 
+  const coupons = useMemo(() => {
+    return couponsData?.data || [];
+  }, [couponsData]);
+
+  // Filter coupons based on search term
+  const filteredCoupons = useMemo(() => {
+    if (!searchTerm) return coupons;
+
+    return coupons.filter((coupon: Coupon) => {
+      const searchLower = searchTerm.toLowerCase();
+
+      // Search in username
+      const username = coupon.userid?.username?.toLowerCase() || "";
+
+      // Search in team names (both teamA and teamB)
+      const teamAName = coupon.matchid?.teamA?.name?.toLowerCase() || "";
+      const teamBName = coupon.matchid?.teamB?.name?.toLowerCase() || "";
+      const matchString = `${teamAName} - ${teamBName}`;
+
+      // Search in date
+      const date = new Date(coupon.date).toLocaleDateString().toLowerCase();
+
+      // Search in status
+      const status = coupon.status?.toLowerCase() || "";
+
+      return (
+        username.includes(searchLower) ||
+        matchString.includes(searchLower) ||
+        date.includes(searchLower) ||
+        status.includes(searchLower)
+      );
+    });
+  }, [coupons, searchTerm]);
+
   if (couponsLoading) {
     return <div>Loading...</div>;
   }
@@ -95,18 +132,25 @@ const CouponTable = ({
     return <div>Something went wrong. Please try again later.</div>;
   }
 
-  // A gameService már a megfelelő formátumban adja vissza az adatokat
-  const coupons = couponsData?.data || [];
-
   return (
     <>
       <PageTitle>Játékosok fogadásai</PageTitle>
 
+      {/* Search input */}
+      <div className="mb-4">
+        <Input
+          placeholder="Keresés username, csapatnév, dátum vagy státusz alapján..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="max-w-sm"
+        />
+      </div>
+
       <div className="py-5">
         <DataTable
-          data={coupons as Coupon[]}
+          data={filteredCoupons as Coupon[]}
           columns={columns}
-          filteredColumnNames={filteredColumnNames}
+          onOpenDialog={onOpen}
         />
       </div>
     </>

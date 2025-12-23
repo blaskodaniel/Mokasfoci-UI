@@ -75,7 +75,7 @@ export const configService = {
 export const gameService = {
   calculateScoreByMatch: async (
     matchId: string
-  ): Promise<AxiosResponse<boolean>> =>
+  ): Promise<AxiosResponse<{ success: boolean; processedCoupons: number }>> =>
     await axios.get(`/admin/calculation/${matchId}`),
   getAllCoupons: async (): Promise<
     AxiosResponse<{ success: boolean; data: Coupon[] }>
@@ -87,4 +87,6 @@ export const gameService = {
     await axios.patch(`/admin/coupon/${couponId}`, body),
   deleteCoupon: async (couponId: string): Promise<AxiosResponse<boolean>> =>
     await axios.delete(`/admin/coupon/${couponId}`),
+  resetGame: async (): Promise<AxiosResponse<boolean>> =>
+    await axios.post("/admin/reset-game"),
 };

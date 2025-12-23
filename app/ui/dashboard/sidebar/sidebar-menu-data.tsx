@@ -59,6 +59,11 @@ export const SideBarMenuData: SideBarElement[] = [
         path: "/dashboard/settings",
         icon: <IoSettingsOutline />,
       },
+      {
+        title: "Operations",
+        path: "/dashboard/operations",
+        icon: <IoSettingsOutline />,
+      },
     ],
   },
   {

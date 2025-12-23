@@ -107,9 +107,10 @@ const MatchTable = ({
     async (match: Match) => {
       console.log("Calculate match: ", match);
       calculateScoreByMatchMutation.mutate(match._id, {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          console.log("Match calculated: ", data);
           toast({
-            description: "The match is calculated",
+            description: `${data.data.processedCoupons} coupons calculated successfully`,
           });
         },
         onError: (error) => {
