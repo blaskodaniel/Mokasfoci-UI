@@ -110,7 +110,8 @@ const MatchTable = ({
         onSuccess: (data) => {
           console.log("Match calculated: ", data);
           toast({
-            description: `${data.data.processedCoupons} coupons calculated successfully`,
+            description: `${data.data.processedCoupons} coupons calculated successfully 
+            and ${data.data.penalizedUsers} users penalized.`,
           });
         },
         onError: (error) => {
@@ -124,8 +125,9 @@ const MatchTable = ({
   );
 
   const columns = useMemo(
-    () =>
-      MatchColumns({ onEdit, onDelete, onCalculation, isMobile: !isDesktop }),
+    () => {
+      return MatchColumns({ onEdit, onDelete, onCalculation, isMobile: !isDesktop })
+    },
     [onDelete, onEdit, onCalculation, isDesktop]
   );
 

@@ -39,3 +39,17 @@ export enum CouponType {
   outcomeBet = "outcomeBet",
   notBetFine = "notBetFine",
 }
+
+export enum TransactionType {
+  bet = "bet",
+  win = "win",
+  penalty = "penalty",
+  refund = "refund",
+  initial = "initial",
+  correction = "correction",
+}
+
+export enum SortOrder {
+  asc = "asc",
+  desc = "desc",
+}

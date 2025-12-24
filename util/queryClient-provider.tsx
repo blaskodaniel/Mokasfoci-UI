@@ -13,7 +13,7 @@ function makeQueryClient() {
     defaultOptions: {
       queries: {
         staleTime: 2 * 1000,
-        refetchInterval: 2 * 1000,
+        // refetchInterval: 2 * 1000,
       },
     },
   });

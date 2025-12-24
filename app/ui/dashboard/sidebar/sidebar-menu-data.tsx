@@ -46,6 +46,11 @@ export const SideBarMenuData: SideBarElement[] = [
         path: "/dashboard/coupons",
         icon: <PiNewspaperClippingLight />,
       },
+      {
+        title: "Transactions",
+        path: "/dashboard/transactions",
+        icon: <PiNewspaperClippingLight />,
+      },
     ],
   },
   {
@@ -55,7 +60,7 @@ export const SideBarMenuData: SideBarElement[] = [
     },
     list: [
       {
-        title: "Settings",
+        title: "Config",
         path: "/dashboard/settings",
         icon: <IoSettingsOutline />,
       },

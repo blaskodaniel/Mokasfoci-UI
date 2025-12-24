@@ -4,7 +4,25 @@ import {
   MatchOutcome,
   MatchStatus,
   MatchType,
+  SortOrder,
+  TransactionType,
 } from "util/enums";
+
+
+export interface PaginationResponse<T> {
+  items: T[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface PaginationParams {
+  page: number;
+  limit: number;
+  sort: string;
+  order: SortOrder;
+  search?: string;
+}
 
 export type Group = {
   _id: string;
@@ -28,7 +46,7 @@ export type Team = {
 
 export type CreateTeamPostBody = {
   name: string;
-  groupId: string;
+  groupid: string;
   flag: string;
   active: boolean;
 };
@@ -62,6 +80,7 @@ export type Match = {
   comment?: string | null;
   outcome?: MatchOutcome;
   externalID?: string;
+  isCalculated?: boolean;
 };
 
 export interface ITableActionsProps<T> {
@@ -138,4 +157,20 @@ export interface Coupon {
   outcome: MatchOutcome;
   date: string;
   type: CouponType;
+}
+
+export interface Transaction {
+  _id: string;
+  userid: User;
+  amount: number;
+  type: TransactionType;
+  date: string;
+  comment?: string;
+  matchid?: Match;
+  couponid?: Coupon;
+}
+
+export interface GetAllTransactionsResponse {
+  success: boolean;
+  data: PaginationResponse<Transaction>;
 }

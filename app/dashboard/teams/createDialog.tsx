@@ -24,18 +24,40 @@ import { IoSaveOutline } from "react-icons/io5";
 import { createTeamAction } from "services/actions";
 import { toast } from "@/components/ui/use-toast";
 import { Switch } from "@/components/ui/switch";
+import { useGetAllGroups } from "hooks/useGroups";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useGetAllFlags } from "hooks/useTeams";
 
 const CreateTeamDialog = () => {
+  const { isOpen, onClose } = useDialog();
   const form = useForm<z.infer<typeof CreateTeamSchema>>({
     resolver: zodResolver(CreateTeamSchema),
     defaultValues: {
       name: "",
       flag: "",
-      groupId: "",
+      groupid: "",
       active: false,
     },
   });
-  const { isOpen, onClose } = useDialog();
+  
+  const {
+      data: groupsData,
+      error: groupsError,
+      isLoading: groupsLoading,
+    } = useGetAllGroups(isOpen);
+
+  const {
+      data: flagsData,
+      error: flagsError,
+      isLoading: flagsLoading,
+  } = useGetAllFlags()
+
 
   const handleSubmit = async (values: z.infer<typeof CreateTeamSchema>) => {
     await createTeamAction({ ...values, active: !!values.active });
@@ -71,14 +93,38 @@ const CreateTeamDialog = () => {
             />
             <FormField
               control={form.control}
-              name="groupId"
+              name="groupid"
               render={({ field }) => {
                 return (
                   <FormItem className="mb-3">
                     <FormLabel>Group</FormLabel>
-                    <FormControl>
-                      <Input placeholder="group" {...field} />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a group" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {groupsLoading ? (
+                          <SelectItem value="loading" disabled>
+                            Loading...
+                          </SelectItem>
+                        ) : groupsError ? (
+                          <SelectItem value="error" disabled>
+                            Error loading groups
+                          </SelectItem>
+                        ) : (
+                          groupsData?.map((group) => (
+                            <SelectItem key={group._id} value={group._id}>
+                              {group.name}
+                            </SelectItem>
+                          ))
+                        )}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 );
@@ -91,9 +137,33 @@ const CreateTeamDialog = () => {
                 return (
                   <FormItem className="mb-3">
                     <FormLabel>Flag</FormLabel>
-                    <FormControl>
-                      <Input placeholder="flag" {...field} />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a flag" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {flagsLoading ? (
+                          <SelectItem value="loading" disabled>
+                            Loading...
+                          </SelectItem>
+                        ) : flagsError ? (
+                          <SelectItem value="error" disabled>
+                            Error loading flags
+                          </SelectItem>
+                        ) : (
+                          flagsData?.map((flag) => (
+                            <SelectItem key={flag} value={flag}>
+                              {flag}
+                            </SelectItem>
+                          ))
+                        )}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 );

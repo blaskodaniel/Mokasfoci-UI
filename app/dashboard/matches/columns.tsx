@@ -10,6 +10,7 @@ import DatePickerCell from "@ui/dashboard/table/datePickerCell";
 import { mapEnumToObjectArray } from "util/commons";
 import DesktopActions from "@ui/dashboard/table/desktop-actions";
 import MobileActions from "@ui/dashboard/table/mobile-actions";
+import SwitchCell from "@ui/dashboard/table/switchCell";
 
 interface IMatchColumnProps {
   onEdit: (match: Match) => void;
@@ -86,6 +87,11 @@ export const MatchColumns = ({
       }),
   },
   {
+    accessorKey: "isCalculated",
+    header: "Is Calculated",
+    cell: SwitchCell,
+  },
+  {
     accessorKey: "date",
     header: "Date",
     cell: DatePickerCell,
@@ -108,22 +114,23 @@ export const MatchColumns = ({
     enableHiding: false,
     cell: ({ row }) => {
       const editedMatch = row.original;
+      console.log("editedMatch: ", editedMatch.isCalculated);
+      const props = {
+        onEdit,
+        onDelete: (row: Match) => onDelete(row._id),
+        rowData: editedMatch,
+        ...(!editedMatch.isCalculated && { onCalculation }),
+      }
       if (!isMobile) {
         return (
           <DesktopActions
-            onEdit={onEdit}
-            onDelete={(row) => onDelete(row._id)}
-            onCalculation={onCalculation}
-            rowData={editedMatch}
+            {...props}
           />
         );
       }
       return (
         <MobileActions
-          onEdit={onEdit}
-          onCalculation={onCalculation}
-          onDelete={(row) => onDelete(row._id)}
-          rowData={editedMatch}
+          {...props}
         />
       );
     },

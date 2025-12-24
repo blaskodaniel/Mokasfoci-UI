@@ -5,8 +5,10 @@ import {
   Coupon,
   CreateMatchPostBody,
   CreateTeamPostBody,
+  GetAllTransactionsResponse,
   Group,
   Match,
+  PaginationParams,
   Team,
   UpdateMatchBody,
   User,
@@ -75,7 +77,7 @@ export const configService = {
 export const gameService = {
   calculateScoreByMatch: async (
     matchId: string
-  ): Promise<AxiosResponse<{ success: boolean; processedCoupons: number }>> =>
+  ): Promise<AxiosResponse<{ success: boolean; processedCoupons: number; penalizedUsers: number }>> =>
     await axios.get(`/admin/calculation/${matchId}`),
   getAllCoupons: async (): Promise<
     AxiosResponse<{ success: boolean; data: Coupon[] }>
@@ -89,4 +91,7 @@ export const gameService = {
     await axios.delete(`/admin/coupon/${couponId}`),
   resetGame: async (): Promise<AxiosResponse<boolean>> =>
     await axios.post("/admin/reset-game"),
+  getAllTransactions: async (params: PaginationParams): Promise<
+    AxiosResponse<GetAllTransactionsResponse>
+  > => await axios.get("/admin/transactions", { params }),
 };

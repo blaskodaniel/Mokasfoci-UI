@@ -93,7 +93,7 @@ const SettingsTable = ({
 
   return (
     <>
-      <PageTitle>Settings</PageTitle>
+      <PageTitle>Tournament config</PageTitle>
       <div className="max-w-[70%]">
         <DataTable
           data={settingsArray}
