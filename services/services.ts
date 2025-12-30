@@ -5,6 +5,7 @@ import {
   Coupon,
   CreateMatchPostBody,
   CreateTeamPostBody,
+  CreateTransactionBody,
   GetAllTransactionsResponse,
   Group,
   Match,
@@ -94,4 +95,12 @@ export const gameService = {
   getAllTransactions: async (params: PaginationParams): Promise<
     AxiosResponse<GetAllTransactionsResponse>
   > => await axios.get("/admin/transactions", { params }),
+  createTransaction: async (
+    body: CreateTransactionBody
+  ): Promise<AxiosResponse<boolean>> =>
+    await axios.post("/admin/transaction", body),
+  revertCalculation: async (
+    matchId: string
+  ): Promise<AxiosResponse<{ success: boolean; message: string; affectedCoupons: number }>> =>
+    await axios.post(`/admin/revert-calculation/${matchId}`),
 };

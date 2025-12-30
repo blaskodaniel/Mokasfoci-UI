@@ -1,7 +1,7 @@
 import TransactionTable from "./table";
 
 const TransactionsPage = () => {
-  return <TransactionTable filteredColumnNames={[]} />;
+  return <TransactionTable />;
 };
 
 export default TransactionsPage;

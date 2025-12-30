@@ -47,6 +47,8 @@ export enum TransactionType {
   refund = "refund",
   initial = "initial",
   correction = "correction",
+  betModification = "betModification",
+  reward = "reward",
 }
 
 export enum SortOrder {

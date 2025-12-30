@@ -7,15 +7,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 import {
   DeleteTeamAction,
+  GetGroupsAction,
   GetTeamsAction,
   updateTeamAction,
 } from "services/actions";
-import { Team } from "services/types";
+import { Group, Team } from "services/types";
 import { TeamColumns } from "./columns";
 import { useMediaQuery } from "hooks/useMediaQuery";
 import { Breakpoints } from "util/responsive";
 import CreateTeamDialog from "./createDialog";
 import { useDialog } from "store/useDialog";
+import { useGetAllGroups } from "hooks/useGroups";
 
 const TeamsTable = ({
   filteredColumnNames,
@@ -26,6 +28,13 @@ const TeamsTable = ({
   const isDesktop = useMediaQuery(`(min-width: ${Breakpoints.tablet})`);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  const {
+      data: groupsData,
+      error: groupsError,
+      isLoading: groupsLoading,
+    } = useGetAllGroups();
+
   const {
     data: teamsData,
     error: teamsError,
@@ -90,7 +99,9 @@ const TeamsTable = ({
     [onDelete, onEdit, isDesktop]
   );
 
-  if (teamsLoading) {
+  const groups = groupsData as Group[];
+
+  if (teamsLoading || groupsLoading) {
     return <div>Loading...</div>;
   }
 
@@ -105,6 +116,7 @@ const TeamsTable = ({
         <DataTable
           data={teamsData as Team[]}
           columns={columns}
+          groups={groups}
           filteredColumnNames={filteredColumnNames}
           hideColumns={{
             win: false,

@@ -12,6 +12,7 @@ function MobileActions<T>({
   onEdit,
   onDelete,
   onCalculation,
+  onRevertCalculation,
   rowData,
 }: ITableActionsProps<T>) {
   return (
@@ -30,13 +31,22 @@ function MobileActions<T>({
         >
           Save
         </DropdownMenuItem>
+        {onRevertCalculation && (
+          <DropdownMenuItem
+            onClick={() => {
+              onRevertCalculation?.(rowData);
+            }}
+          >
+            Revert Calculation
+          </DropdownMenuItem>
+        )}
         {onCalculation && (
           <DropdownMenuItem
             onClick={() => {
               onCalculation?.(rowData);
             }}
           >
-            Kalkuláció
+            Calculation
           </DropdownMenuItem>
         )}
         <DropdownMenuItem

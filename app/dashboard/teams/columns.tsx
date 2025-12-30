@@ -7,6 +7,7 @@ import EditableCell from "./editableCell";
 import SwitchCell from "@ui/dashboard/table/switchCell";
 import DesktopActions from "@ui/dashboard/table/desktop-actions";
 import MobileActions from "@ui/dashboard/table/mobile-actions";
+import DropDownCell from "./dropDownCell";
 
 interface ITeamColumnProps {
   onEdit: (team: Team) => void;
@@ -36,7 +37,7 @@ export const TeamColumns = ({
   {
     accessorKey: "groupid",
     header: "GroupId",
-    cell: EditableCell,
+    cell: DropDownCell,
   },
   {
     accessorKey: "win",
@@ -71,6 +72,11 @@ export const TeamColumns = ({
   {
     accessorKey: "active",
     header: "Active",
+    cell: SwitchCell,
+  },
+  {
+    accessorKey: "isTournamentWinner",
+    header: "Tournament Winner",
     cell: SwitchCell,
   },
   {

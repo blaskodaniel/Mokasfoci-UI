@@ -18,6 +18,7 @@ import { useCallback, useMemo } from "react";
 import { MatchColumns } from "./columns";
 import { useMediaQuery } from "hooks/useMediaQuery";
 import { gameService } from "services/services";
+import { useRevertMatchCalculation } from "hooks/useMatches";
 
 const MatchTable = ({
   filteredColumnNames,
@@ -46,6 +47,8 @@ const MatchTable = ({
     queryKey: ["teams"],
     queryFn: GetTeamsAction,
   });
+
+  const reversCalculateMatchMutation = useRevertMatchCalculation();
 
   const calculateScoreByMatchMutation = useMutation({
     mutationFn: (matchId: string) =>
@@ -124,11 +127,30 @@ const MatchTable = ({
     [calculateScoreByMatchMutation, toast]
   );
 
+  const onRevertCalculation = useCallback(
+    async (match: Match) => {
+      reversCalculateMatchMutation.mutate(match._id, {
+        onSuccess: (data) => {          
+          toast({
+            description: `${data.data.affectedCoupons} coupons reverted successfully 
+            and penalties reverted.`,
+          });
+        },
+        onError: (error) => {
+          toast({
+            description: `Error reverting the match", ${error}`,
+          });
+        },
+      });
+    },
+    [calculateScoreByMatchMutation, toast]
+  );
+
   const columns = useMemo(
     () => {
-      return MatchColumns({ onEdit, onDelete, onCalculation, isMobile: !isDesktop })
+      return MatchColumns({ onEdit, onDelete, onCalculation, onRevertCalculation, isMobile: !isDesktop })
     },
-    [onDelete, onEdit, onCalculation, isDesktop]
+    [onDelete, onEdit, onCalculation, onRevertCalculation, isDesktop]
   );
 
   const teams = teamsData as Team[];
@@ -143,6 +165,9 @@ const MatchTable = ({
           columns={columns}
           teams={teams}
           filteredColumnNames={filteredColumnNames}
+          hideColumns={{
+            isCalculated: false,
+          }}
           onOpenDialog={onOpen}
         />
         <CreateMatchDialog teams={teams} />

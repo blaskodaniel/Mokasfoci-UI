@@ -28,6 +28,7 @@ export type Group = {
   _id: string;
   name: string;
   winteamid?: Team;
+  isCalculated?: boolean;
 };
 
 export type Team = {
@@ -42,6 +43,7 @@ export type Team = {
   getgoal?: number;
   kickgoal?: number;
   active?: boolean;
+  isTournamentWinner?: boolean;
 };
 
 export type CreateTeamPostBody = {
@@ -88,6 +90,7 @@ export interface ITableActionsProps<T> {
   onEdit: (row: T) => void;
   onDelete?: (row: T) => void;
   onCalculation?: (row: T) => void;
+  onRevertCalculation?: (row: T) => void;
 }
 
 type UserData = {
@@ -174,3 +177,12 @@ export interface GetAllTransactionsResponse {
   success: boolean;
   data: PaginationResponse<Transaction>;
 }
+
+export interface CreateTransactionBody {
+  userid: string;
+  amount: number;
+  type: string;
+  comment?: string;
+  matchid?: string;
+  couponid?: string;
+} 

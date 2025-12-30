@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query"
-import { Group } from "services/types";
 import { axios } from "util/axios";
 
 export const useGetAllFlags = () => {

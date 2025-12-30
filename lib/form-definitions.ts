@@ -34,3 +34,12 @@ export const CreateUserSchema = z
     message: "Passwords don't match",
     path: ["passwordAgain"],
   });
+
+export const CreateTransactionSchema = z.object({
+  userid: z.string(),
+  amount: z.coerce.number(),
+  type: z.string(),
+  comment: z.string().optional(),
+  matchid: z.string().optional(),
+  couponid: z.string().optional(),
+});

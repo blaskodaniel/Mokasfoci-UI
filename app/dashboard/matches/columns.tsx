@@ -16,6 +16,7 @@ interface IMatchColumnProps {
   onEdit: (match: Match) => void;
   onDelete: (id: string) => void;
   onCalculation?: (match: Match) => void;
+  onRevertCalculation?: (match: Match) => void;
   isMobile: boolean;
 }
 
@@ -23,6 +24,7 @@ export const MatchColumns = ({
   onEdit,
   onDelete,
   onCalculation,
+  onRevertCalculation,
   isMobile,
 }: IMatchColumnProps): ColumnDef<Match>[] => [
   {
@@ -118,16 +120,16 @@ export const MatchColumns = ({
       const props = {
         onEdit,
         onDelete: (row: Match) => onDelete(row._id),
+        ...(editedMatch.isCalculated ? { onRevertCalculation } : { onCalculation }),
         rowData: editedMatch,
-        ...(!editedMatch.isCalculated && { onCalculation }),
       }
-      if (!isMobile) {
+      /* if (!isMobile) {
         return (
           <DesktopActions
             {...props}
           />
         );
-      }
+      } */
       return (
         <MobileActions
           {...props}

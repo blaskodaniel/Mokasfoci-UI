@@ -1,28 +1,34 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import MobileActions from "@ui/dashboard/table/mobile-actions";
-import DesktopActions from "@ui/dashboard/table/desktop-actions";
-import EditableCell from "../coupons/editableCell";
-import { Coupon, Transaction } from "services/types";
-import { mapEnumToObjectArray } from "util/commons";
-import { CouponStatus, CouponType } from "util/enums";
-import DropDownCell from "../coupons/dropDownCell";
+import { Transaction } from "services/types";
 
-interface ITransactionsColumnProps {
-  onEdit: (transaction: Transaction) => void;
-  onDelete: (id: string) => void;
-  isMobile: boolean;
-}
 
-export const TransactionsColumns = ({
-  onEdit,
-  onDelete,
-  isMobile,
-}: ITransactionsColumnProps): ColumnDef<Transaction>[] => [
+export const TransactionsColumns = (): ColumnDef<Transaction>[] => [
   {
     accessorKey: "_id",
     header: () => <div className="text-left">ID</div>,
+  },
+  {
+    accessorKey: "username",
+    header: "Username",
+    cell: ({ row }) => {
+      return <div>{row.original.userid?.username}</div>;
+    },
+  },
+  {
+    accessorKey: "amount",
+    header: "Amount",
+    cell: ({ row }) => {
+      return <div>{row.original.amount}</div>;
+    },
+  },
+  {
+    accessorKey: "comment",
+    header: "Comment",
+    cell: ({ row }) => {
+      return <div>{row.original.comment}</div>;
+    },
   },
   {
     accessorKey: "match",
@@ -43,27 +49,5 @@ export const TransactionsColumns = ({
       return <div>{row.original.date}</div>;
     },
   },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const editedGroup = row.original;
-      if (!isMobile) {
-        return (
-          <DesktopActions
-            onEdit={onEdit}
-            onDelete={(row) => onDelete(row._id)}
-            rowData={editedGroup}
-          />
-        );
-      }
-      return (
-        <MobileActions
-          onEdit={onEdit}
-          onDelete={(row) => onDelete(row._id)}
-          rowData={editedGroup}
-        />
-      );
-    },
-  },
+
 ];
