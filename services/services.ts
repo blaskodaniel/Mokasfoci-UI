@@ -7,6 +7,7 @@ import {
   CreateTeamPostBody,
   CreateTransactionBody,
   GetAllTransactionsResponse,
+  GetSchedulerStatusResponse,
   Group,
   Match,
   PaginationParams,
@@ -56,13 +57,13 @@ export const matchService = {
 
 export const userService = {
   getUsers: async (): Promise<AxiosResponse<User[]>> =>
-    await axios.get("/user/all"),
+    await axios.get("/user/admin/all"),
   updateUser: async (body: User, id: string) =>
-    await axios.patch(`/user/${id}`, body),
+    await axios.patch(`/user/admin/${id}`, body),
   deleteUser: async (userId: string): Promise<AxiosResponse<boolean>> =>
-    await axios.delete(`/user/${userId}`),
+    await axios.delete(`/user/admin/${userId}`),
   createUser: async (body: UserCreateBody): Promise<AxiosResponse<boolean>> =>
-    await axios.post("/user/create", body),
+    await axios.post("/user/admin/create", body),
 };
 
 export const configService = {
@@ -78,8 +79,13 @@ export const configService = {
 export const gameService = {
   calculateScoreByMatch: async (
     matchId: string
-  ): Promise<AxiosResponse<{ success: boolean; processedCoupons: number; penalizedUsers: number }>> =>
-    await axios.get(`/admin/calculation/${matchId}`),
+  ): Promise<
+    AxiosResponse<{
+      success: boolean;
+      processedCoupons: number;
+      penalizedUsers: number;
+    }>
+  > => await axios.get(`/admin/calculation/${matchId}`),
   getAllCoupons: async (): Promise<
     AxiosResponse<{ success: boolean; data: Coupon[] }>
   > => await axios.get("/admin/coupons"),
@@ -92,15 +98,26 @@ export const gameService = {
     await axios.delete(`/admin/coupon/${couponId}`),
   resetGame: async (): Promise<AxiosResponse<boolean>> =>
     await axios.post("/admin/reset-game"),
-  getAllTransactions: async (params: PaginationParams): Promise<
-    AxiosResponse<GetAllTransactionsResponse>
-  > => await axios.get("/admin/transactions", { params }),
+  getAllTransactions: async (
+    params: PaginationParams
+  ): Promise<AxiosResponse<GetAllTransactionsResponse>> =>
+    await axios.get("/admin/transactions", { params }),
   createTransaction: async (
     body: CreateTransactionBody
   ): Promise<AxiosResponse<boolean>> =>
     await axios.post("/admin/transaction", body),
   revertCalculation: async (
     matchId: string
-  ): Promise<AxiosResponse<{ success: boolean; message: string; affectedCoupons: number }>> =>
-    await axios.post(`/admin/revert-calculation/${matchId}`),
+  ): Promise<
+    AxiosResponse<{
+      success: boolean;
+      message: string;
+      affectedCoupons: number;
+    }>
+  > => await axios.post(`/admin/revert-calculation/${matchId}`),
+};
+
+export const MatchSchedulerService = {
+  getStatus: async (): Promise<AxiosResponse<GetSchedulerStatusResponse>> =>
+    await axios.get("/admin/scheduler-status"),
 };

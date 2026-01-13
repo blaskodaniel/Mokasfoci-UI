@@ -186,3 +186,19 @@ export interface CreateTransactionBody {
   matchid?: string;
   couponid?: string;
 } 
+
+export interface ScheduleMatch {
+  matchId: string;
+  scheduledFor: Date;
+  teamA: string;
+  teamB: string;
+}
+
+export interface GetSchedulerStatusResponse {
+  success: boolean;
+  data: {
+    isInitialized: boolean;
+    scheduledCount: number;
+    scheduledMatches: ScheduleMatch[];
+  }
+}

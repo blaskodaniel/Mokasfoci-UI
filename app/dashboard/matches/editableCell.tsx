@@ -1,13 +1,13 @@
 import { Input } from "@/components/ui/input";
 import { Column, Row, Table } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
-import { Match } from "services/types";
+import { MatchTableItem } from "./types";
 
 interface ColumnProps {
   getValue: () => any;
-  row: Row<Match>;
-  column: Column<Match, unknown>;
-  table: Table<Match>;
+  row: Row<MatchTableItem>;
+  column: Column<MatchTableItem, unknown>;
+  table: Table<MatchTableItem>;
 }
 
 const EditableCell = ({ getValue, row, column, table }: ColumnProps) => {

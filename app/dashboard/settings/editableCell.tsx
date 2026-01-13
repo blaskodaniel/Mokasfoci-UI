@@ -1,13 +1,12 @@
 import { Input } from "@/components/ui/input";
 import { Column, Row, Table } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
-import { Config, Team } from "services/types";
 
 interface ColumnProps {
   getValue: () => any;
   row: Row<{ key: string; value: any }>;
   column: Column<{ key: string; value: any }, unknown>;
-  table: Table<Config>;
+  table: Table<{ key: string; value: any }>;
 }
 
 const EditableCell = ({ getValue, row, column, table }: ColumnProps) => {

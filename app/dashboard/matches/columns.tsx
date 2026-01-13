@@ -1,22 +1,21 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Match } from "services/types";
 import DropDownCell from "./dropDownCell";
 import EditableCell from "./editableCell";
-import { Button } from "@/components/ui/button";
 import { MatchOutcome, MatchStatus, MatchType } from "util/enums";
 import DatePickerCell from "@ui/dashboard/table/datePickerCell";
 import { mapEnumToObjectArray } from "util/commons";
-import DesktopActions from "@ui/dashboard/table/desktop-actions";
 import MobileActions from "@ui/dashboard/table/mobile-actions";
 import SwitchCell from "@ui/dashboard/table/switchCell";
+import { MatchTableItem } from "./types";
+import { FaRegCheckCircle } from "react-icons/fa";
 
 interface IMatchColumnProps {
-  onEdit: (match: Match) => void;
+  onEdit: (match: MatchTableItem) => void;
   onDelete: (id: string) => void;
-  onCalculation?: (match: Match) => void;
-  onRevertCalculation?: (match: Match) => void;
+  onCalculation?: (match: MatchTableItem) => void;
+  onRevertCalculation?: (match: MatchTableItem) => void;
   isMobile: boolean;
 }
 
@@ -26,7 +25,28 @@ export const MatchColumns = ({
   onCalculation,
   onRevertCalculation,
   isMobile,
-}: IMatchColumnProps): ColumnDef<Match>[] => [
+}: IMatchColumnProps): ColumnDef<MatchTableItem>[] => [
+  {
+    accessorKey: "schedulerStatus",
+    header: "",
+    cell: ({ getValue, row }) => {
+      const status = getValue() as MatchTableItem["schedulerStatus"];
+      if(row.original.status === MatchStatus.finished){
+        return <FaRegCheckCircle className="text-green-500" size={20} />;
+      }
+      if(row.original.status === MatchStatus.playing){
+        return (
+          <span className="w-4 h-4 inline-block rounded-full bg-red-500 animate-pulse" />
+        );
+      }
+      if (status) {
+        return (
+          <span className="w-4 h-4 inline-block rounded-full bg-yellow-500 animate-pulse" />
+        );
+      }
+      return null;
+    },
+  },
   {
     accessorKey: "teamA",
     header: "Team A",
@@ -49,17 +69,17 @@ export const MatchColumns = ({
   },
   {
     accessorKey: "oddsAwin",
-    header: "Team A Odds",
+    header: "1",
     cell: EditableCell,
   },
   {
     accessorKey: "oddsDraw",
-    header: "Draw Odds",
+    header: "X",
     cell: EditableCell,
   },
   {
     accessorKey: "oddsBwin",
-    header: "Team B Odds",
+    header: "2",
     cell: EditableCell,
   },
   {
@@ -116,10 +136,9 @@ export const MatchColumns = ({
     enableHiding: false,
     cell: ({ row }) => {
       const editedMatch = row.original;
-      console.log("editedMatch: ", editedMatch.isCalculated);
       const props = {
         onEdit,
-        onDelete: (row: Match) => onDelete(row._id),
+        onDelete: (row: MatchTableItem) => onDelete(row._id),
         ...(editedMatch.isCalculated ? { onRevertCalculation } : { onCalculation }),
         rowData: editedMatch,
       }

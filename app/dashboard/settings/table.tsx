@@ -6,16 +6,12 @@ import DataTable from "@ui/dashboard/table/data-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 import {
-  DeleteTeamAction,
   GetSettingsAction,
-  GetTeamsAction,
   updateSettingsAction,
-  updateTeamAction,
 } from "services/actions";
 import { useMediaQuery } from "hooks/useMediaQuery";
 import { Breakpoints } from "util/responsive";
 import { useDialog } from "store/useDialog";
-import { Config } from "services/types";
 import { ConfigColumns } from "./columns";
 
 const SettingsTable = ({
@@ -52,7 +48,6 @@ const SettingsTable = ({
 
   const onEdit = useCallback(
     async (row: { key: string; value: any }) => {
-      console.log("onEdit: ", row);
       updateMutation.mutate(
         {
           configName: row.key,
@@ -60,7 +55,6 @@ const SettingsTable = ({
         },
         {
           onSuccess: () => {
-            console.log("Update successfully");
             toast({
               description: "Update successfully",
             });

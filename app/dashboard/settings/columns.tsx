@@ -1,15 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { Config, Team } from "services/types";
-import SwitchCell from "@ui/dashboard/table/switchCell";
 import DesktopActions from "@ui/dashboard/table/desktop-actions";
 import MobileActions from "@ui/dashboard/table/mobile-actions";
 import EditableCell from "./editableCell";
 
 interface IConfigColumnProps {
-  onEdit: (key: string, value: any) => void;
+  onEdit: (row: { key: string; value: any }) => void;
   isMobile: boolean;
 }
 

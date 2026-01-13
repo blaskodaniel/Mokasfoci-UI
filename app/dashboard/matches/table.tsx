@@ -19,6 +19,8 @@ import { MatchColumns } from "./columns";
 import { useMediaQuery } from "hooks/useMediaQuery";
 import { gameService } from "services/services";
 import { useRevertMatchCalculation } from "hooks/useMatches";
+import { useGetStatus } from "hooks/useMatchScheduler";
+import { MatchTableItem } from "./types";
 
 const MatchTable = ({
   filteredColumnNames,
@@ -29,6 +31,13 @@ const MatchTable = ({
   const { onOpen } = useDialog();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  const {
+    data: schedulerStatusData, 
+    error: schedulerStatusError,
+    isLoading: schedulerStatusLoading,
+  } = useGetStatus()
+
   const {
     data: matchesData,
     error: matchesError,
@@ -48,6 +57,21 @@ const MatchTable = ({
     queryFn: GetTeamsAction,
   });
 
+  const matchTableData: MatchTableItem[] = useMemo(() => {
+    const matches = matchesData as Match[];
+    if (!matches || !Array.isArray(matches)) return [];
+    
+    return matches.map((match: Match) => {
+      const scheduledMatch = schedulerStatusData?.data.scheduledMatches?.find(
+        sm => sm.matchId === match._id
+      );
+      return {
+        ...match,
+        schedulerStatus: scheduledMatch
+      };
+    });
+  }, [matchesData, schedulerStatusData]);
+
   const reversCalculateMatchMutation = useRevertMatchCalculation();
 
   const calculateScoreByMatchMutation = useMutation({
@@ -63,6 +87,7 @@ const MatchTable = ({
     mutationFn: ({ body }: { body: Match }) => updateMatchAction(body),
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["matches"] });
+      queryClient.invalidateQueries({ queryKey: ["match-scheduler-status"] });
     },
   });
 
@@ -143,7 +168,7 @@ const MatchTable = ({
         },
       });
     },
-    [calculateScoreByMatchMutation, toast]
+    [reversCalculateMatchMutation, toast]
   );
 
   const columns = useMemo(
@@ -161,7 +186,7 @@ const MatchTable = ({
       <PageTitle>Matches</PageTitle>
       <div className="py-5">
         <DataTable
-          data={matches}
+          data={matchTableData}
           columns={columns}
           teams={teams}
           filteredColumnNames={filteredColumnNames}

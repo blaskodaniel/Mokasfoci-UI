@@ -21,7 +21,7 @@ const TransactionTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [currentPage, setCurrentPage] = useState(0);
-  const [size, setSize] = useState(10);
+  const [size, setSize] = useState(20);
 
   const {
     data: transactionsData,
@@ -29,7 +29,7 @@ const TransactionTable = () => {
     isLoading: transactionsLoading,
     refetch: transactionsRefetch,
   } = useQuery({
-    queryKey: ["transactions", currentPage, size],
+    queryKey: ["transactions", currentPage, size, searchTerm],
     queryFn: () => 
       gameService.getAllTransactions({ 
         page: currentPage + 1, 
@@ -39,6 +39,7 @@ const TransactionTable = () => {
         search: searchTerm
       })
     .then((res) => res.data),
+    placeholderData: (previousData) => previousData,
   });
 
 
@@ -80,7 +81,10 @@ const TransactionTable = () => {
         <Button
           className="bg-emerald-700 hover:bg-emerald-600"
           variant="outline"
-          onClick={() => transactionsRefetch()}
+          onClick={() => {
+            setCurrentPage(0);
+            transactionsRefetch();
+          }}
         > 
         <IoSearchOutline className="mr-2 h-4 w-4" /> Search
       </Button>

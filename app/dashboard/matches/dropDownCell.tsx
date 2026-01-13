@@ -9,13 +9,13 @@ import {
 } from "@/components/ui/select";
 import { Column, Row, Table } from "@tanstack/react-table";
 import { useCallback, useMemo } from "react";
-import { Match, Team } from "services/types";
+import { MatchTableItem } from "./types";
 
 interface ColumnProps {
   getValue: () => any;
-  row: Row<Match>;
-  column: Column<Match, unknown>;
-  table: Table<Match>;
+  row: Row<MatchTableItem>;
+  column: Column<MatchTableItem, unknown>;
+  table: Table<MatchTableItem>;
   data?: any[];
   placeholder?: string;
   property?: string;
