@@ -13,14 +13,7 @@ import {
   User,
   UserCreateBody,
 } from "./types";
-import {
-  configService,
-  gameService,
-  groupService,
-  matchService,
-  teamService,
-  userService,
-} from "./services";
+import { configService, gameService, groupService, matchService, teamService, userService } from "./services";
 import { AxiosResponse } from "axios";
 import { removeUserTokenFromCookie } from "util/commons";
 import { redirect } from "next/navigation";
@@ -192,22 +185,7 @@ export const logOut = async () => {
   redirect("/login");
 };
 
-export async function GetAllCouponsAction() {
-  try {
-    const { data } = await gameService.getAllCoupons();
-    console.log("GetAllCouponsAction: ", data);
-    return data;
-  } catch (error: unknown) {
-    console.log("GetAllCouponsAction error: ", error);
-    const errorMsg = ErrorHandler(error);
-    return { error: errorMsg };
-  }
-}
-
-export async function updateCouponAction(
-  couponId: string,
-  body: Partial<Coupon>
-) {
+export async function updateCouponAction(couponId: string, body: Partial<Coupon>) {
   await gameService.updateCoupon(couponId, body);
 }
 

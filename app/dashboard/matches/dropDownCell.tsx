@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Column, Row, Table } from "@tanstack/react-table";
 import { useCallback, useMemo } from "react";
 import { MatchTableItem } from "./types";
@@ -34,7 +28,7 @@ const DropDownCell = ({
 
   const defaultValue = useMemo(
     () => (property && data.length > 0 ? row.getValue(property) : null),
-    [property, data.length, row]
+    [property, data.length, row],
   );
 
   const onChange = (e: string | null) => {
@@ -61,11 +55,8 @@ const DropDownCell = ({
   }, [table.options.meta?.teams, data]);
 
   return (
-    <Select
-      onValueChange={onChange}
-      defaultValue={defaultValue?.toString() || value?._id || value?.toString()}
-    >
-      <SelectTrigger className="w-[150px]">
+    <Select onValueChange={onChange} value={defaultValue?.toString() || value?._id || value?.toString() || ""}>
+      <SelectTrigger className="w/[150px]">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>{renderOptions()}</SelectContent>

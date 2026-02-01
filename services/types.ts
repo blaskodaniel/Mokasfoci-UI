@@ -1,13 +1,4 @@
-import {
-  CouponStatus,
-  CouponType,
-  MatchOutcome,
-  MatchStatus,
-  MatchType,
-  SortOrder,
-  TransactionType,
-} from "util/enums";
-
+import { CouponStatus, CouponType, MatchOutcome, MatchStatus, MatchType, SortOrder, TransactionType } from "util/enums";
 
 export interface PaginationResponse<T> {
   items: T[];
@@ -27,13 +18,14 @@ export interface PaginationParams {
 export type Group = {
   _id: string;
   name: string;
-  winteamid?: Team;
+  groupWinnerId?: Team;
   isCalculated?: boolean;
 };
 
 export type Team = {
   _id: string;
   name: string;
+  tla: string;
   groupId: string;
   flag: string;
   win?: number;
@@ -44,6 +36,9 @@ export type Team = {
   kickgoal?: number;
   active?: boolean;
   isTournamentWinner?: boolean;
+  position?: number;
+  playedGames?: number;
+  goalDifference?: number;
 };
 
 export type CreateTeamPostBody = {
@@ -68,7 +63,9 @@ export type LoginType = {
 export type Match = {
   _id: string;
   teamA?: Team;
+  teamAPlaceholder?: string;
   teamB?: Team;
+  teamBPlaceholder?: string;
   goalA?: number;
   goalB?: number;
   oddsAwin?: number;
@@ -178,6 +175,11 @@ export interface GetAllTransactionsResponse {
   data: PaginationResponse<Transaction>;
 }
 
+export interface GetAllCouponsResponse {
+  success: boolean;
+  data: PaginationResponse<Coupon>;
+}
+
 export interface CreateTransactionBody {
   userid: string;
   amount: number;
@@ -185,7 +187,7 @@ export interface CreateTransactionBody {
   comment?: string;
   matchid?: string;
   couponid?: string;
-} 
+}
 
 export interface ScheduleMatch {
   matchId: string;
@@ -200,5 +202,17 @@ export interface GetSchedulerStatusResponse {
     isInitialized: boolean;
     scheduledCount: number;
     scheduledMatches: ScheduleMatch[];
-  }
+  };
+}
+
+export interface DashboardStats {
+  success: boolean;
+  data: {
+    totalPlayers: number;
+    activeCoupons: number;
+    errorLogsCount: number;
+    totalSystemBalance: number;
+    totalSystemProfit: number;
+    recentTransactions: Transaction[];
+  };
 }

@@ -71,15 +71,17 @@ export const CouponColumns = ({
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ getValue, row, column, table }) =>
-      DropDownCell({
+    cell: ({ getValue, row, column, table }) =>{
+      return DropDownCell({
         getValue,
         row,
         column,
         table,
         data: mapEnumToObjectArray(CouponStatus),
         property: "status",
-      }),
+      })
+    }
+      ,
   },
   {
     accessorKey: "type",

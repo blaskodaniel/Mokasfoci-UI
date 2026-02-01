@@ -1,20 +1,16 @@
 import { MdSupervisedUserCircle } from "react-icons/md";
-import {
-  Container,
-  DataInfo,
-  DataPart,
-  DataTitle,
-  DataValue,
-} from "./card.style";
+import { Container, DataInfo, DataPart, DataTitle, DataValue } from "./card.style";
+import { FC } from "react";
+import { CardProps } from "./type";
 
-const Card = () => {
+const Card: FC<CardProps> = ({ title, value, icon, description }) => {
   return (
     <Container>
-      <MdSupervisedUserCircle size={24} />
+      {icon && icon}
       <DataPart>
-        <DataTitle>Total users</DataTitle>
-        <DataValue>10.125</DataValue>
-        <DataInfo>Lorem ipsum dolor, sit</DataInfo>
+        <DataTitle>{title || ""}</DataTitle>
+        <DataValue>{value || "-"}</DataValue>
+        <DataInfo>{description || ""}</DataInfo>
       </DataPart>
     </Container>
   );

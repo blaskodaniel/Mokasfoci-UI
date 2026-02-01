@@ -13,6 +13,9 @@ import { CouponColumns } from "./columns";
 import { Input } from "@/components/ui/input";
 import { DeleteCouponAction, updateCouponAction } from "services/actions";
 import { gameService } from "services/services";
+import { SortOrder } from "util/enums";
+import { Button } from "@/components/ui/button";
+import { IoSearchOutline } from "react-icons/io5";
 
 const CouponTable = ({
   filteredColumnNames,
@@ -24,6 +27,8 @@ const CouponTable = ({
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [size, setSize] = useState(20);
 
   const {
     data: couponsData,
@@ -31,8 +36,15 @@ const CouponTable = ({
     isLoading: couponsLoading,
     refetch: couponsRefetch,
   } = useQuery({
-    queryKey: ["coupons"],
-    queryFn: () => gameService.getAllCoupons().then((res) => res.data),
+    queryKey: ["coupons", currentPage, size],
+    queryFn: () => gameService.getAllCoupons({ 
+      page: currentPage + 1, 
+      limit: size, 
+      sort: "date", 
+      order: SortOrder.desc,
+      search: searchTerm
+    }).then((res) => res.data),
+    placeholderData: (previousData) => previousData,
   });
 
   const deleteMutation = useMutation({
@@ -91,38 +103,14 @@ const CouponTable = ({
   );
 
   const coupons = useMemo(() => {
-    return couponsData?.data || [];
+    return couponsData?.data?.items || [];
   }, [couponsData]);
 
-  // Filter coupons based on search term
-  const filteredCoupons = useMemo(() => {
-    if (!searchTerm) return coupons;
+  const {limit, page, total} = useMemo(() => {
+    return couponsData?.data || {limit: 10, page: 1, total: 0};
+  }, [couponsData]);
 
-    return coupons.filter((coupon: Coupon) => {
-      const searchLower = searchTerm.toLowerCase();
-
-      // Search in username
-      const username = coupon.userid?.username?.toLowerCase() || "";
-
-      // Search in team names (both teamA and teamB)
-      const teamAName = coupon.matchid?.teamA?.name?.toLowerCase() || "";
-      const teamBName = coupon.matchid?.teamB?.name?.toLowerCase() || "";
-      const matchString = `${teamAName} - ${teamBName}`;
-
-      // Search in date
-      const date = new Date(coupon.date).toLocaleDateString().toLowerCase();
-
-      // Search in status
-      const status = coupon.status?.toLowerCase() || "";
-
-      return (
-        username.includes(searchLower) ||
-        matchString.includes(searchLower) ||
-        date.includes(searchLower) ||
-        status.includes(searchLower)
-      );
-    });
-  }, [coupons, searchTerm]);
+  const totalPages = Math.ceil(total / limit);
 
   if (couponsLoading) {
     return <div>Loading...</div>;
@@ -137,20 +125,39 @@ const CouponTable = ({
       <PageTitle>Játékosok fogadásai</PageTitle>
 
       {/* Search input */}
-      <div className="mb-4">
+      <div className="mb-4 flex items-center gap-2">
         <Input
           placeholder="Keresés username, csapatnév, dátum vagy státusz alapján..."
-          value={searchTerm}
+          value={searchTerm ?? ""}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="max-w-sm"
         />
+        <Button
+          className="bg-emerald-700 hover:bg-emerald-600"
+          variant="outline"
+          onClick={() => {
+            setCurrentPage(0);
+            couponsRefetch();
+          }}
+        > 
+        <IoSearchOutline className="mr-2 h-4 w-4" /> Search
+      </Button>
       </div>
 
       <div className="py-5">
         <DataTable
-          data={filteredCoupons as Coupon[]}
+          data={coupons}
           columns={columns}
           onOpenDialog={onOpen}
+          enablePagination={true}
+          manualPagination={true}
+          pageSize={size}
+          totalCount={total}
+          pageCount={totalPages}
+          onPaginationChange={(pageIndex, pageSize) => {
+            setCurrentPage(pageIndex);
+            setSize(pageSize);
+          }}
         />
       </div>
     </>

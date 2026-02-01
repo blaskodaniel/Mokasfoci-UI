@@ -35,7 +35,7 @@ const TransactionTable = () => {
         page: currentPage + 1, 
         limit: size, 
         sort: "date", 
-        order: SortOrder.asc,
+        order: SortOrder.desc,
         search: searchTerm
       })
     .then((res) => res.data),

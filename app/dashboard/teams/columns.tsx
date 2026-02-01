@@ -15,11 +15,7 @@ interface ITeamColumnProps {
   isMobile: boolean;
 }
 
-export const TeamColumns = ({
-  onEdit,
-  onDelete,
-  isMobile,
-}: ITeamColumnProps): ColumnDef<Team>[] => [
+export const TeamColumns = ({ onEdit, onDelete, isMobile }: ITeamColumnProps): ColumnDef<Team>[] => [
   {
     accessorKey: "_id",
     header: () => <div className="text-left">ID</div>,
@@ -27,6 +23,11 @@ export const TeamColumns = ({
   {
     accessorKey: "name",
     header: "Name",
+    cell: EditableCell,
+  },
+  {
+    accessorKey: "tla",
+    header: "TLA",
     cell: EditableCell,
   },
   {
@@ -85,21 +86,9 @@ export const TeamColumns = ({
     cell: ({ row }) => {
       const editedRow = row.original;
       if (!isMobile) {
-        return (
-          <DesktopActions
-            onEdit={onEdit}
-            onDelete={(row) => onDelete(row._id)}
-            rowData={editedRow}
-          />
-        );
+        return <DesktopActions onEdit={onEdit} onDelete={(row) => onDelete(row._id)} rowData={editedRow} />;
       }
-      return (
-        <MobileActions
-          onEdit={onEdit}
-          onDelete={(row) => onDelete(row._id)}
-          rowData={editedRow}
-        />
-      );
+      return <MobileActions onEdit={onEdit} onDelete={(row) => onDelete(row._id)} rowData={editedRow} />;
     },
   },
 ];

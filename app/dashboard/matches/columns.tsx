@@ -31,18 +31,14 @@ export const MatchColumns = ({
     header: "",
     cell: ({ getValue, row }) => {
       const status = getValue() as MatchTableItem["schedulerStatus"];
-      if(row.original.status === MatchStatus.finished){
+      if (row.original.status === MatchStatus.finished) {
         return <FaRegCheckCircle className="text-green-500" size={20} />;
       }
-      if(row.original.status === MatchStatus.playing){
-        return (
-          <span className="w-4 h-4 inline-block rounded-full bg-red-500 animate-pulse" />
-        );
+      if (row.original.status === MatchStatus.playing) {
+        return <span className="w-4 h-4 inline-block rounded-full bg-red-500 animate-pulse" />;
       }
       if (status) {
-        return (
-          <span className="w-4 h-4 inline-block rounded-full bg-yellow-500 animate-pulse" />
-        );
+        return <span className="w-4 h-4 inline-block rounded-full bg-yellow-500 animate-pulse" />;
       }
       return null;
     },
@@ -55,12 +51,12 @@ export const MatchColumns = ({
   {
     accessorKey: "goalA",
     header: "Goals A",
-    cell: EditableCell,
+    cell: (props) => EditableCell({ ...props, width: "w-[50px]" }),
   },
   {
     accessorKey: "goalB",
     header: "Goals B",
-    cell: EditableCell,
+    cell: (props) => EditableCell({ ...props, width: "w-[50px]" }),
   },
   {
     accessorKey: "teamB",
@@ -132,6 +128,16 @@ export const MatchColumns = ({
       }),
   },
   {
+    accessorKey: "teamAPlaceholder",
+    header: "Team A Comment",
+    cell: EditableCell,
+  },
+  {
+    accessorKey: "teamBPlaceholder",
+    header: "Team B Comment",
+    cell: EditableCell,
+  },
+  {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
@@ -141,7 +147,7 @@ export const MatchColumns = ({
         onDelete: (row: MatchTableItem) => onDelete(row._id),
         ...(editedMatch.isCalculated ? { onRevertCalculation } : { onCalculation }),
         rowData: editedMatch,
-      }
+      };
       /* if (!isMobile) {
         return (
           <DesktopActions
@@ -149,11 +155,7 @@ export const MatchColumns = ({
           />
         );
       } */
-      return (
-        <MobileActions
-          {...props}
-        />
-      );
+      return <MobileActions {...props} />;
     },
   },
 ];

@@ -11,6 +11,7 @@ export const CreatGroupSchema = z.object({
 
 export const CreateTeamSchema = z.object({
   name: z.string().min(1, "You need to add at least one character"),
+  tla: z.string().min(1, "You need to add at least one character"),
   flag: z.string(),
   groupid: z.string(),
   active: z.boolean().default(false).optional(),

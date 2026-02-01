@@ -13,11 +13,7 @@ interface IGroupColumnProps {
   isMobile: boolean;
 }
 
-export const GroupColumns = ({
-  onEdit,
-  onDelete,
-  isMobile,
-}: IGroupColumnProps): ColumnDef<Group>[] => [
+export const GroupColumns = ({ onEdit, onDelete, isMobile }: IGroupColumnProps): ColumnDef<Group>[] => [
   {
     accessorKey: "_id",
     header: () => <div className="text-left">ID</div>,
@@ -28,7 +24,7 @@ export const GroupColumns = ({
     cell: EditableCell,
   },
   {
-    accessorKey: "winteamid",
+    accessorKey: "groupWinnerId",
     header: "WinTeam ID",
     cell: DropDownCell,
   },
@@ -38,21 +34,9 @@ export const GroupColumns = ({
     cell: ({ row }) => {
       const editedGroup = row.original;
       if (!isMobile) {
-        return (
-          <DesktopActions
-            onEdit={onEdit}
-            onDelete={(row) => onDelete(row._id)}
-            rowData={editedGroup}
-          />
-        );
+        return <DesktopActions onEdit={onEdit} onDelete={(row) => onDelete(row._id)} rowData={editedGroup} />;
       }
-      return (
-        <MobileActions
-          onEdit={onEdit}
-          onDelete={(row) => onDelete(row._id)}
-          rowData={editedGroup}
-        />
-      );
+      return <MobileActions onEdit={onEdit} onDelete={(row) => onDelete(row._id)} rowData={editedGroup} />;
     },
   },
 ];

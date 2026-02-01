@@ -7,12 +7,7 @@ import { useDialog } from "store/useDialog";
 import { useToast } from "@/components/ui/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Breakpoints } from "util/responsive";
-import {
-  DeleteMatchAction,
-  GetMatchAction,
-  GetTeamsAction,
-  updateMatchAction,
-} from "services/actions";
+import { DeleteMatchAction, GetMatchAction, GetTeamsAction, updateMatchAction } from "services/actions";
 import { Match, Team } from "services/types";
 import { useCallback, useMemo } from "react";
 import { MatchColumns } from "./columns";
@@ -22,21 +17,13 @@ import { useRevertMatchCalculation } from "hooks/useMatches";
 import { useGetStatus } from "hooks/useMatchScheduler";
 import { MatchTableItem } from "./types";
 
-const MatchTable = ({
-  filteredColumnNames,
-}: {
-  filteredColumnNames: string[];
-}) => {
+const MatchTable = ({ filteredColumnNames }: { filteredColumnNames: string[] }) => {
   const isDesktop = useMediaQuery(`(min-width: ${Breakpoints.tablet})`);
   const { onOpen } = useDialog();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const {
-    data: schedulerStatusData, 
-    error: schedulerStatusError,
-    isLoading: schedulerStatusLoading,
-  } = useGetStatus()
+  const { data: schedulerStatusData, error: schedulerStatusError, isLoading: schedulerStatusLoading } = useGetStatus();
 
   const {
     data: matchesData,
@@ -60,14 +47,12 @@ const MatchTable = ({
   const matchTableData: MatchTableItem[] = useMemo(() => {
     const matches = matchesData as Match[];
     if (!matches || !Array.isArray(matches)) return [];
-    
+
     return matches.map((match: Match) => {
-      const scheduledMatch = schedulerStatusData?.data.scheduledMatches?.find(
-        sm => sm.matchId === match._id
-      );
+      const scheduledMatch = schedulerStatusData?.data.scheduledMatches?.find((sm) => sm.matchId === match._id);
       return {
         ...match,
-        schedulerStatus: scheduledMatch
+        schedulerStatus: scheduledMatch,
       };
     });
   }, [matchesData, schedulerStatusData]);
@@ -111,10 +96,10 @@ const MatchTable = ({
               description: "Update successfully",
             });
           },
-        }
+        },
       );
     },
-    [toast, updateMutation]
+    [toast, updateMutation],
   );
 
   const onDelete = useCallback(
@@ -128,7 +113,7 @@ const MatchTable = ({
         },
       });
     },
-    [deleteMutation, toast]
+    [deleteMutation, toast],
   );
 
   const onCalculation = useCallback(
@@ -149,13 +134,13 @@ const MatchTable = ({
         },
       });
     },
-    [calculateScoreByMatchMutation, toast]
+    [calculateScoreByMatchMutation, toast],
   );
 
   const onRevertCalculation = useCallback(
     async (match: Match) => {
       reversCalculateMatchMutation.mutate(match._id, {
-        onSuccess: (data) => {          
+        onSuccess: (data) => {
           toast({
             description: `${data.data.affectedCoupons} coupons reverted successfully 
             and penalties reverted.`,
@@ -168,18 +153,14 @@ const MatchTable = ({
         },
       });
     },
-    [reversCalculateMatchMutation, toast]
+    [reversCalculateMatchMutation, toast],
   );
 
-  const columns = useMemo(
-    () => {
-      return MatchColumns({ onEdit, onDelete, onCalculation, onRevertCalculation, isMobile: !isDesktop })
-    },
-    [onDelete, onEdit, onCalculation, onRevertCalculation, isDesktop]
-  );
+  const columns = useMemo(() => {
+    return MatchColumns({ onEdit, onDelete, onCalculation, onRevertCalculation, isMobile: !isDesktop });
+  }, [onDelete, onEdit, onCalculation, onRevertCalculation, isDesktop]);
 
   const teams = teamsData as Team[];
-  const matches = matchesData as Match[];
 
   return (
     <>
@@ -192,6 +173,8 @@ const MatchTable = ({
           filteredColumnNames={filteredColumnNames}
           hideColumns={{
             isCalculated: false,
+            date: false,
+            comment: false,
           }}
           onOpenDialog={onOpen}
         />

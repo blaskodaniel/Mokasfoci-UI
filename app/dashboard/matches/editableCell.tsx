@@ -8,9 +8,10 @@ interface ColumnProps {
   row: Row<MatchTableItem>;
   column: Column<MatchTableItem, unknown>;
   table: Table<MatchTableItem>;
+  width?: string;
 }
 
-const EditableCell = ({ getValue, row, column, table }: ColumnProps) => {
+const EditableCell = ({ getValue, row, column, table, width }: ColumnProps) => {
   const initialValue = getValue();
   const [value, setValue] = useState(initialValue || "");
 
@@ -23,7 +24,7 @@ const EditableCell = ({ getValue, row, column, table }: ColumnProps) => {
   }, [initialValue]);
 
   return (
-    <div className="w-100">
+    <div className={width || "w-100"}>
       <Input
         className="text-center"
         value={value}
