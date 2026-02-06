@@ -52,9 +52,15 @@ const MatchList = ({
           </div>
           <div className="flex-1 text-sm font-light">{getMatchTypeText(match.type)}</div>
           <div className="flex flex-1 gap-1">
-            <span className="flex-1 font-medium">{match?.oddsAwin ?? "-"}</span>
-            <span className="flex-1 font-medium">{match?.oddsDraw ?? "-"}</span>
-            <span className="flex-1 font-medium">{match?.oddsBwin ?? "-"}</span>
+            <span className="flex-1 font-medium rounded-sm bg-blue-500/50 text-sm text-center">
+              {match?.oddsAwin ?? "-"}
+            </span>
+            <span className="flex-1 font-medium rounded-sm bg-blue-500/50 text-sm text-center">
+              {match?.oddsDraw ?? "-"}
+            </span>
+            <span className="flex-1 font-medium rounded-sm bg-blue-500/50 text-sm text-center">
+              {match?.oddsBwin ?? "-"}
+            </span>
           </div>
           <div className="flex-1">
             {match?.outcome

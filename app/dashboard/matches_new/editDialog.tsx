@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useForm } from "react-hook-form";
 import { EditMatchSchema } from "lib/form-definitions";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -83,9 +83,20 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[95vw] max-w-[95vw] sm:w-[70vw] sm:max-w-[70vw]">
+      <DialogContent
+        className="w-[95vw] max-w-[95vw] sm:w-[70vw] sm:max-w-[70vw]"
+        onOpenAutoFocus={(e) => {
+          // Prevent auto-focus to avoid conflicts with dropdown menu
+          e.preventDefault();
+        }}
+        onCloseAutoFocus={(e) => {
+          // Prevent auto-focus return to avoid aria-hidden issues
+          e.preventDefault();
+        }}
+      >
         <DialogHeader>
           <DialogTitle>Mérkőzés szerkesztése</DialogTitle>
+          <DialogDescription className="sr-only">Szerkeszd a mérkőzés adatait az alábbi űrlapon</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
