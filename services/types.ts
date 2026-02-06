@@ -180,6 +180,11 @@ export interface GetAllCouponsResponse {
   data: PaginationResponse<Coupon>;
 }
 
+export interface GetAllMatchesResponse {
+  success: boolean;
+  data: PaginationResponse<Match>;
+}
+
 export interface CreateTransactionBody {
   userid: string;
   amount: number;

@@ -1,28 +1,30 @@
 "use client";
 
-import DataTable from "@ui/dashboard/table/data-table";
-import { PageTitle } from "@ui/global/CommonStyles";
-import CreateMatchDialog from "./createDialog";
-import { useDialog } from "store/useDialog";
 import { useToast } from "@/components/ui/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Breakpoints } from "util/responsive";
-import { DeleteMatchAction, GetMatchAction, GetTeamsAction, updateMatchAction } from "services/actions";
-import { Match, Team } from "services/types";
-import { useCallback, useMemo, useState } from "react";
-import { MatchColumns } from "./columns";
-import { useMediaQuery } from "hooks/useMediaQuery";
-import { gameService, matchService, teamService } from "services/services";
 import { useRevertMatchCalculation } from "hooks/useMatches";
 import { useGetStatus } from "hooks/useMatchScheduler";
-import { MatchTableItem } from "./types";
+import { useMediaQuery } from "hooks/useMediaQuery";
+import { useCallback, useMemo, useState } from "react";
+import { DeleteMatchAction, updateMatchAction } from "services/actions";
+import { gameService, matchService, teamService } from "services/services";
+import { Match, Team } from "services/types";
+import { useDialog } from "store/useDialog";
 import { SortOrder } from "util/enums";
+import { Breakpoints } from "util/responsive";
+import { MatchTableItem } from "../matches/types";
+import MatchList from "./matchList";
+import { Button } from "@/components/ui/button";
+import CreateMatchDialog from "./createDialog";
+import EditMatchDialog from "./editDialog";
+import { GoPlus } from "react-icons/go";
 
-const MatchTable = ({ filteredColumnNames }: { filteredColumnNames: string[] }) => {
+const MatchesList = () => {
   const isDesktop = useMediaQuery(`(min-width: ${Breakpoints.tablet})`);
   const { onOpen } = useDialog();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
   const [searchTerm, setSearchTerm] = useState("");
 
   const [currentPage, setCurrentPage] = useState(0);
@@ -81,20 +83,14 @@ const MatchTable = ({ filteredColumnNames }: { filteredColumnNames: string[] }) 
 
   const reversCalculateMatchMutation = useRevertMatchCalculation();
 
+  const [editingMatch, setEditingMatch] = useState<Match | null>(null);
+
   const calculateScoreByMatchMutation = useMutation({
     mutationFn: (matchId: string) =>
       // Call the game service to calculate score by match
       gameService.calculateScoreByMatch(matchId),
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["matches"] });
-    },
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ body }: { body: Match }) => updateMatchAction(body),
-    onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ["matches"] });
-      queryClient.invalidateQueries({ queryKey: ["match-scheduler-status"] });
     },
   });
 
@@ -105,24 +101,9 @@ const MatchTable = ({ filteredColumnNames }: { filteredColumnNames: string[] }) 
     },
   });
 
-  const onEdit = useCallback(
-    async (match: Match) => {
-      updateMutation.mutate(
-        {
-          body: match,
-        },
-        {
-          onSuccess: () => {
-            console.log("Update successfully");
-            toast({
-              description: "Update successfully",
-            });
-          },
-        },
-      );
-    },
-    [toast, updateMutation],
-  );
+  const onEdit = useCallback((match: Match) => {
+    setEditingMatch(match);
+  }, []);
 
   const onDelete = useCallback(
     async (id: string) => {
@@ -178,41 +159,35 @@ const MatchTable = ({ filteredColumnNames }: { filteredColumnNames: string[] }) 
     [reversCalculateMatchMutation, toast],
   );
 
-  const columns = useMemo(() => {
-    return MatchColumns({ onEdit, onDelete, onCalculation, onRevertCalculation, isMobile: !isDesktop });
-  }, [onDelete, onEdit, onCalculation, onRevertCalculation, isDesktop]);
-
   const teams = teamsData as Team[];
 
   return (
-    <>
-      <PageTitle>Matches</PageTitle>
-      <div className="py-5">
-        <DataTable
-          data={matchTableData}
-          columns={columns}
-          teams={teams}
-          filteredColumnNames={filteredColumnNames}
-          hideColumns={{
-            isCalculated: false,
-            date: false,
-            comment: false,
-          }}
-          onOpenDialog={onOpen}
-          enablePagination={true}
-          manualPagination={true}
-          pageSize={size}
-          totalCount={total}
-          pageCount={totalPages}
-          onPaginationChange={(pageIndex, pageSize) => {
-            setCurrentPage(pageIndex);
-            setSize(pageSize);
-          }}
-        />
-        <CreateMatchDialog teams={teams} />
+    <div>
+      <div className="flex justify-end mt-5 mb-3">
+        <Button className="bg-emerald-700 hover:bg-emerald-600 h-8" variant="outline" onClick={onOpen} type="button">
+          <GoPlus className="mr-2 h-4 w-4" />
+          Új mérkőzés
+        </Button>
       </div>
-    </>
+      <MatchList
+        matches={matchTableData}
+        teams={teams}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        onCalculation={onCalculation}
+        onRevertCalculation={onRevertCalculation}
+        isMobile={!isDesktop}
+      />
+
+      <CreateMatchDialog teams={teams} />
+      <EditMatchDialog
+        isOpen={!!editingMatch}
+        onClose={() => setEditingMatch(null)}
+        match={editingMatch || undefined}
+        teams={teams}
+      />
+    </div>
   );
 };
 
-export default MatchTable;
+export default MatchesList;

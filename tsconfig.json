@@ -22,13 +22,6 @@
       "@ui/*": ["app/ui/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "postcss.config.js",
-    "tailwind.config.ts"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "postcss.config.js", "tailwind.config.ts"],
   "exclude": ["node_modules"]
 }

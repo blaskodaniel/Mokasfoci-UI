@@ -8,6 +8,7 @@ import {
   CreateTransactionBody,
   DashboardStats,
   GetAllCouponsResponse,
+  GetAllMatchesResponse,
   GetAllTransactionsResponse,
   GetSchedulerStatusResponse,
   Group,
@@ -36,7 +37,8 @@ export const groupService = {
 };
 
 export const matchService = {
-  getMatches: async (): Promise<AxiosResponse<Match[]>> => await axios.get("/match/admin/all"),
+  getMatches: async (params?: PaginationParams): Promise<AxiosResponse<GetAllMatchesResponse>> =>
+    await axios.get("/match/admin/all", { params }),
   createMatch: async (body: CreateMatchPostBody): Promise<AxiosResponse<boolean>> => await axios.post("/match", body),
   updateMatch: async (body: Match, id: string) => await axios.patch(`/match/${id}`, body),
   deleteMatch: async (matchId: string): Promise<AxiosResponse<boolean>> => await axios.delete(`/match/${matchId}`),

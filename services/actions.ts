@@ -17,6 +17,7 @@ import { configService, gameService, groupService, matchService, teamService, us
 import { AxiosResponse } from "axios";
 import { removeUserTokenFromCookie } from "util/commons";
 import { redirect } from "next/navigation";
+import { SortOrder } from "util/enums";
 
 export async function GetGroupsAction() {
   try {
@@ -128,7 +129,7 @@ export async function updateSettingsAction(configName: string, value: string) {
 export async function DeleteAction(
   id: string,
   deleteRequest: (id: string) => Promise<AxiosResponse<boolean>>,
-  refreshPath?: string
+  refreshPath?: string,
 ) {
   try {
     await deleteRequest(id);
@@ -152,7 +153,12 @@ export async function GetTeamsAction() {
 
 export async function GetMatchAction() {
   try {
-    const data = await matchService.getMatches();
+    const data = await matchService.getMatches({
+      page: 0,
+      limit: 10,
+      sort: "createdAt",
+      order: SortOrder.desc,
+    });
     return data.data;
   } catch (error: unknown) {
     const errorMsg = ErrorHandler(error);

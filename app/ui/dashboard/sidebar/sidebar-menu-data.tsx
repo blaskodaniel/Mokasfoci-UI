@@ -37,6 +37,11 @@ export const SideBarMenuData: SideBarElement[] = [
         icon: <GiSoccerField />,
       },
       {
+        title: "Mérkőzések",
+        path: "/dashboard/matches_new",
+        icon: <GiSoccerField />,
+      },
+      {
         title: "Players",
         path: "/dashboard/users",
         icon: <GiSoccerKick />,

@@ -1,3 +1,4 @@
+import { MatchOutcome, MatchStatus, MatchType } from "util/enums";
 import { z } from "zod";
 
 export const LoginFormSchema = z.object({
@@ -43,4 +44,22 @@ export const CreateTransactionSchema = z.object({
   comment: z.string().optional(),
   matchid: z.string().optional(),
   couponid: z.string().optional(),
+});
+
+export const EditMatchSchema = z.object({
+  teamA: z.string().optional(),
+  teamB: z.string().optional(),
+  teamAPlaceholder: z.string().optional(),
+  teamBPlaceholder: z.string().optional(),
+  goalA: z.coerce.number().optional(),
+  goalB: z.coerce.number().optional(),
+  oddsAwin: z.coerce.number().optional(),
+  oddsDraw: z.coerce.number().optional(),
+  oddsBwin: z.coerce.number().optional(),
+  date: z.date(),
+  type: z.nativeEnum(MatchType),
+  status: z.nativeEnum(MatchStatus),
+  outcome: z.nativeEnum(MatchOutcome).nullable().optional(),
+  location: z.string().optional(),
+  comment: z.string().optional(),
 });

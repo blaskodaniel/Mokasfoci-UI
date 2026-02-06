@@ -13,14 +13,14 @@ interface ColumnProps {
 
 const EditableCell = ({ getValue, row, column, table, width }: ColumnProps) => {
   const initialValue = getValue();
-  const [value, setValue] = useState(initialValue || "");
+  const [value, setValue] = useState(initialValue ?? "");
 
   const onBlur = () => {
     table.options.meta?.updateData(row.index, column.id, value);
   };
 
   useEffect(() => {
-    setValue(initialValue);
+    setValue(initialValue ?? "");
   }, [initialValue]);
 
   return (

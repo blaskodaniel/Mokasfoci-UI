@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { COOKIE_NAME } from "./config";
-import { MatchOutcome } from "./enums";
+import { MatchOutcome, MatchStatus, MatchType } from "./enums";
 
 export async function setUserTokenToCookie(token: string) {
   const { cookies } = await import("next/headers");
@@ -85,5 +85,43 @@ export const formatNumber = (num: number, compact: boolean = false): string => {
   } else {
     // Szóközzel elválasztott formátum: 1 234 567
     return new Intl.NumberFormat("hu-HU").format(num);
+  }
+};
+
+export const getMatchStatusInfo = (status: MatchStatus | null): { color: string; text: string; className?: string } => {
+  switch (status) {
+    case MatchStatus.enabled:
+      return { color: "", text: "Látható", className: "" };
+    case MatchStatus.finished:
+      return { color: "bg-gray-600", text: "Vége", className: "" };
+    case MatchStatus.playing:
+      return {
+        color: "bg-red-600",
+        text: "LIVE",
+        className: "animate-pulse text-white",
+      };
+    default:
+      return { color: "bg-yellow-600", text: "Ismeretlen" };
+  }
+};
+
+export const getMatchTypeText = (type: MatchType): string => {
+  switch (type) {
+    case MatchType.Final:
+      return "Döntő";
+    case MatchType.Semifinal:
+      return "Elődöntő";
+    case MatchType.Quarterfinal:
+      return "Negyedöntő";
+    case MatchType.RoundOf16:
+      return "Nyolcaddöntő";
+    case MatchType.GroupStageRound1:
+      return "Csoportkör 1. forduló";
+    case MatchType.GroupStageRound2:
+      return "Csoportkör 2. forduló";
+    case MatchType.GroupStageRound3:
+      return "Csoportkör 3. forduló";
+    default:
+      return "-";
   }
 };
