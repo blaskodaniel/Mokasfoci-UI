@@ -30,7 +30,8 @@ const ConfirmationModal = ({
   variant = "default",
 }: ConfirmationModalProps) => {
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} modal={false}>
+      {isOpen && <div className="fixed inset-0 bg-black/50 z-40" />}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>

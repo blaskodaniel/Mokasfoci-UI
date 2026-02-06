@@ -9,6 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { IoSaveOutline } from "react-icons/io5";
+import { X } from "lucide-react";
 import { updateMatchAction } from "services/actions";
 import { toast } from "@/components/ui/use-toast";
 import { DateTimePicker } from "@ui/dashboard/components/DateTimePicker/dateTimePicker";
@@ -54,23 +55,18 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
         comment: match.comment || "",
       });
     }
-  }, [match, isOpen, form]);
+  }, [match, isOpen]);
 
   const handleSubmit = async (values: z.infer<typeof EditMatchSchema>) => {
     if (!match?._id) return;
 
-    // Filter out undefined/null/empty strings if necessary, but for update we might want to send nulls?
-    // Usually standard practice is to send what's in the form.
-    // However, the action likely expects a partial object or full object.
-    // Let's coerce and clean.
-
     const payload = {
       ...values,
       _id: match._id,
+      ...(values.teamA ? { teamA: values.teamA } : { teamA: null }),
+      ...(values.teamB ? { teamB: values.teamB } : { teamB: null }),
     };
 
-    // Assuming updateMatchAction takes the payload directly or we need to wrap it.
-    // previous code: updateMatchAction(body)
     await updateMatchAction(payload as any);
 
     queryClient.invalidateQueries({ queryKey: ["matches"] });
@@ -82,18 +78,9 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent
-        className="w-[95vw] max-w-[95vw] sm:w-[70vw] sm:max-w-[70vw]"
-        onOpenAutoFocus={(e) => {
-          // Prevent auto-focus to avoid conflicts with dropdown menu
-          e.preventDefault();
-        }}
-        onCloseAutoFocus={(e) => {
-          // Prevent auto-focus return to avoid aria-hidden issues
-          e.preventDefault();
-        }}
-      >
+    <Dialog open={isOpen} modal={false}>
+      {isOpen && <div className="fixed inset-0 bg-black/50 z-40"></div>}
+      <DialogContent className="w-[95vw] max-w-[95vw] sm:w-[70vw] sm:max-w-[70vw]">
         <DialogHeader>
           <DialogTitle>Mérkőzés szerkesztése</DialogTitle>
           <DialogDescription className="sr-only">Szerkeszd a mérkőzés adatait az alábbi űrlapon</DialogDescription>
@@ -108,20 +95,31 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Hazai csapat</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Válassz csapatot" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {teams.map((team) => (
-                          <SelectItem key={team._id} value={team._id}>
-                            {team.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="relative">
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Válassz csapatot" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {teams.map((team) => (
+                            <SelectItem key={team._id} value={team._id}>
+                              {team.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {field.value && (
+                        <button
+                          type="button"
+                          onClick={() => field.onChange("")}
+                          className="absolute right-8 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -243,20 +241,31 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Vendég csapat</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Válassz csapatot" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {teams.map((team) => (
-                          <SelectItem key={team._id} value={team._id}>
-                            {team.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="relative">
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Válassz csapatot" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {teams.map((team) => (
+                            <SelectItem key={team._id} value={team._id}>
+                              {team.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {field.value && (
+                        <button
+                          type="button"
+                          onClick={() => field.onChange("")}
+                          className="absolute right-8 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -379,7 +388,10 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
               />
             </div>
 
-            <div className="col-span-1 sm:col-span-2 flex justify-end mt-4">
+            <div className="col-span-1 sm:col-span-2 flex justify-end mt-4 gap-4">
+              <Button variant="outline" type="button" onClick={onClose}>
+                Mégsem
+              </Button>
               <Button className="bg-emerald-700 hover:bg-emerald-600" variant="outline" type="submit">
                 <IoSaveOutline className="mr-2 h-4 w-4" />
                 Mentés

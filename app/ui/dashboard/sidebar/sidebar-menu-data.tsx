@@ -32,13 +32,8 @@ export const SideBarMenuData: SideBarElement[] = [
         icon: <RiTeamLine />,
       },
       {
-        title: "Matches",
-        path: "/dashboard/matches",
-        icon: <GiSoccerField />,
-      },
-      {
         title: "Mérkőzések",
-        path: "/dashboard/matches_new",
+        path: "/dashboard/matches",
         icon: <GiSoccerField />,
       },
       {

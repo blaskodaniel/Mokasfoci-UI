@@ -1,12 +1,11 @@
 import { ScheduleMatch, Team } from "services/types";
-import { MatchTableItem } from "../matches/types";
+import { MatchTableItem } from "../matches_old/types";
 import { MatchStatusBadge, SchedulerStatusBadge } from "./status-badges";
 import { format } from "date-fns";
 import { getMatchTypeText } from "util/commons";
 import { MatchOutcome } from "util/enums";
 import { MdOutlineTimer, MdPriceCheck } from "react-icons/md";
 import MatchActionMenu from "./MatchActionMenu";
-import Legend from "./legend";
 
 interface MatchListProps {
   matches: MatchTableItem[];
@@ -27,8 +26,6 @@ const MatchList = ({
   onRevertCalculation,
   isMobile,
 }: MatchListProps) => {
-  console.log(matches);
-
   return (
     <div className="flex gap-1 flex-col">
       {matches.map((match) => (
@@ -43,9 +40,9 @@ const MatchList = ({
             <span>{match?.date && format(new Date(match.date), "HH:mm")}</span>
           </div>
           <div className="flex gap-2 flex-1">
-            <div>{match?.goalA || ""}</div>
+            <div>{match?.goalA ?? ""}</div>
             <div>-</div>
-            <div>{match?.goalB || ""}</div>
+            <div>{match?.goalB ?? ""}</div>
           </div>
           <div className="font-bold flex-[2]">
             {match.teamA?.name || match.teamAPlaceholder || "-"} - {match.teamB?.name || match.teamBPlaceholder || "-"}
@@ -71,6 +68,7 @@ const MatchList = ({
                   : "Döntetlen"
               : "-"}
           </div>
+          <div className="flex-1 text-xs">{match.comment || "-"}</div>
           <div>
             <MatchActionMenu
               match={match}
@@ -82,8 +80,6 @@ const MatchList = ({
           </div>
         </div>
       ))}
-
-      <Legend />
     </div>
   );
 };
