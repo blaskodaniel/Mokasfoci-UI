@@ -13,6 +13,7 @@ function MobileActions<T>({
   onDelete,
   onCalculation,
   onRevertCalculation,
+  onValidation,
   rowData,
 }: ITableActionsProps<T>) {
   return (
@@ -55,6 +56,13 @@ function MobileActions<T>({
           }}
         >
           Delete
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            onValidation?.(rowData);
+          }}
+        >
+          Score validation
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

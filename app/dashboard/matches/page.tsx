@@ -20,6 +20,7 @@ import EditMatchDialog from "./editDialog";
 import { GoPlus } from "react-icons/go";
 import Pagination from "./Pagination";
 import Legend from "./legend";
+import MatchInfoDialog from "./infoDialog";
 
 const MatchesList = () => {
   const isDesktop = useMediaQuery(`(min-width: ${Breakpoints.tablet})`);
@@ -86,6 +87,7 @@ const MatchesList = () => {
   const reversCalculateMatchMutation = useRevertMatchCalculation();
 
   const [editingMatch, setEditingMatch] = useState<Match | null>(null);
+  const [infoMatch, setInfoMatch] = useState<Match | null>(null);
 
   const calculateScoreByMatchMutation = useMutation({
     mutationFn: (matchId: string) =>
@@ -105,6 +107,10 @@ const MatchesList = () => {
 
   const onEdit = useCallback((match: Match) => {
     setEditingMatch(match);
+  }, []);
+
+  const onShowInfo = useCallback((match: Match) => {
+    setInfoMatch(match);
   }, []);
 
   const onDelete = useCallback(
@@ -165,7 +171,8 @@ const MatchesList = () => {
 
   return (
     <div>
-      <div className="flex justify-end mt-5 mb-3">
+      <div className="flex justify-between items-center mt-5 mb-3">
+        <div>Mérkőzések száma: {matchesData?.data.total}</div>
         <Button className="bg-emerald-700 hover:bg-emerald-600 h-8" variant="outline" onClick={onOpen} type="button">
           <GoPlus className="mr-2 h-4 w-4" />
           Új mérkőzés
@@ -178,6 +185,7 @@ const MatchesList = () => {
         onDelete={onDelete}
         onCalculation={onCalculation}
         onRevertCalculation={onRevertCalculation}
+        onShowInfo={onShowInfo}
         isMobile={!isDesktop}
       />
       {/* PAGINATION */}
@@ -201,6 +209,7 @@ const MatchesList = () => {
         match={editingMatch || undefined}
         teams={teams}
       />
+      <MatchInfoDialog isOpen={!!infoMatch} onClose={() => setInfoMatch(null)} match={infoMatch} />
     </div>
   );
 };

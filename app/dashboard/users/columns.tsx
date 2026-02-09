@@ -14,14 +14,11 @@ import EditableCell from "./editableCell";
 interface IUsersColumnProps {
   onEdit: (team: User) => void;
   onDelete: (id: string) => void;
+  onValidation: (id: string) => void;
   isMobile: boolean;
 }
 
-export const UsersColumns = ({
-  onEdit,
-  onDelete,
-  isMobile,
-}: IUsersColumnProps): ColumnDef<User>[] => [
+export const UsersColumns = ({ onEdit, onDelete, onValidation, isMobile }: IUsersColumnProps): ColumnDef<User>[] => [
   {
     accessorKey: "avatar",
     header: "Avatar",
@@ -96,6 +93,7 @@ export const UsersColumns = ({
           <DesktopActions
             onEdit={onEdit}
             onDelete={(row) => onDelete(row._id)}
+            onValidation={(row) => onValidation(row._id)}
             rowData={editedRow}
           />
         );
@@ -104,6 +102,7 @@ export const UsersColumns = ({
         <MobileActions
           onEdit={onEdit}
           onDelete={(row) => onDelete(row._id)}
+          onValidation={(row) => onValidation(row._id)}
           rowData={editedRow}
         />
       );

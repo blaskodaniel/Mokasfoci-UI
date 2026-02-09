@@ -3,7 +3,7 @@ import { MatchTableItem } from "../matches_old/types";
 import { MatchStatusBadge, SchedulerStatusBadge } from "./status-badges";
 import { format } from "date-fns";
 import { getMatchTypeText } from "util/commons";
-import { MatchOutcome } from "util/enums";
+import { MatchOutcome, MatchStatus } from "util/enums";
 import { MdOutlineTimer, MdPriceCheck } from "react-icons/md";
 import MatchActionMenu from "./MatchActionMenu";
 
@@ -14,6 +14,7 @@ interface MatchListProps {
   onDelete: (id: string) => void;
   onCalculation: (match: MatchTableItem) => void;
   onRevertCalculation: (match: MatchTableItem) => void;
+  onShowInfo: (match: MatchTableItem) => void;
   isMobile: boolean;
 }
 
@@ -24,6 +25,7 @@ const MatchList = ({
   onDelete,
   onCalculation,
   onRevertCalculation,
+  onShowInfo,
   isMobile,
 }: MatchListProps) => {
   return (
@@ -44,7 +46,12 @@ const MatchList = ({
             <div>-</div>
             <div>{match?.goalB ?? ""}</div>
           </div>
-          <div className="font-bold flex-[2]">
+          <div
+            className={`font-bold flex-[2] transition-colors ${
+              match.status !== MatchStatus.disabled ? "cursor-pointer hover:text-blue-500" : "cursor-default"
+            }`}
+            onClick={() => match.status !== MatchStatus.disabled && onShowInfo(match)}
+          >
             {match.teamA?.name || match.teamAPlaceholder || "-"} - {match.teamB?.name || match.teamBPlaceholder || "-"}
           </div>
           <div className="flex-1 text-sm font-light">{getMatchTypeText(match.type)}</div>

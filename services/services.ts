@@ -13,11 +13,13 @@ import {
   GetSchedulerStatusResponse,
   Group,
   Match,
+  MatchInfoResponse,
   PaginationParams,
   Team,
   UpdateMatchBody,
   User,
   UserCreateBody,
+  UserScoresValidationResponse,
 } from "./types";
 
 export const teamService = {
@@ -42,6 +44,8 @@ export const matchService = {
   createMatch: async (body: CreateMatchPostBody): Promise<AxiosResponse<boolean>> => await axios.post("/match", body),
   updateMatch: async (body: Match, id: string) => await axios.patch(`/match/${id}`, body),
   deleteMatch: async (matchId: string): Promise<AxiosResponse<boolean>> => await axios.delete(`/match/${matchId}`),
+  getMatchInfo: async (matchId: string): Promise<AxiosResponse<MatchInfoResponse>> =>
+    await axios.get(`/match/admin/info/${matchId}`),
 };
 
 export const userService = {
@@ -50,6 +54,8 @@ export const userService = {
   deleteUser: async (userId: string): Promise<AxiosResponse<boolean>> => await axios.delete(`/user/admin/${userId}`),
   createUser: async (body: UserCreateBody): Promise<AxiosResponse<boolean>> =>
     await axios.post("/user/admin/create", body),
+  userScoresValidation: async (userId: string): Promise<AxiosResponse<UserScoresValidationResponse>> =>
+    await axios.get(`/admin/user/${userId}/score-check`),
 };
 
 export const configService = {

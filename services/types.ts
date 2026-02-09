@@ -82,11 +82,28 @@ export type Match = {
   isCalculated?: boolean;
 };
 
+export type MatchInfoResponse = {
+  success: boolean;
+  data: MatchInfo;
+};
+
+export type MatchInfo = {
+  totalPlayers: number;
+  playersWhoBet: number;
+  playersWhoDidNotBet: number;
+  betPercentage: string;
+  correctPredictions: number;
+  incorrectPredictions: number;
+  maxWinAmount: number;
+  isCalculated: boolean;
+};
+
 export interface ITableActionsProps<T> {
   rowData: T;
   onEdit: (row: T) => void;
   onDelete?: (row: T) => void;
   onCalculation?: (row: T) => void;
+  onValidation?: (row: T) => void;
   onRevertCalculation?: (row: T) => void;
 }
 
@@ -220,4 +237,33 @@ export interface DashboardStats {
     totalSystemProfit: number;
     recentTransactions: Transaction[];
   };
+}
+
+export interface UserScoresValidation {
+  userId: string;
+  username: string;
+  email: string;
+  transactionCount: number;
+  currentScores: {
+    availableScore: number;
+    profitScore: number;
+  };
+  calculatedScores: {
+    availableScore: number;
+    profitScore: number;
+  };
+  differences: {
+    availableScore: number;
+    profitScore: number;
+  };
+  isCorrect: {
+    availableScore: boolean;
+    profitScore: boolean;
+    overall: boolean;
+  };
+}
+
+export interface UserScoresValidationResponse {
+  success: boolean;
+  data: UserScoresValidation;
 }

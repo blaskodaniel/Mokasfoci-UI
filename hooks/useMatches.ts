@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { gameService, matchService, userService } from "services/services";
-import { GetAllMatchesResponse, Match } from "services/types";
+import { gameService, matchService } from "services/services";
+import { GetAllMatchesResponse, MatchInfoResponse } from "services/types";
 
 export const useGetAllMatches = (enabled: boolean = true) => {
   return useQuery<GetAllMatchesResponse>({
@@ -30,5 +30,16 @@ export const useRevertMatchCalculation = () => {
       queryClient.invalidateQueries({ queryKey: ["matches"] });
       queryClient.invalidateQueries({ queryKey: ["coupons"] });
     },
+  });
+};
+
+export const useGetMatchInfo = (matchId: string) => {
+  return useQuery<MatchInfoResponse>({
+    queryKey: ["match-info", matchId],
+    queryFn: async () => {
+      const response = await matchService.getMatchInfo(matchId);
+      return response.data;
+    },
+    enabled: !!matchId,
   });
 };
