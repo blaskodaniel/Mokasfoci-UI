@@ -55,3 +55,9 @@ export enum SortOrder {
   asc = "asc",
   desc = "desc",
 }
+
+export enum LogTypes {
+  error = "error",
+  info = "info",
+  warning = "warning",
+}

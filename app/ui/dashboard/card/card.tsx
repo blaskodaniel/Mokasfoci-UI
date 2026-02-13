@@ -10,7 +10,7 @@ const Card: FC<CardProps> = ({ title, value, icon, description }) => {
       <DataPart>
         <DataTitle>{title || ""}</DataTitle>
         <DataValue>{value || "-"}</DataValue>
-        <DataInfo>{description || ""}</DataInfo>
+        <DataInfo className="text-sm font-thin text-gray-300">{description || ""}</DataInfo>
       </DataPart>
     </Container>
   );

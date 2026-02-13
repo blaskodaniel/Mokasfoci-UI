@@ -1,10 +1,9 @@
+"use client";
+
+import LogList from "./logList";
+
 const LogsPage = () => {
-  return (
-    <>
-      <h1>Logs</h1>
-      <div>Logs page</div>
-    </>
-  );
+  return <LogList />;
 };
 
 export default LogsPage;

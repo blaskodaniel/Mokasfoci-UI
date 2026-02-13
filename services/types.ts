@@ -1,4 +1,13 @@
-import { CouponStatus, CouponType, MatchOutcome, MatchStatus, MatchType, SortOrder, TransactionType } from "util/enums";
+import {
+  CouponStatus,
+  CouponType,
+  LogTypes,
+  MatchOutcome,
+  MatchStatus,
+  MatchType,
+  SortOrder,
+  TransactionType,
+} from "util/enums";
 
 export interface PaginationResponse<T> {
   items: T[];
@@ -13,6 +22,7 @@ export interface PaginationParams {
   sort: string;
   order: SortOrder;
   search?: string;
+  type?: string;
 }
 
 export type Group = {
@@ -121,7 +131,7 @@ type UserData = {
   profitScore: number;
   availableScore: number;
   notbetcount: number;
-  winteamcount: number;
+  groupWinCount: number;
   couponwin: number;
   couponlost: number;
   coupons: number;
@@ -187,6 +197,18 @@ export interface Transaction {
   couponid?: Coupon;
 }
 
+export interface Log {
+  _id: string;
+  message: string;
+  stack?: string;
+  type: LogTypes;
+  useragent?: string;
+  ip?: string;
+  datetime: string;
+  identityEmail?: string;
+  errorCode?: number;
+}
+
 export interface GetAllTransactionsResponse {
   success: boolean;
   data: PaginationResponse<Transaction>;
@@ -231,8 +253,10 @@ export interface DashboardStats {
   success: boolean;
   data: {
     totalPlayers: number;
+    lastRegistrationDate: string;
     activeCoupons: number;
     errorLogsCount: number;
+    lastErrorLogDate: string;
     totalSystemBalance: number;
     totalSystemProfit: number;
     recentTransactions: Transaction[];
@@ -266,4 +290,14 @@ export interface UserScoresValidation {
 export interface UserScoresValidationResponse {
   success: boolean;
   data: UserScoresValidation;
+}
+
+export interface GetLogsResponse {
+  success: boolean;
+  data: {
+    items: Log[];
+    total: number;
+    page: number;
+    limit: number;
+  };
 }

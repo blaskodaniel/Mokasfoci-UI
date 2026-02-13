@@ -1,7 +1,9 @@
-import CouponTable from "./table";
+"use client";
+
+import CouponList from "./couponList";
 
 const CouponsPage = () => {
-  return <CouponTable filteredColumnNames={["username"]} />;
+  return <CouponList />;
 };
 
 export default CouponsPage;

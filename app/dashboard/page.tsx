@@ -4,7 +4,8 @@ import Card from "@ui/dashboard/card/card";
 import Chart from "@ui/dashboard/chart/chart";
 import { Container, Section } from "@ui/dashboard/dashboard.style";
 import LatestTable from "@ui/dashboard/latestTable";
-import { format } from "date-fns";
+import { format, formatRelative } from "date-fns";
+import { hu } from "date-fns/locale";
 import { useGetDasboardStats } from "hooks/useDashboard";
 import { Tag } from "lucide-react";
 import { useEffect, useMemo } from "react";
@@ -32,9 +33,13 @@ const DashboardPage = () => {
         <Card
           title="Játékosok száma"
           value={stats?.totalPlayers.toString()}
-          description="regisztrált játékosok száma"
+          description={`Utolsó: ${stats?.lastRegistrationDate ? formatRelative(new Date(stats.lastRegistrationDate), new Date(), { locale: hu }) : "-"}`}
         />
-        <Card title="Error logok" value={stats?.errorLogsCount.toString()} description="" />
+        <Card
+          title="Error logok"
+          value={stats?.errorLogsCount.toString()}
+          description={`Utolsó: ${stats?.lastErrorLogDate ? formatRelative(new Date(stats.lastErrorLogDate), new Date(), { locale: hu }) : "-"}`}
+        />
         <Card title="Aktív fogadások" value={stats?.activeCoupons.toString()} description="játékban lévő fogadások" />
         <Card
           title="Össz felhasználható"
@@ -54,7 +59,7 @@ const DashboardPage = () => {
             },
             { header: "Típus", render: (row) => row.type },
             { header: "Összeg", render: (row) => formatNumber(row.amount) },
-            { header: "Dátum", render: (row) => format(new Date(row.date), "eee HH:mm") },
+            { header: "Dátum", render: (row) => formatRelative(new Date(row.date), new Date(), { locale: hu }) },
           ]}
           data={stats.recentTransactions}
         />

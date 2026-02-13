@@ -10,6 +10,7 @@ import {
   GetAllCouponsResponse,
   GetAllMatchesResponse,
   GetAllTransactionsResponse,
+  GetLogsResponse,
   GetSchedulerStatusResponse,
   Group,
   Match,
@@ -100,4 +101,9 @@ export const gameService = {
 
 export const MatchSchedulerService = {
   getStatus: async (): Promise<AxiosResponse<GetSchedulerStatusResponse>> => await axios.get("/admin/scheduler-status"),
+};
+
+export const LogService = {
+  getLogs: async (params: PaginationParams): Promise<AxiosResponse<GetLogsResponse>> =>
+    await axios.get("/admin/logs", { params }),
 };
