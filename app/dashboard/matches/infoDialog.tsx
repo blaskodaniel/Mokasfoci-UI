@@ -160,7 +160,8 @@ const MatchInfoDialog = ({ match, isOpen, onClose }: MatchInfoDialogProps) => {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-600">Legnagyobb nyeremény</p>
-                  <p className="text-3xl font-bold text-yellow-600">{matchInfo.maxWinAmount.toLocaleString()} pont</p>
+                  <p className="text-xl font-bold text-yellow-600">{matchInfo.maxWinAmount.toLocaleString()} pont</p>
+                  <p className="text-sm font-medium text-gray-300">{matchInfo.bestPlayerName}</p>
                 </div>
               </div>
             </div>

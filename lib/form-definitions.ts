@@ -51,15 +51,39 @@ export const EditMatchSchema = z.object({
   teamB: z.string().optional(),
   teamAPlaceholder: z.string().optional(),
   teamBPlaceholder: z.string().optional(),
-  goalA: z.coerce.number().optional(),
-  goalB: z.coerce.number().optional(),
+  goalA: z
+    .union([z.string(), z.number(), z.null()])
+    .transform((val) => (val === "" || val === null ? null : Number(val)))
+    .optional(),
+  goalB: z
+    .union([z.string(), z.number(), z.null()])
+    .transform((val) => (val === "" || val === null ? null : Number(val)))
+    .optional(),
   oddsAwin: z.coerce.number().optional(),
   oddsDraw: z.coerce.number().optional(),
   oddsBwin: z.coerce.number().optional(),
+  position: z.coerce.number().optional(),
   date: z.date(),
   type: z.nativeEnum(MatchType),
   status: z.nativeEnum(MatchStatus),
   outcome: z.nativeEnum(MatchOutcome).nullable().optional(),
   location: z.string().optional(),
   comment: z.string().optional(),
+  additionalOdds: z
+    .object({
+      advancement: z
+        .object({
+          teamAOdds: z.coerce.number().optional(),
+          teamBOdds: z.coerce.number().optional(),
+        })
+        .optional(),
+      scoreOdds: z
+        .object({
+          exactMatch: z.coerce.number().optional(),
+          goalDifference: z.coerce.number().optional(),
+          outcome: z.coerce.number().optional(),
+        })
+        .optional(),
+    })
+    .optional(),
 });

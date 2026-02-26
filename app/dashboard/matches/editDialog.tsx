@@ -53,11 +53,14 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
         outcome: match.outcome,
         location: match.location || "",
         comment: match.comment || "",
+        additionalOdds: match.additionalOdds,
+        position: match.position,
       });
     }
-  }, [match, isOpen]);
+  }, [match, isOpen, form]);
 
   const handleSubmit = async (values: z.infer<typeof EditMatchSchema>) => {
+    console.log(values);
     if (!match?._id) return;
 
     const payload = {
@@ -80,13 +83,23 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
   return (
     <Dialog open={isOpen} modal={false}>
       {isOpen && <div className="fixed inset-0 bg-black/50 z-40"></div>}
-      <DialogContent className="w-[95vw] max-w-[95vw] sm:w-[70vw] sm:max-w-[70vw]">
+      <DialogContent className="w-[90vw] max-w-[90vw] sm:w-[90vw] md:w-[90vw] lg:w-[70vw]">
         <DialogHeader>
           <DialogTitle>Mérkőzés szerkesztése</DialogTitle>
           <DialogDescription className="sr-only">Szerkeszd a mérkőzés adatait az alábbi űrlapon</DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit, (errors) => {
+              console.log("Validation Errors:", errors);
+              toast({
+                title: "Validation Error",
+                description: "Please check the console for validation errors.",
+                variant: "destructive",
+              });
+            })}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+          >
             {/* Column 1 */}
             <div className="space-y-3">
               <FormField
@@ -98,7 +111,7 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
                     <div className="relative">
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="border-slate-500">
                             <SelectValue placeholder="Válassz csapatot" />
                           </SelectTrigger>
                         </FormControl>
@@ -125,20 +138,6 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="teamAPlaceholder"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Hazai csapat (Placeholder)</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               <div className="flex space-x-2">
                 <FormField
                   control={form.control}
@@ -147,7 +146,29 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
                     <FormItem className="flex-1">
                       <FormLabel>Hazai gól</FormLabel>
                       <FormControl>
-                        <Input type="number" {...field} />
+                        <Input
+                          type="number"
+                          {...field}
+                          value={field.value ?? ""}
+                          onChange={(e) => field.onChange(e.target.value === "" ? null : Number(e.target.value))}
+                          className="border-slate-600"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="flex space-x-2">
+                <FormField
+                  control={form.control}
+                  name="teamAPlaceholder"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Hazai csapat (Placeholder)</FormLabel>
+                      <FormControl>
+                        <Input {...field} className="border-slate-600" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -155,12 +176,12 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
                 />
                 <FormField
                   control={form.control}
-                  name="goalB"
+                  name="teamBPlaceholder"
                   render={({ field }) => (
                     <FormItem className="flex-1">
-                      <FormLabel>Vendég gól</FormLabel>
+                      <FormLabel>Vendég csapat (Placeholder)</FormLabel>
                       <FormControl>
-                        <Input type="number" {...field} />
+                        <Input className="border-slate-500" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -176,7 +197,7 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
                     <FormLabel>Típus</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="border-slate-500">
                           <SelectValue placeholder="Válassz típust" />
                         </SelectTrigger>
                       </FormControl>
@@ -201,7 +222,7 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
                     <FormLabel>Státusz</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="border-slate-500">
                           <SelectValue placeholder="Válassz státuszt" />
                         </SelectTrigger>
                       </FormControl>
@@ -225,7 +246,21 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
                   <FormItem>
                     <FormLabel>Helyszín</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input className="border-slate-600" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="position"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Pozíció</FormLabel>
+                    <FormControl>
+                      <Input className="border-slate-600" type="number" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -244,7 +279,7 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
                     <div className="relative">
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="border-slate-500">
                             <SelectValue placeholder="Válassz csapatot" />
                           </SelectTrigger>
                         </FormControl>
@@ -273,12 +308,18 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
 
               <FormField
                 control={form.control}
-                name="teamBPlaceholder"
+                name="goalB"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Vendég csapat (Placeholder)</FormLabel>
+                  <FormItem className="flex-1">
+                    <FormLabel>Vendég gól</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        type="number"
+                        {...field}
+                        value={field.value ?? ""}
+                        onChange={(e) => field.onChange(e.target.value === "" ? null : Number(e.target.value))}
+                        className="border-slate-600"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -293,7 +334,7 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
                     <FormItem className="flex-1">
                       <FormLabel>Hazai odds</FormLabel>
                       <FormControl>
-                        <Input type="number" step="0.01" {...field} />
+                        <Input className="border-slate-500" type="number" step="0.01" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -306,7 +347,7 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
                     <FormItem className="flex-1">
                       <FormLabel>Döntetlen odds</FormLabel>
                       <FormControl>
-                        <Input type="number" step="0.01" {...field} />
+                        <Input className="border-slate-500" type="number" step="0.01" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -319,7 +360,49 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
                     <FormItem className="flex-1">
                       <FormLabel>Vendég odds</FormLabel>
                       <FormControl>
-                        <Input type="number" step="0.01" {...field} />
+                        <Input className="border-slate-500" type="number" step="0.01" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="flex space-x-2">
+                <FormField
+                  control={form.control}
+                  name="additionalOdds.scoreOdds.exactMatch"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Telitalálat odds</FormLabel>
+                      <FormControl>
+                        <Input className="border-slate-500" type="number" step="0.01" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="additionalOdds.scoreOdds.goalDifference"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Gólkülönbség odds</FormLabel>
+                      <FormControl>
+                        <Input className="border-slate-500" type="number" step="0.01" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="additionalOdds.scoreOdds.outcome"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Csak győztes odds</FormLabel>
+                      <FormControl>
+                        <Input className="border-slate-500" type="number" step="0.01" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -338,7 +421,7 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
                         <DateTimePicker
                           granularity="minute"
                           displayFormat={{ hour24: "MMM dd - HH:mm" }}
-                          className="w-full"
+                          className="w-full border-slate-500"
                           {...field}
                         />
                       </FormControl>
@@ -356,7 +439,7 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
                     <FormLabel>Eredmény</FormLabel>
                     <Select onValueChange={field.onChange} value={field?.value || undefined}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="border-slate-500">
                           <SelectValue placeholder="Válassz eredményt" />
                         </SelectTrigger>
                       </FormControl>
@@ -380,7 +463,7 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
                   <FormItem>
                     <FormLabel>Komment</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input className="border-slate-500" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

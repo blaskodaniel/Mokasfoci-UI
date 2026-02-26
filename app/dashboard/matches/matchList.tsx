@@ -66,16 +66,8 @@ const MatchList = ({
               {match?.oddsBwin ?? "-"}
             </span>
           </div>
-          <div className="flex-1">
-            {match?.outcome
-              ? match.outcome === MatchOutcome.home
-                ? "Hazai"
-                : match.outcome === MatchOutcome.away
-                  ? "Idegen"
-                  : "Döntetlen"
-              : "-"}
-          </div>
-          <div className="flex-1 text-xs">{match.comment || "-"}</div>
+          <div className="w-[50px] text-xs text-gray-300">{match.position || "-"}</div>
+          <div className="flex-1 text-xs text-gray-300">{match.comment || "-"}</div>
           <div>
             <MatchActionMenu
               match={match}

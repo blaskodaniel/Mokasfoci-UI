@@ -1,8 +1,10 @@
 export enum MatchType {
   Final = "Final",
   Semifinal = "Semifinal",
+  ThirdPlacePlayoff = "ThirdPlacePlayoff",
   Quarterfinal = "Quarterfinal",
   RoundOf16 = "RoundOf16",
+  RoundOf32 = "RoundOf32",
   GroupStageRound1 = "GroupStageRound1",
   GroupStageRound2 = "GroupStageRound2",
   GroupStageRound3 = "GroupStageRound3",
@@ -37,7 +39,7 @@ export enum CouponStatus {
 
 export enum CouponType {
   outcomeBet = "outcomeBet",
-  notBetFine = "notBetFine",
+  scoreBet = "scoreBet",
 }
 
 export enum TransactionType {

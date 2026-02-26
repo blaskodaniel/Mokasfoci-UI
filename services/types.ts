@@ -90,6 +90,18 @@ export type Match = {
   outcome?: MatchOutcome;
   externalID?: string;
   isCalculated?: boolean;
+  additionalOdds?: {
+    advancement?: {
+      teamAOdds: number;
+      teamBOdds: number;
+    };
+    scoreOdds?: {
+      exactMatch: number;
+      goalDifference: number;
+      outcome: number;
+    };
+  };
+  position?: number;
 };
 
 export type MatchInfoResponse = {
@@ -105,6 +117,7 @@ export type MatchInfo = {
   correctPredictions: number;
   incorrectPredictions: number;
   maxWinAmount: number;
+  bestPlayerName: string;
   isCalculated: boolean;
 };
 
@@ -184,6 +197,10 @@ export interface Coupon {
   outcome: MatchOutcome;
   date: string;
   type: CouponType;
+  isFavoriteTeam?: boolean;
+  scoreTeamA?: number;
+  scoreTeamB?: number;
+  teamId?: string;
 }
 
 export interface Transaction {

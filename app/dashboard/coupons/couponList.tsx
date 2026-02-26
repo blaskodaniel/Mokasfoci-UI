@@ -3,33 +3,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { gameService } from "services/services";
-import { CouponStatus, SortOrder } from "util/enums";
-import { format } from "date-fns";
+import { CouponStatus, CouponType, MatchStatus, SortOrder } from "util/enums";
+import { Coupon } from "services/types";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Coupon } from "services/types";
 import { IoSearchOutline } from "react-icons/io5";
-import { FaRegCheckCircle, FaTimesCircle, FaClock, FaCheck, FaTimes } from "react-icons/fa";
-import { MdOutlineAttachMoney } from "react-icons/md";
-import { VscError } from "react-icons/vsc";
-
-const CouponStatusBadge = ({ status }: { status: CouponStatus }) => {
-  switch (status) {
-    case CouponStatus.active:
-      return <span className="bg-green-500 text-white text-xs px-2 py-0.5 rounded-full">Active</span>;
-    case CouponStatus.inactive:
-      return <span className="bg-gray-400 text-white text-xs px-2 py-0.5 rounded-full">Inactive</span>;
-    case CouponStatus.closed:
-      return <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">Closed</span>;
-    case CouponStatus.inprogress:
-      return <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">In Progress</span>;
-    case CouponStatus.processed:
-      return <span className="bg-purple-500 text-white text-xs px-2 py-0.5 rounded-full">Processed</span>;
-    default:
-      return <span className="bg-gray-300 text-gray-700 text-xs px-2 py-0.5 rounded-full">{status}</span>;
-  }
-};
+import CouponListItem from "./components/CouponListItem";
 
 const CouponList = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -40,6 +20,7 @@ const CouponList = () => {
   const [matchFilter, setMatchFilter] = useState("");
   const [successFilter, setSuccessFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [typeFilter, setTypeFilter] = useState<string>("all");
 
   const queryParams = useMemo(() => {
     const params: any = {
@@ -53,9 +34,10 @@ const CouponList = () => {
     if (matchFilter) params.match = matchFilter;
     if (successFilter !== "all") params.success = successFilter === "true";
     if (statusFilter !== "all") params.status = statusFilter;
+    if (typeFilter !== "all") params.type = typeFilter;
 
     return params;
-  }, [currentPage, size, usernameFilter, matchFilter, successFilter, statusFilter]);
+  }, [currentPage, size, usernameFilter, matchFilter, successFilter, statusFilter, typeFilter]);
 
   const {
     data: couponsData,
@@ -139,6 +121,23 @@ const CouponList = () => {
             </Select>
           </div>
 
+          <div className="flex flex-col gap-1 w-[150px]">
+            <label className="text-sm text-gray-600">Type</label>
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger className="h-9">
+                <SelectValue placeholder="All" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                {Object.values(CouponType).map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {s}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           <Button
             variant="outline"
             size="sm"
@@ -160,55 +159,7 @@ const CouponList = () => {
         {!isLoading && coupons.length === 0 && <div className="p-4 text-center text-gray-500">No coupons found.</div>}
 
         {coupons.map((coupon: Coupon) => (
-          <div key={coupon._id} className="flex gap-3 items-center border-b last:border-0 border-gray-500/30 p-2">
-            <div className="w-[80px] flex-shrink-0">
-              <CouponStatusBadge status={coupon.status} />
-            </div>
-
-            <div className="flex flex-col w-[120px] text-sm">
-              <div className="font-semibold text-white/80">{coupon.userid?.username || "Unknown"}</div>
-              <div className="text-xs text-gray-500">
-                {coupon.date && format(new Date(coupon.date), "yyyy-MM-dd HH:mm")}
-              </div>
-            </div>
-
-            <div className="flex-1 flex flex-col justify-center">
-              <div className="font-bold text-white/80">
-                {coupon.matchid?.teamA?.name || coupon.matchid?.teamAPlaceholder || "?"} -{" "}
-                {coupon.matchid?.teamB?.name || coupon.matchid?.teamBPlaceholder || "?"}
-              </div>
-              <div className="text-xs text-gray-500 flex gap-2">
-                <span>Outcome: {coupon.matchid?.outcome || "-"}</span>
-                <span>
-                  Your Bet: <span className="font-semibold text-blue-600">{coupon.outcome}</span>
-                </span>
-              </div>
-            </div>
-
-            <div className="flex gap-4 w-[250px] items-center text-sm">
-              <div className="flex flex-col items-end flex-1">
-                <span className="text-xs text-gray-500">Odds</span>
-                <span className="font-mono">{coupon.odds}</span>
-              </div>
-              <div className="flex flex-col items-end flex-1">
-                <span className="text-xs text-gray-500">Amount</span>
-                <span className="font-mono">{coupon.amount}</span>
-              </div>
-              <div className="flex flex-col items-end flex-1 font-semibold text-green-700">
-                <span className="text-xs text-gray-500">Win</span>
-                <span className="font-mono flex items-center">{coupon.success ? coupon.totalWin : 0}</span>
-              </div>
-            </div>
-
-            <div className="w-[40px] flex justify-center">
-              {coupon.status === CouponStatus.closed && coupon.success === true && (
-                <FaCheck className="text-green-500" />
-              )}
-              {coupon.status === CouponStatus.closed && coupon.success === false && (
-                <VscError className="text-red-500" />
-              )}
-            </div>
-          </div>
+          <CouponListItem key={coupon._id} coupon={coupon} />
         ))}
       </div>
 
