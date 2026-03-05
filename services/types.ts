@@ -36,7 +36,7 @@ export type Team = {
   _id: string;
   name: string;
   tla: string;
-  groupId: string;
+  groupid: Group;
   flag: string;
   win?: number;
   draw?: number;

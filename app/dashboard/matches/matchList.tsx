@@ -1,5 +1,5 @@
 import { ScheduleMatch, Team } from "services/types";
-import { MatchTableItem } from "../matches_old/types";
+import { MatchTableItem } from "./types";
 import { MatchStatusBadge, SchedulerStatusBadge } from "./status-badges";
 import { format } from "date-fns";
 import { getMatchTypeText } from "util/commons";

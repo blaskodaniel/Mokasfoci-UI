@@ -109,6 +109,8 @@ export const getMatchTypeText = (type: MatchType): string => {
   switch (type) {
     case MatchType.Final:
       return "Döntő";
+    case MatchType.ThirdPlacePlayoff:
+      return "Bronzmérkőzés";
     case MatchType.Semifinal:
       return "Elődöntő";
     case MatchType.Quarterfinal:

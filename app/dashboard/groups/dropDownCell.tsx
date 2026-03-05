@@ -1,14 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectSeparator,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Column, Row, Table } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import { Group } from "services/types";
@@ -35,20 +28,18 @@ const DropDownCell = ({ getValue, row, column, table }: ColumnProps) => {
   }, [wintemid]);
 
   return (
-    <Select
-      defaultValue={wintemid ?? undefined}
-      onValueChange={onChange}
-      value={value ?? undefined}
-    >
+    <Select defaultValue={wintemid ?? undefined} onValueChange={onChange} value={value ?? undefined}>
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Choose a team..." />
       </SelectTrigger>
       <SelectContent>
-        {teams.map((team) => (
-          <SelectItem key={team._id} value={team._id}>
-            {team.name}
-          </SelectItem>
-        ))}
+        {teams
+          .filter((team) => team.groupid?._id === row.original._id)
+          .map((team) => (
+            <SelectItem key={team._id} value={team._id}>
+              {team.name}
+            </SelectItem>
+          ))}
         <SelectSeparator />
         <Button
           className="w-full px-2"

@@ -10,9 +10,9 @@ import { DeleteMatchAction, updateMatchAction } from "services/actions";
 import { gameService, matchService, teamService } from "services/services";
 import { Match, Team } from "services/types";
 import { useDialog } from "store/useDialog";
-import { SortOrder } from "util/enums";
+import { MatchType, SortOrder } from "util/enums";
 import { Breakpoints } from "util/responsive";
-import { MatchTableItem } from "../matches_old/types";
+import { MatchTableItem } from "./types";
 import MatchList from "./matchList";
 import { Button } from "@/components/ui/button";
 import CreateMatchDialog from "./createDialog";
@@ -21,6 +21,7 @@ import { GoPlus } from "react-icons/go";
 import Pagination from "./Pagination";
 import Legend from "./legend";
 import MatchInfoDialog from "./infoDialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const MatchesList = () => {
   const isDesktop = useMediaQuery(`(min-width: ${Breakpoints.tablet})`);
@@ -32,25 +33,30 @@ const MatchesList = () => {
 
   const [currentPage, setCurrentPage] = useState(0);
   const [size, setSize] = useState(15);
+  const [typeFilter, setTypeFilter] = useState<string>("all");
 
   const { data: schedulerStatusData, error: schedulerStatusError, isLoading: schedulerStatusLoading } = useGetStatus();
+
+  const queryParams = useMemo(() => {
+    const params: any = {
+      page: currentPage + 1,
+      limit: size,
+      sort: "date",
+      order: SortOrder.desc,
+    };
+
+    if (typeFilter !== "all") params.type = typeFilter;
+
+    return params;
+  }, [currentPage, size, typeFilter]);
 
   const {
     data: matchesData,
     error: matchesError,
     isLoading: matchesLoading,
   } = useQuery({
-    queryKey: ["matches", currentPage, size, searchTerm],
-    queryFn: () =>
-      matchService
-        .getMatches({
-          page: currentPage + 1,
-          limit: size,
-          sort: "date",
-          order: SortOrder.desc,
-          search: searchTerm,
-        })
-        .then((res) => res.data),
+    queryKey: ["matches", queryParams],
+    queryFn: () => matchService.getMatches(queryParams).then((res) => res.data),
     placeholderData: (previousData) => previousData,
   });
 
@@ -171,6 +177,37 @@ const MatchesList = () => {
 
   return (
     <div>
+      <div className="flex flex-col gap-2 py-2 rounded-md ">
+        <h2 className="font-semibold text-lg mb-2">Filters</h2>
+        <div className="flex flex-wrap gap-4 items-end">
+          <div className="flex flex-col gap-1 w-[200px]">
+            <label className="text-sm text-gray-600">Type</label>
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger className="h-9">
+                <SelectValue placeholder="All" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                {Object.values(MatchType).map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {s}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setTypeFilter("all");
+            }}
+          >
+            Clear
+          </Button>
+        </div>
+      </div>
       <div className="flex justify-between items-center mt-5 mb-3">
         <div>Mérkőzések száma: {matchesData?.data.total}</div>
         <Button className="bg-emerald-700 hover:bg-emerald-600 h-8" variant="outline" onClick={onOpen} type="button">

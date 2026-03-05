@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CiMenuKebab } from "react-icons/ci";
-import { MatchTableItem } from "../matches_old/types";
+import { MatchTableItem } from "./types";
 import { MatchStatus } from "util/enums";
 import ConfirmationModal from "components/ConfirmationModal";
 
