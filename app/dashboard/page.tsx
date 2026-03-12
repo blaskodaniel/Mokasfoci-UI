@@ -29,12 +29,7 @@ const DashboardPage = () => {
 
   return (
     <Container>
-      <Section gap="20px">
-        <Card
-          title="Játékosok száma"
-          value={stats?.totalPlayers.toString()}
-          description={`Utolsó: ${stats?.lastRegistrationDate ? formatRelative(new Date(stats.lastRegistrationDate), new Date(), { locale: hu }) : "-"}`}
-        />
+      <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-3">
         <Card
           title="Error logok"
           value={stats?.errorLogsCount.toString()}
@@ -47,7 +42,15 @@ const DashboardPage = () => {
           description="összess felhasználható pont"
         />
         <Card title="Össz profit" value={formatNumber(stats?.totalSystemProfit)} description="összess profit pont" />
-      </Section>
+        <Card
+          title="Játékosok száma"
+          value={stats?.totalPlayers.toString()}
+          description={`Utolsó: ${stats?.lastRegistrationDate ? formatRelative(new Date(stats.lastRegistrationDate), new Date(), { locale: hu }) : "-"}`}
+        />
+        <Card title="Csapatok száma" value={stats?.teamsCount.toString()} description="csapatok száma" />
+        <Card title="Mérkőzések száma" value={stats?.matchesCount.toString()} description="mérkőzések száma" />
+      </div>
+
       <Section>
         <LatestTable
           title="Legutóbbi 24h tranzakciói"

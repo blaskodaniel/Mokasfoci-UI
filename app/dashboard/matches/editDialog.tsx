@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { IoSaveOutline } from "react-icons/io5";
 import { X } from "lucide-react";
-import { updateMatchAction } from "services/actions";
+import { matchService } from "services/services";
 import { toast } from "@/components/ui/use-toast";
 import { DateTimePicker } from "@ui/dashboard/components/DateTimePicker/dateTimePicker";
 import { Match, Team } from "services/types";
@@ -70,14 +70,21 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
       ...(values.teamB ? { teamB: values.teamB } : { teamB: null }),
     };
 
-    await updateMatchAction(payload as any);
+    try {
+      await matchService.updateMatch(payload as any, match._id);
 
-    queryClient.invalidateQueries({ queryKey: ["matches"] });
-    queryClient.invalidateQueries({ queryKey: ["match-scheduler-status"] });
-    onClose();
-    toast({
-      description: "Mérkőzés sikeresen frissítve",
-    });
+      queryClient.invalidateQueries({ queryKey: ["matches"] });
+      queryClient.invalidateQueries({ queryKey: ["match-scheduler-status"] });
+      onClose();
+      toast({
+        description: "Mérkőzés sikeresen frissítve",
+      });
+    } catch (error) {
+      toast({
+        description: "Hiba történt a mérkőzés frissítése közben",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

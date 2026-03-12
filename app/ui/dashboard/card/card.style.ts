@@ -17,14 +17,14 @@ export const Container = styled.div`
 export const DataPart = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 4px;
 `;
 export const DataTitle = styled.div`
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 500;
 `;
 export const DataValue = styled.div`
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 800;
 `;
 export const DataInfo = styled.div`

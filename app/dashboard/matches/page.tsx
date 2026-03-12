@@ -22,6 +22,7 @@ import Pagination from "./Pagination";
 import Legend from "./legend";
 import MatchInfoDialog from "./infoDialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 const MatchesList = () => {
   const isDesktop = useMediaQuery(`(min-width: ${Breakpoints.tablet})`);
@@ -30,6 +31,7 @@ const MatchesList = () => {
   const queryClient = useQueryClient();
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [appliedSearchTerm, setAppliedSearchTerm] = useState("");
 
   const [currentPage, setCurrentPage] = useState(0);
   const [size, setSize] = useState(15);
@@ -45,10 +47,16 @@ const MatchesList = () => {
       order: SortOrder.desc,
     };
 
-    if (typeFilter !== "all") params.type = typeFilter;
+    if (typeFilter !== "all") {
+      params.type = typeFilter;
+    }
+    if (appliedSearchTerm) {
+      params.search = appliedSearchTerm;
+      params.page = 1;
+    }
 
     return params;
-  }, [currentPage, size, typeFilter]);
+  }, [currentPage, size, typeFilter, appliedSearchTerm]);
 
   const {
     data: matchesData,
@@ -135,10 +143,8 @@ const MatchesList = () => {
 
   const onCalculation = useCallback(
     async (match: Match) => {
-      console.log("Calculate match: ", match);
       calculateScoreByMatchMutation.mutate(match._id, {
         onSuccess: (data) => {
-          console.log("Match calculated: ", data);
           toast({
             description: `${data.data.processedCoupons} coupons calculated successfully 
             and ${data.data.penalizedUsers} users penalized.`,
@@ -180,6 +186,26 @@ const MatchesList = () => {
       <div className="flex flex-col gap-2 py-2 rounded-md ">
         <h2 className="font-semibold text-lg mb-2">Filters</h2>
         <div className="flex flex-wrap gap-4 items-end">
+          <div className="flex flex-col gap-1 w-[300px]">
+            <label className="text-sm text-gray-600">Keresés</label>
+            <div className="flex gap-2">
+              <Input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Csapatnév..."
+                className="h-9"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    setAppliedSearchTerm(searchTerm);
+                  }
+                }}
+              />
+              <Button variant="outline" size="sm" className="h-9" onClick={() => setAppliedSearchTerm(searchTerm)}>
+                Keresés
+              </Button>
+            </div>
+          </div>
+
           <div className="flex flex-col gap-1 w-[200px]">
             <label className="text-sm text-gray-600">Type</label>
             <Select value={typeFilter} onValueChange={setTypeFilter}>
@@ -202,6 +228,8 @@ const MatchesList = () => {
             size="sm"
             onClick={() => {
               setTypeFilter("all");
+              setSearchTerm("");
+              setAppliedSearchTerm("");
             }}
           >
             Clear

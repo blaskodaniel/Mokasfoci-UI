@@ -5,35 +5,26 @@ import { PageTitle } from "@ui/global/CommonStyles";
 import DataTable from "@ui/dashboard/table/data-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  DeleteTeamAction,
-  GetGroupsAction,
-  GetTeamsAction,
-  updateTeamAction,
-} from "services/actions";
+import { DeleteTeamAction, GetGroupsAction, GetTeamsAction, updateTeamAction } from "services/actions";
 import { Group, Team } from "services/types";
 import { TeamColumns } from "./columns";
 import { useMediaQuery } from "hooks/useMediaQuery";
 import { Breakpoints } from "util/responsive";
 import CreateTeamDialog from "./createDialog";
+import EditTeamDialog from "./editDialog";
 import { useDialog } from "store/useDialog";
+import { useState } from "react";
 import { useGetAllGroups } from "hooks/useGroups";
 
-const TeamsTable = ({
-  filteredColumnNames,
-}: {
-  filteredColumnNames?: string[];
-}) => {
+const TeamsTable = ({ filteredColumnNames }: { filteredColumnNames?: string[] }) => {
   const { onOpen } = useDialog();
   const isDesktop = useMediaQuery(`(min-width: ${Breakpoints.tablet})`);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [selectedTeam, setSelectedTeam] = useState<Team>();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const {
-      data: groupsData,
-      error: groupsError,
-      isLoading: groupsLoading,
-    } = useGetAllGroups();
+  const { data: groupsData, error: groupsError, isLoading: groupsLoading } = useGetAllGroups();
 
   const {
     data: teamsData,
@@ -53,32 +44,16 @@ const TeamsTable = ({
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, body }: { id: string; body: Team }) =>
-      updateTeamAction(id, body),
+    mutationFn: ({ id, body }: { id: string; body: Team }) => updateTeamAction(id, body),
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
     },
   });
 
-  const onEdit = useCallback(
-    async (team: Team) => {
-      updateMutation.mutate(
-        {
-          id: team._id,
-          body: team,
-        },
-        {
-          onSuccess: () => {
-            console.log("Update successfully");
-            toast({
-              description: "Update successfully",
-            });
-          },
-        }
-      );
-    },
-    [toast, updateMutation]
-  );
+  const onEdit = useCallback((team: Team) => {
+    setSelectedTeam(team);
+    setIsEditModalOpen(true);
+  }, []);
 
   const onDelete = useCallback(
     async (id: string) => {
@@ -91,13 +66,10 @@ const TeamsTable = ({
         },
       });
     },
-    [deleteMutation, toast]
+    [deleteMutation, toast],
   );
 
-  const columns = useMemo(
-    () => TeamColumns({ onEdit, onDelete, isMobile: !isDesktop }),
-    [onDelete, onEdit, isDesktop]
-  );
+  const columns = useMemo(() => TeamColumns({ onEdit, onDelete, isMobile: !isDesktop }), [onDelete, onEdit, isDesktop]);
 
   const groups = groupsData as Group[];
 
@@ -126,6 +98,12 @@ const TeamsTable = ({
           onOpenDialog={onOpen}
         />
         <CreateTeamDialog />
+        <EditTeamDialog
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          team={selectedTeam}
+          groups={groups}
+        />
       </div>
     </>
   );

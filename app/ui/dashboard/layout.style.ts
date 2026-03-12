@@ -24,8 +24,7 @@ export const LayoutMenu = styled.aside<{ isopen: string }>`
     position: fixed;
     z-index: 1;
     min-height: 100vh;
-    width: ${({ isopen }) =>
-      isopen === "true" ? "var(--sidebar-width)" : "0"};
+    width: ${({ isopen }) => (isopen === "true" ? "var(--sidebar-width)" : "0")};
     padding: ${({ isopen }) => (isopen === "true" ? "0 20" : 0)}px;
     overflow: hidden;
 
@@ -36,7 +35,6 @@ export const LayoutMenu = styled.aside<{ isopen: string }>`
   }
 `;
 export const LayoutContent = styled.div`
-  grid-area: main;
   padding: 1rem 20px;
   overflow-y: auto;
 `;

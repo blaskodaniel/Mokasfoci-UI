@@ -3,11 +3,14 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { Team } from "services/types";
-import EditableCell from "./editableCell";
-import SwitchCell from "@ui/dashboard/table/switchCell";
-import DesktopActions from "@ui/dashboard/table/desktop-actions";
-import MobileActions from "@ui/dashboard/table/mobile-actions";
-import DropDownCell from "./dropDownCell";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { BiDotsHorizontalRounded } from "react-icons/bi";
+import { IoPencilOutline, IoTrashOutline } from "react-icons/io5";
 
 interface ITeamColumnProps {
   onEdit: (team: Team) => void;
@@ -23,62 +26,53 @@ export const TeamColumns = ({ onEdit, onDelete, isMobile }: ITeamColumnProps): C
   {
     accessorKey: "name",
     header: "Name",
-    cell: EditableCell,
   },
   {
     accessorKey: "tla",
     header: "TLA",
-    cell: EditableCell,
   },
   {
     accessorKey: "flag",
     header: "Flag",
-    cell: EditableCell,
   },
   {
     accessorKey: "groupid",
-    header: "GroupId",
-    cell: DropDownCell,
+    header: "Group",
+    cell: ({ row }) => row.original.groupid?.name || "-",
   },
   {
     accessorKey: "win",
     header: "Win",
-    cell: EditableCell,
   },
   {
     accessorKey: "draw",
     header: "Draw",
-    cell: EditableCell,
   },
   {
     accessorKey: "loss",
     header: "Loss",
-    cell: EditableCell,
   },
   {
     accessorKey: "score",
     header: "Score",
-    cell: EditableCell,
   },
   {
     accessorKey: "getgoal",
     header: "Get goals",
-    cell: EditableCell,
   },
   {
     accessorKey: "kickgoal",
     header: "Kick goals",
-    cell: EditableCell,
   },
   {
     accessorKey: "active",
     header: "Active",
-    cell: SwitchCell,
+    cell: ({ row }) => (row.original.active ? "Igen" : "Nem"),
   },
   {
     accessorKey: "isTournamentWinner",
     header: "Tournament Winner",
-    cell: SwitchCell,
+    cell: ({ row }) => (row.original.isTournamentWinner ? "Igen" : "Nem"),
   },
   {
     id: "actions",
@@ -86,9 +80,27 @@ export const TeamColumns = ({ onEdit, onDelete, isMobile }: ITeamColumnProps): C
     cell: ({ row }) => {
       const editedRow = row.original;
       if (!isMobile) {
-        return <DesktopActions onEdit={onEdit} onDelete={(row) => onDelete(row._id)} rowData={editedRow} />;
+        return (
+          <div className="flex gap-3">
+            <IoPencilOutline className="cursor-pointer text-blue-500" size={18} onClick={() => onEdit(editedRow)} />
+            <IoTrashOutline className="cursor-pointer text-red-500" size={18} onClick={() => onDelete(editedRow._id)} />
+          </div>
+        );
       }
-      return <MobileActions onEdit={onEdit} onDelete={(row) => onDelete(row._id)} rowData={editedRow} />;
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <BiDotsHorizontalRounded className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => onEdit(editedRow)}>Szerkesztés</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDelete(editedRow._id)}>Törlés</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
     },
   },
 ];

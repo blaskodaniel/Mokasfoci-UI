@@ -277,6 +277,8 @@ export interface DashboardStats {
     totalSystemBalance: number;
     totalSystemProfit: number;
     recentTransactions: Transaction[];
+    teamsCount: number;
+    matchesCount: number;
   };
 }
 

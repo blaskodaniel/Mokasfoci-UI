@@ -18,6 +18,24 @@ export const CreateTeamSchema = z.object({
   active: z.boolean().default(false).optional(),
 });
 
+export const EditTeamSchema = z.object({
+  name: z.string().min(1, "Name must have at least one character").optional(),
+  tla: z.string().min(1, "TLA must have at least one character").optional(),
+  flag: z.string().optional(),
+  groupid: z.string().optional(),
+  win: z.coerce.number().optional(),
+  draw: z.coerce.number().optional(),
+  loss: z.coerce.number().optional(),
+  score: z.coerce.number().optional(),
+  getgoal: z.coerce.number().optional(),
+  kickgoal: z.coerce.number().optional(),
+  active: z.boolean().optional(),
+  isTournamentWinner: z.boolean().optional(),
+  position: z.coerce.number().optional(),
+  playedGames: z.coerce.number().optional(),
+  goalDifference: z.coerce.number().optional(),
+});
+
 export const CreateMatchSchema = z.object({
   teamA: z.string(),
   teamB: z.string(),
