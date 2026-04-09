@@ -5,6 +5,7 @@ import {
   MatchOutcome,
   MatchStatus,
   MatchType,
+  NotificationType,
   SortOrder,
   TransactionType,
 } from "util/enums";
@@ -319,4 +320,22 @@ export interface GetLogsResponse {
     page: number;
     limit: number;
   };
+}
+
+export interface INotification {
+  _id: string;
+  userId: string;
+  text: string;
+  type: NotificationType;
+  actionUrl?: string;
+  read: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreateNotificationBody {
+  userid: string;
+  text: string;
+  type: NotificationType;
+  actionUrl?: string;
 }

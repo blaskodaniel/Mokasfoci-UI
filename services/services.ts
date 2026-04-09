@@ -4,6 +4,7 @@ import {
   Config,
   Coupon,
   CreateMatchPostBody,
+  CreateNotificationBody,
   CreateTeamPostBody,
   CreateTransactionBody,
   DashboardStats,
@@ -97,6 +98,8 @@ export const gameService = {
     }>
   > => await axios.post(`/admin/revert-calculation/${matchId}`),
   getDashboardStats: async (): Promise<AxiosResponse<DashboardStats>> => await axios.get("/admin/dashboard-stats"),
+  createNotification: async (body: CreateNotificationBody): Promise<AxiosResponse<boolean>> =>
+    await axios.post("/admin/notification", body),
 };
 
 export const MatchSchedulerService = {

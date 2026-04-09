@@ -63,3 +63,9 @@ export enum LogTypes {
   info = "info",
   warning = "warning",
 }
+
+export enum NotificationType {
+  system = "system",
+  achievementUnlocked = "achievementUnlocked",
+  oddsUpdate = "oddsUpdate",
+}
