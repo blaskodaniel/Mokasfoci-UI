@@ -1,4 +1,6 @@
 import {
+  ChatMessageType,
+  ChatRoom,
   CouponStatus,
   CouponType,
   LogTypes,
@@ -89,6 +91,7 @@ export type Match = {
   status: MatchStatus;
   comment?: string | null;
   outcome?: MatchOutcome;
+  advancingTeam?: Team | string | null;
   externalID?: string;
   isCalculated?: boolean;
   additionalOdds?: {
@@ -338,4 +341,15 @@ export interface CreateNotificationBody {
   text: string;
   type: NotificationType;
   actionUrl?: string;
+}
+
+export interface ChatMessage {
+  _id: string;
+  sender: User | string;
+  message: string;
+  type: ChatMessageType;
+  room: ChatRoom;
+  isEdited?: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }

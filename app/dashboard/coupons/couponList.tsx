@@ -159,7 +159,7 @@ const CouponList = () => {
         {!isLoading && coupons.length === 0 && <div className="p-4 text-center text-gray-500">No coupons found.</div>}
 
         {coupons.map((coupon: Coupon) => (
-          <CouponListItem key={coupon._id} coupon={coupon} />
+          <CouponListItem key={coupon._id} coupon={coupon} onDelete={refetch} />
         ))}
       </div>
 

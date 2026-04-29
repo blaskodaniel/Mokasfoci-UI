@@ -7,7 +7,7 @@ import { RxReset } from "react-icons/rx";
 import { gameService, userService } from "services/services";
 import { useState, useEffect } from "react";
 import { User } from "services/types";
-import { NotificationType } from "util/enums";
+import { ChatRoom, NotificationType } from "util/enums";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { IoIosSend } from "react-icons/io";
@@ -15,38 +15,64 @@ import { IoIosSend } from "react-icons/io";
 const OperationPage = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [notificationText, setNotificationText] = useState("");
+  const [chatMessageText, setChatMessageText] = useState("");
+  const [chatRoom, setChatRoom] = useState<ChatRoom>(ChatRoom.general);
   const [selectedUserId, setSelectedUserId] = useState("all");
   const [notificationType, setNotificationType] = useState<NotificationType>(NotificationType.system);
   const [actionUrl, setActionUrl] = useState("");
 
   useEffect(() => {
-    userService.getUsers().then(res => {
-      setUsers(res.data);
-    }).catch(err => {
-      console.error("Error fetching users:", err);
-    });
+    userService
+      .getUsers()
+      .then((res) => {
+        setUsers(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching users:", err);
+      });
   }, []);
+
+  const handleSendChatMessage = async () => {
+    if (!chatMessageText.trim()) {
+      toast({ description: "Az üzenet szövege kötelező!", variant: "destructive" });
+      return;
+    }
+
+    try {
+      const response = await gameService.sendChatMessage(chatMessageText, chatRoom);
+
+      if (response.status === 200) {
+        toast({ description: "Üzenet elküldve!" });
+        setChatMessageText("");
+      } else {
+        toast({ description: "Hiba az üzenet küldésekor", variant: "destructive" });
+      }
+    } catch (error) {
+      console.error("Error sending chat message:", error);
+      toast({ description: "Kritikus hiba az üzenet küldésekor", variant: "destructive" });
+    }
+  };
 
   const handleSendNotification = async () => {
     if (!notificationText.trim()) {
       toast({ description: "Az értesítés szövege kötelező!", variant: "destructive" });
       return;
     }
-    
+
     try {
       const response = await gameService.createNotification({
-          userid: selectedUserId,
-          text: notificationText,
-          type: notificationType,
-          actionUrl: actionUrl || undefined
+        userid: selectedUserId,
+        text: notificationText,
+        type: notificationType,
+        actionUrl: actionUrl || undefined,
       });
-      
+
       if (response.status === 200) {
-          toast({ description: "Értesítés(ek) elküldve!" });
-          setNotificationText("");
-          setActionUrl("");
+        toast({ description: "Értesítés(ek) elküldve!" });
+        setNotificationText("");
+        setActionUrl("");
       } else {
-          toast({ description: "Hiba az értesítés küldésekor", variant: "destructive" });
+        toast({ description: "Hiba az értesítés küldésekor", variant: "destructive" });
       }
     } catch (error) {
       console.error("Error sending notification:", error);
@@ -148,12 +174,14 @@ const OperationPage = () => {
       </section>
       <section className="pl-2 pb-5 border-b">
         <div className="text-xl font-bold pb-2">Értesítés küldése</div>
-        <div className="text-sm text-gray-400 mb-4">Értesítést lehet küldeni a játékosoknak vagy csak egy játékosnak.</div>
-        
+        <div className="text-sm text-gray-400 mb-4">
+          Értesítést lehet küldeni a játékosoknak vagy csak egy játékosnak.
+        </div>
+
         <div className="flex flex-col space-y-4 max-w-xl">
-          <textarea 
+          <textarea
             className="flex min-h-[100px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            placeholder="Üzenet szövege..." 
+            placeholder="Üzenet szövege..."
             rows={4}
             value={notificationText}
             onChange={(e) => setNotificationText(e.target.value)}
@@ -167,8 +195,10 @@ const OperationPage = () => {
                 </SelectTrigger>
                 <SelectContent className="max-h-[300px]">
                   <SelectItem value="all">Minden játékos</SelectItem>
-                  {users.map(user => (
-                    <SelectItem key={user._id} value={user._id}>{user.username}</SelectItem>
+                  {users.map((user) => (
+                    <SelectItem key={user._id} value={user._id}>
+                      {user.username}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -180,25 +210,59 @@ const OperationPage = () => {
                   <SelectValue placeholder="Értesítés típusa" />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.values(NotificationType).map(type => (
-                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                  {Object.values(NotificationType).map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
           </div>
 
-          <Input 
-            placeholder="Akció URL (opcionális)..." 
+          <Input
+            placeholder="Akció URL (opcionális)..."
             value={actionUrl}
             onChange={(e) => setActionUrl(e.target.value)}
           />
 
-          <Button
-            className="w-fit bg-slate-600 hover:bg-slate-500"
-            variant="outline"
-            onClick={handleSendNotification}
-          >
+          <Button className="w-fit bg-slate-600 hover:bg-slate-500" variant="outline" onClick={handleSendNotification}>
+            <IoIosSend className="mr-2 h-4 w-4" />
+            Küldés
+          </Button>
+        </div>
+      </section>
+      <section className="pl-2 pb-5 border-b">
+        <div className="text-xl font-bold pb-2">Rendszer chat üzenet küldése</div>
+        <div className="text-sm text-gray-400 mb-4">Rendszer chat üzenetet lehet küldeni egy megadott szobába</div>
+
+        <div className="flex flex-col space-y-4 max-w-xl">
+          <textarea
+            className="flex min-h-[100px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            placeholder="Üzenet szövege..."
+            rows={4}
+            value={chatMessageText}
+            onChange={(e) => setChatMessageText(e.target.value)}
+          />
+
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <Select value={chatRoom} onValueChange={(val) => setChatRoom(val as ChatRoom)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Válassz szobát" />
+                </SelectTrigger>
+                <SelectContent className="max-h-[300px]">
+                  {Object.values(ChatRoom).map((room) => (
+                    <SelectItem key={room} value={room}>
+                      {room}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <Button className="w-fit bg-slate-600 hover:bg-slate-500" variant="outline" onClick={handleSendChatMessage}>
             <IoIosSend className="mr-2 h-4 w-4" />
             Küldés
           </Button>

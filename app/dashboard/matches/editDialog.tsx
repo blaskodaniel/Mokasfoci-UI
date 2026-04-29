@@ -40,6 +40,7 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
       form.reset({
         teamA: match.teamA?._id || "",
         teamB: match.teamB?._id || "",
+        advancingTeam: typeof match.advancingTeam === "string" ? match.advancingTeam : match.advancingTeam?._id || "",
         teamAPlaceholder: match.teamAPlaceholder || "",
         teamBPlaceholder: match.teamBPlaceholder || "",
         goalA: match.goalA,
@@ -68,6 +69,7 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
       _id: match._id,
       ...(values.teamA ? { teamA: values.teamA } : { teamA: null }),
       ...(values.teamB ? { teamB: values.teamB } : { teamB: null }),
+      ...(values.advancingTeam ? { advancingTeam: values.advancingTeam } : { advancingTeam: null }),
     };
 
     try {
@@ -221,30 +223,67 @@ const EditMatchDialog = ({ isOpen, onClose, match, teams }: EditMatchDialogProps
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Státusz</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="border-slate-500">
-                          <SelectValue placeholder="Válassz státuszt" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.values(MatchStatus).map((status) => (
-                          <SelectItem key={status} value={status}>
-                            {status}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="flex space-x-2">
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Státusz</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="border-slate-500">
+                            <SelectValue placeholder="Válassz státuszt" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Object.values(MatchStatus).map((status) => (
+                            <SelectItem key={status} value={status}>
+                              {status}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="advancingTeam"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Továbbjutó csapat</FormLabel>
+                      <div className="relative">
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="border-slate-500">
+                              <SelectValue placeholder="Válassz csapatot" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {teams.map((team) => (
+                              <SelectItem key={team._id} value={team._id}>
+                                {team.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {field.value && (
+                          <button
+                            type="button"
+                            onClick={() => field.onChange("")}
+                            className="absolute right-8 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        )}
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <FormField
                 control={form.control}

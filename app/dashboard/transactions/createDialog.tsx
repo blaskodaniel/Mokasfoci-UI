@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useDialog } from "store/useDialog";
 import { useForm } from "react-hook-form";
 import { CreateTransactionSchema } from "lib/form-definitions";
@@ -26,6 +27,7 @@ const CreateTransactionDialog = () => {
       type: TransactionType.correction,
       matchid: "",
       couponid: "",
+      isUpdateProfitScore: false,
     },
   });
 
@@ -39,11 +41,15 @@ const CreateTransactionDialog = () => {
     // Üres mezők eltávolítása
     const cleanedValues = Object.fromEntries(
       Object.entries(values).filter(
-        ([_, value]) => value !== "" && value !== null && value !== undefined && value !== "_none",
+        ([key, value]) =>
+          key !== "isUpdateProfitScore" && value !== "" && value !== null && value !== undefined && value !== "_none",
       ),
     );
 
-    await transactionMutation.mutateAsync(cleanedValues as any);
+    await transactionMutation.mutateAsync({
+      transactionBody: cleanedValues as any,
+      isUpdateProfitScore: values.isUpdateProfitScore,
+    });
     form.reset(form.getValues());
     onClose();
     toast({
@@ -56,6 +62,10 @@ const CreateTransactionDialog = () => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create new transaction</DialogTitle>
+          <DialogDescription className="text-xs">
+            A tranzakció csak az available pontokat módosítja. Ha azt is be akarod állítani, hogy a profit score is
+            módosuljon, akkor pipáld be a &quot;Update Profit Score&quot; checkboxot.
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
@@ -202,6 +212,19 @@ const CreateTransactionDialog = () => {
                   </FormItem>
                 );
               }}
+            />
+            <FormField
+              control={form.control}
+              name="isUpdateProfitScore"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center space-x-3 space-y-0 p-4 border rounded-md mb-3">
+                  <FormControl>
+                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                  </FormControl>
+                  <FormLabel className="font-normal cursor-pointer">Update Profit Score</FormLabel>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
             <Button className="mt-5 float-end bg-emerald-700 hover:bg-emerald-600" variant="outline" type="submit">
               <IoSaveOutline className="mr-2 h-4 w-4" />

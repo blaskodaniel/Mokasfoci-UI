@@ -5,6 +5,16 @@ import { CouponStatus, CouponType, MatchStatus } from "util/enums";
 import { format } from "date-fns";
 import { FaCheck } from "react-icons/fa";
 import { VscError } from "react-icons/vsc";
+import { useState } from "react";
+import { MdMoreVert } from "react-icons/md";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import ConfirmationModal from "components/ConfirmationModal";
+import { gameService } from "services/services";
 
 const CouponStatusBadge = ({ status }: { status: CouponStatus }) => {
   switch (status) {
@@ -25,11 +35,36 @@ const CouponStatusBadge = ({ status }: { status: CouponStatus }) => {
 
 interface CouponListItemProps {
   coupon: Coupon;
+  onDelete?: () => void;
 }
 
-const CouponListItem = ({ coupon }: CouponListItemProps) => {
+const CouponListItem = ({ coupon, onDelete }: CouponListItemProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<"standard" | "correction" | null>(null);
+
+  const handleDelete = async () => {
+    if (!modalType || !coupon._id) return;
+    
+    try {
+      const restorePoints = modalType === "correction";
+      await gameService.deleteCoupon(coupon._id, restorePoints);
+      if (onDelete) onDelete();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsModalOpen(false);
+      setModalType(null);
+    }
+  };
+
+  const openModal = (type: "standard" | "correction") => {
+    setModalType(type);
+    setIsModalOpen(true);
+  };
+
   return (
-    <div className="flex gap-3 items-center border-b last:border-0 border-gray-500/30 p-2">
+    <>
+      <div className="flex gap-3 items-center border-b last:border-0 border-gray-500/30 p-2">
       <div className="w-[80px] flex-shrink-0">
         <CouponStatusBadge status={coupon.status} />
       </div>
@@ -86,7 +121,46 @@ const CouponListItem = ({ coupon }: CouponListItemProps) => {
         {coupon.status === CouponStatus.closed && coupon.success === true && <FaCheck className="text-green-500" />}
         {coupon.status === CouponStatus.closed && coupon.success === false && <VscError className="text-red-500" />}
       </div>
+
+      {/* Context Menu */}
+      <div className="w-[30px] flex justify-center">
+        {coupon.status === CouponStatus.active && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="p-1 hover:bg-gray-700/50 rounded-md transition-colors">
+                <MdMoreVert className="text-gray-300" size={18} />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => openModal("correction")}>
+                Törlés korrekcióval
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => openModal("standard")} className="text-red-500 focus:text-red-400 focus:bg-red-500/10 hover:text-red-400 hover:bg-red-500/10">
+                Törlés
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
     </div>
+
+    <ConfirmationModal
+      isOpen={isModalOpen}
+      onClose={() => {
+        setIsModalOpen(false);
+        setModalType(null);
+      }}
+      onConfirm={handleDelete}
+      title="Biztosan törlöd a kupont?"
+      description={
+        modalType === "correction" 
+          ? "A törlésnél a pontok is korrigálásra (visszavonásra) kerülnek. Biztosan folytatod?" 
+          : "Véglegesen törlöd ezt a kupont anélkül, hogy a játékos pontjai módosulnának. Biztosan folytatod?"
+      }
+      confirmText="Törlés"
+      variant="destructive"
+    />
+    </>
   );
 };
 

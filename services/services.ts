@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios";
 import { axios } from "../util/axios";
 import {
+  ChatMessage,
   Config,
   Coupon,
   CreateMatchPostBody,
@@ -23,6 +24,7 @@ import {
   UserCreateBody,
   UserScoresValidationResponse,
 } from "./types";
+import { ChatRoom } from "util/enums";
 
 export const teamService = {
   getTeams: async (): Promise<AxiosResponse<Team[]>> => await axios.get("/team/all"),
@@ -80,14 +82,17 @@ export const gameService = {
     await axios.get("/admin/coupons", { params }),
   updateCoupon: async (couponId: string, body: Partial<Coupon>): Promise<AxiosResponse<boolean>> =>
     await axios.patch(`/admin/coupon/${couponId}`, body),
-  deleteCoupon: async (couponId: string): Promise<AxiosResponse<boolean>> =>
-    await axios.delete(`/admin/coupon/${couponId}`),
+  deleteCoupon: async (couponId: string, restorePoints?: boolean): Promise<AxiosResponse<boolean>> =>
+    await axios.delete(`/admin/coupon/${couponId}`, { params: { restorePoints } }),
   resetGame: async (): Promise<AxiosResponse<boolean>> => await axios.post("/admin/reset-game"),
   syncTeams: async (): Promise<AxiosResponse<boolean>> => await axios.post("/admin/sync-teams-standings"),
   getAllTransactions: async (params: PaginationParams): Promise<AxiosResponse<GetAllTransactionsResponse>> =>
     await axios.get("/admin/transactions", { params }),
-  createTransaction: async (body: CreateTransactionBody): Promise<AxiosResponse<boolean>> =>
-    await axios.post("/admin/transaction", body),
+  createTransaction: async (
+    body: CreateTransactionBody,
+    isUpdateProfitScore: boolean,
+  ): Promise<AxiosResponse<boolean>> =>
+    await axios.post("/admin/transaction", { transactionBody: body, isUpdateProfitScore }),
   revertCalculation: async (
     matchId: string,
   ): Promise<
@@ -100,6 +105,11 @@ export const gameService = {
   getDashboardStats: async (): Promise<AxiosResponse<DashboardStats>> => await axios.get("/admin/dashboard-stats"),
   createNotification: async (body: CreateNotificationBody): Promise<AxiosResponse<boolean>> =>
     await axios.post("/admin/notification", body),
+  sendChatMessage: async (
+    message: string,
+    room = ChatRoom.general,
+  ): Promise<AxiosResponse<{ success: boolean; data: ChatMessage }>> =>
+    await axios.post("/admin/chat/message", { message, room }),
 };
 
 export const MatchSchedulerService = {

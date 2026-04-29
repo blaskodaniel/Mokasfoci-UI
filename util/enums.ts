@@ -69,3 +69,12 @@ export enum NotificationType {
   achievementUnlocked = "achievementUnlocked",
   oddsUpdate = "oddsUpdate",
 }
+
+export enum ChatMessageType {
+  system = "system",
+  user = "user",
+}
+
+export enum ChatRoom {
+  general = "general",
+}

@@ -62,11 +62,13 @@ export const CreateTransactionSchema = z.object({
   comment: z.string().optional(),
   matchid: z.string().optional(),
   couponid: z.string().optional(),
+  isUpdateProfitScore: z.boolean().default(false),
 });
 
 export const EditMatchSchema = z.object({
   teamA: z.string().optional(),
   teamB: z.string().optional(),
+  advancingTeam: z.string().optional(),
   teamAPlaceholder: z.string().optional(),
   teamBPlaceholder: z.string().optional(),
   goalA: z
