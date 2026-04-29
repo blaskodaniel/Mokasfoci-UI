@@ -11,6 +11,16 @@ import { ChatRoom, NotificationType } from "util/enums";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { IoIosSend } from "react-icons/io";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 const OperationPage = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -126,25 +136,47 @@ const OperationPage = () => {
         <div className="text-xl font-bold pb-2">Reset game</div>
         <div className="text-sm text-gray-400">
           <ul className="list-disc list-inside space-y-1">
-            <li>Minden user pontjainak alaphelyzetbe állítása</li>
+            <li>Minden user pontjainak alaphelyzetbe állítása, csoportgyőztes és bajnok csapat tippek törlése</li>
             <li>
               Minden meccs kalkulációs állapotának visszaállítása (isCalculated:false, status: enabled, outcome: null,
-              goalA: null, goalB: null)
+              goalA: null, goalB: null, advancingTeam: null)
             </li>
             <li>Minden fogadás törlése</li>
             <li>Minden tranzakció törlése</li>
+            <li>Minden napló bejegyzés törlése</li>
           </ul>
         </div>
         <div>
-          <Button
-            className="mt-5 bg-red-700 hover:bg-red-600"
-            variant="outline"
-            type="submit"
-            onClick={handleResetGame}
-          >
-            <RxReset className="mr-2 h-4 w-4" />
-            Reset game
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                className="mt-5 bg-red-700 hover:bg-red-600"
+                variant="outline"
+                type="button"
+              >
+                <RxReset className="mr-2 h-4 w-4" />
+                Reset game
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Biztosan resetelni akarod a játékot?</DialogTitle>
+                <DialogDescription className="pt-2">
+                  Ez a művelet nem vonható vissza. Minden pont, fogadás, tranzakció és napló bejegyzés véglegesen törlődni fog, a meccsek kalkulációs állapota pedig visszaáll alaphelyzetbe!
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="mt-4">
+                <DialogClose asChild>
+                  <Button variant="outline">Mégse</Button>
+                </DialogClose>
+                <DialogClose asChild>
+                  <Button variant="destructive" onClick={handleResetGame}>
+                    Igen, resetelés
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </section>
       <section className="pl-2 pb-5 border-b">
