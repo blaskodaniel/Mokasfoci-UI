@@ -83,7 +83,7 @@ const TeamsTable = ({ filteredColumnNames }: { filteredColumnNames?: string[] })
 
   return (
     <>
-      <PageTitle>Teams</PageTitle>
+      <h1 className={PageTitle}>Teams</h1>
       <div className="py-5">
         <DataTable
           data={teamsData as Team[]}

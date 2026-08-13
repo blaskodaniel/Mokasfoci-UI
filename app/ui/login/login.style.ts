@@ -1,56 +1,7 @@
-"use client";
-
-import styled from "styled-components";
-
-export const LoginWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  height: 100vh;
-`;
-export const LoginForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: var(--bg-color-third);
-  padding: 35px;
-  margin-top: 10%;
-  height: fit-content;
-`;
-export const LoginButton = styled.button`
-  padding: 10px 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: var(--button-color-blue);
-  color: var(--text-color);
-  cursor: pointer;
-  width: 100%;
-  margin-top: 15px;
-`;
-export const LoginTitle = styled.h1`
-  margin-bottom: 15px;
-`;
-export const LoginInput = styled.input`
-  margin-bottom: 10px;
-  padding: 10px;
-  width: 100%;
-  border: 1px solid var(--border-color);
-  border-radius: 5px;
-  background-color: var(--bg-color);
-  color: var(--text-color);
-`;
-export const LoginError = styled.p<{
-  margintop?: number;
-  textcenter?: boolean;
-}>`
-  color: var(--color-red);
-  margin-bottom: 10px;
-  width: 100%;
-  padding-left: 2px;
-  ${({ margintop }) => margintop && `margin-top: ${margintop}px;`}
-  ${({ textcenter }) => textcenter && `text-align: center;`}
-`;
-export const LoginLabel = styled.label`
-  margin-bottom: 5px;
-  padding-left: 3px;
-  width: 100%;
-`;
+export const LoginWrapper = "flex h-screen justify-center";
+export const LoginForm = "mt-[10%] flex h-fit flex-col items-center bg-[var(--bg-color-third)] p-[35px]";
+export const LoginButton = "mt-[15px] w-full cursor-pointer rounded-[5px] border-0 bg-[var(--button-color-blue)] p-2.5 text-[var(--text-color)]";
+export const LoginTitle = "mb-[15px]";
+export const LoginInput = "mb-2.5 w-full rounded-[5px] border border-[var(--border-color)] bg-[var(--bg-color)] p-2.5 text-[var(--text-color)]";
+export const LoginError = "mb-2.5 w-full pl-0.5 text-[var(--color-red)]";
+export const LoginLabel = "mb-1.5 w-full pl-0.5";

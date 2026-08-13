@@ -20,21 +20,21 @@ const Sidebar = ({
   setIsOpenSidebar: Dispatch<SetStateAction<string>>;
 }) => {
   return (
-    <Container>
+    <div className={Container}>
       <div>
-        <UserInfo>
+        <div className={UserInfo}>
           <Image src="/avatar.png" alt="avatar" width={50} height={50} />
           <div>
-            <UserName>Daniel</UserName>
-            <UserRole>Administrator</UserRole>
+            <span className={UserName}>Daniel</span>
+            <span className={UserRole}>Administrator</span>
           </div>
-          <IconInMobile>
+          <div className={IconInMobile}>
             <IoIosArrowBack
               size={30}
               onClick={() => setIsOpenSidebar("false")}
             />
-          </IconInMobile>
-        </UserInfo>
+          </div>
+        </div>
         <ul>
           {SideBarMenuData.map((menu, i) => {
             return <SideBarCategory key={i} menuItem={menu} />;
@@ -43,11 +43,11 @@ const Sidebar = ({
       </div>
 
       <form action={logOut}>
-        <LogoutButton>
+        <button className={LogoutButton}>
           <MdLogout size={20} /> Logout
-        </LogoutButton>
+        </button>
       </form>
-    </Container>
+    </div>
   );
 };
 

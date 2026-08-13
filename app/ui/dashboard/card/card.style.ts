@@ -1,32 +1,5 @@
-"use client";
-
-import styled from "styled-components";
-
-export const Container = styled.div`
-  display: flex;
-  gap: 20px;
-  border-radius: 10px;
-  padding: 20px;
-  background-color: var(--bg-color-second);
-  width: 100%;
-
-  &:hover {
-    background-color: var(--bg-color-third);
-  }
-`;
-export const DataPart = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
-export const DataTitle = styled.div`
-  font-size: 1rem;
-  font-weight: 500;
-`;
-export const DataValue = styled.div`
-  font-size: 1.3rem;
-  font-weight: 800;
-`;
-export const DataInfo = styled.div`
-  font-weight: 300;
-`;
+export const Container = "flex w-full gap-5 rounded-[10px] bg-[var(--bg-color-second)] p-5 hover:bg-[var(--bg-color-third)]";
+export const DataPart = "flex flex-col gap-1";
+export const DataTitle = "text-base font-medium";
+export const DataValue = "text-[1.3rem] font-extrabold";
+export const DataInfo = "font-light";

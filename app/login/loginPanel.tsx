@@ -14,41 +14,41 @@ import SubmitButton from "./submitBtn";
 const LoginPanel = () => {
   const [state, action, pending] = useFormState(loginAction, undefined);
   return (
-    <LoginForm action={action}>
-      <LoginTitle>Login</LoginTitle>
-      <LoginLabel>Username</LoginLabel>
-      <LoginInput
+    <form className={LoginForm} action={action}>
+      <h1 className={LoginTitle}>Login</h1>
+      <label className={LoginLabel}>Username</label>
+      <input className={LoginInput}
         name="username"
         type="text"
         placeholder="Username"
         autoComplete="off"
       />
       {(state?.errors as { username: string[] })?.username && (
-        <LoginError>
+        <p className={LoginError}>
           {(state?.errors as { username: string[] }).username}
-        </LoginError>
+        </p>
       )}
-      <LoginLabel>Password</LoginLabel>
-      <LoginInput
+      <label className={LoginLabel}>Password</label>
+      <input className={LoginInput}
         name="password"
         type="password"
         placeholder="Password"
         autoComplete="off"
       />
       {(state?.errors as { password: string[] })?.password && (
-        <LoginError>
+        <p className={LoginError}>
           {(state?.errors as { password: string[] }).password}
-        </LoginError>
+        </p>
       )}
 
       <SubmitButton />
       {(state?.errors as { form: string })?.form && (
-        <LoginError margintop={10} textcenter={true}>
+        <p className={`${LoginError} mt-2.5 text-center`}>
           {(state?.errors as { form: string }).form}
-        </LoginError>
+        </p>
       )}
       {pending && <p>Loading...</p>}
-    </LoginForm>
+    </form>
   );
 };
 

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@ui/globals.css";
-import StyledComponentsRegistry from "lib/registry";
 import QueryProvider from "util/queryClient-provider";
 import Head from "next/head";
 
@@ -28,7 +27,7 @@ export default function RootLayout({
       </Head>
       <body className={inter.className}>
         <QueryProvider>
-          <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+          {children}
         </QueryProvider>
       </body>
     </html>

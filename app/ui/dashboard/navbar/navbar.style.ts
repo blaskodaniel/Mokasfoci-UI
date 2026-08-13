@@ -1,31 +1,3 @@
-"use client";
-
-import styled from "styled-components";
-
-export const Container = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 15px 15px;
-  background-color: var(--bg-color-second);
-  border-radius: 10px;
-  margin-bottom: 15px;
-
-  div {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-`;
-export const Title = styled.div`
-  font-size: 1.5rem;
-  color: var(--text-color-second);
-  text-transform: capitalize;
-`;
-export const Menu = styled.div`
-  button {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    background: none;
-  }
-`;
+export const Container = "mb-[15px] flex justify-between rounded-[10px] bg-[var(--bg-color-second)] p-[15px] [&>div]:flex [&>div]:items-center [&>div]:gap-2.5";
+export const Title = "text-2xl capitalize text-[var(--text-color-second)]";
+export const Menu = "[&_button]:flex [&_button]:items-center [&_button]:gap-1.5 [&_button]:bg-transparent";

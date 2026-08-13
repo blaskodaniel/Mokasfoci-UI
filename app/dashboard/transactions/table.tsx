@@ -68,7 +68,7 @@ const TransactionTable = () => {
 
   return (
     <>
-      <PageTitle>Játékosok fogadásai</PageTitle>
+      <h1 className={PageTitle}>Játékosok fogadásai</h1>
 
       {/* Search input */}
       <div className="mb-4 flex items-center gap-2">

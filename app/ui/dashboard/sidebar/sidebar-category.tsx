@@ -28,7 +28,7 @@ const SideBarCategory = ({ menuItem }: { menuItem: SideBarElement }) => {
   return (
     <li key={menuItem.category?.title}>
       {menuItem.category && (
-        <Category onClick={() => clickHandler(menuItem.category)}>
+        <span className={Category} onClick={() => clickHandler(menuItem.category)}>
           <div>
             {menuItem.category?.icon}
             {menuItem.category?.title}
@@ -37,13 +37,13 @@ const SideBarCategory = ({ menuItem }: { menuItem: SideBarElement }) => {
           {!menuItem.category?.path && (
             <div>{isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}</div>
           )}
-        </Category>
+        </span>
       )}
-      <List isopen={isOpen.toString()} elemtscount={menuItem.list.length}>
+      <div className={`${List} ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}>
         {menuItem.list.map((submenu) => {
           return <MenuLink key={submenu.title} menu={submenu} />;
         })}
-      </List>
+      </div>
     </li>
   );
 };

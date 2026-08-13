@@ -87,7 +87,7 @@ const UsersTable = () => {
 
   return (
     <>
-      <PageTitle>Users</PageTitle>
+      <h1 className={PageTitle}>Users</h1>
       <div className="py-5">
         <DataTable
           data={usersData as User[]}

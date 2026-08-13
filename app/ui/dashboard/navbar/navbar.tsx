@@ -14,20 +14,20 @@ const Navbar = ({
 }) => {
   const pathname = usePathname();
   return (
-    <Container>
+    <div className={Container}>
       <div>
-        <IconInMobile>
+        <div className={IconInMobile}>
           <IoIosMenu size={30} onClick={() => setIsOpenSidebar("true")} />
-        </IconInMobile>
-        <Title>{pathname.split("/").pop()}</Title>
+        </div>
+        <div className={Title}>{pathname.split("/").pop()}</div>
       </div>
 
-      <Menu>
+      <div className={Menu}>
         {/* <button>
           <MdLogout size={20} /> Logout
         </button> */}
-      </Menu>
-    </Container>
+      </div>
+    </div>
   );
 };
 

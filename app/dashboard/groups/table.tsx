@@ -120,7 +120,7 @@ const GroupTable = ({
 
   return (
     <>
-      <PageTitle>Groups</PageTitle>
+      <h1 className={PageTitle}>Groups</h1>
       <div className="py-5">
         <DataTable
           data={groupsData as Group[]}

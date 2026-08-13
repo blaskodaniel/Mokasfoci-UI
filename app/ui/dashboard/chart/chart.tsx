@@ -60,9 +60,9 @@ const data = [
 
 const Chart = () => {
   return (
-    <Container>
-      <Title>Latest transactions</Title>
-      <CartWrapper>
+    <div className={Container}>
+      <h2 className={Title}>Latest transactions</h2>
+      <div className={CartWrapper}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             width={500}
@@ -88,8 +88,8 @@ const Chart = () => {
             <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
           </LineChart>
         </ResponsiveContainer>
-      </CartWrapper>
-    </Container>
+      </div>
+    </div>
   );
 };
 

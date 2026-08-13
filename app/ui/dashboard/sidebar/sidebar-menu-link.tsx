@@ -12,10 +12,10 @@ const MenuLink = ({
   const pathname = usePathname();
   const isActiveLink = pathname === menu.path;
   return (
-    <Menulink href={menu.path} isactive={isActiveLink.toString()}>
+    <a className={`${Menulink} ${isActiveLink ? "bg-[#2e374a]" : ""}`} href={menu.path}>
       {menu.icon}
       {menu.title}
-    </Menulink>
+    </a>
   );
 };
 

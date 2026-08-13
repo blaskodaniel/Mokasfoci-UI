@@ -28,7 +28,7 @@ const DashboardPage = () => {
   }
 
   return (
-    <Container>
+    <div className={Container}>
       <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-3">
         <Card
           title="Error logok"
@@ -51,7 +51,7 @@ const DashboardPage = () => {
         <Card title="Mérkőzések száma" value={stats?.matchesCount.toString()} description="mérkőzések száma" />
       </div>
 
-      <Section>
+      <div className={Section}>
         <LatestTable
           title="Legutóbbi 24h tranzakciói"
           columns={[
@@ -67,9 +67,9 @@ const DashboardPage = () => {
           data={stats.recentTransactions}
         />
         {/* <Chart /> */}
-      </Section>
-      <Section>{/* <Chart /> */}</Section>
-    </Container>
+      </div>
+      <div className={Section}>{/* <Chart /> */}</div>
+    </div>
   );
 };
 

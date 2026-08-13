@@ -6,10 +6,10 @@ import { LatestTableProps } from "./type";
 
 function LatestTable<T>({ columns, data, title }: LatestTableProps<T> & { data: T[] }) {
   return (
-    <Container>
-      <Title>{title}</Title>
+    <div className={Container}>
+      <h2 className={Title}>{title}</h2>
       <div style={{ maxHeight: 450, overflowY: "auto" }}>
-        <Table>
+        <table className={Table}>
           <thead>
             <tr>
               {columns.map((col, idx) => (
@@ -35,9 +35,9 @@ function LatestTable<T>({ columns, data, title }: LatestTableProps<T> & { data: 
               </tr>
             ))}
           </tbody>
-        </Table>
+        </table>
       </div>
-    </Container>
+    </div>
   );
 }
 

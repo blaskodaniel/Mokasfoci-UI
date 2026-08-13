@@ -11,9 +11,9 @@ const LoginPage = () => {
   if (tokenCookie?.value) redirect("/dashboard");
 
   return (
-    <LoginWrapper>
+    <div className={LoginWrapper}>
       <LoginPanel />
-    </LoginWrapper>
+    </div>
   );
 };
 

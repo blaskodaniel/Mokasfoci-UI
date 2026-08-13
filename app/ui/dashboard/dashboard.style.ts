@@ -1,19 +1,2 @@
-"use client";
-
-import styled from "styled-components";
-import { Breakpoints } from "util/responsive";
-
-export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-export const Section = styled.div<{ gap?: string }>`
-  display: flex;
-  gap: ${({ gap = "20px" }) => gap};
-
-  @media (max-width: ${Breakpoints.tablet}) {
-    flex-direction: column;
-  }
-`;
+export const Container = "flex flex-col gap-5";
+export const Section = "flex flex-col gap-5 min-[801px]:flex-row";

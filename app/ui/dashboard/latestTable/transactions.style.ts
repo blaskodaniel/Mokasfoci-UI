@@ -1,31 +1,3 @@
-"use client";
-
-import { TransactionType } from "enums/transactions";
-import Image from "next/image";
-import styled from "styled-components";
-
-export const Container = styled.div`
-  padding: 20px;
-  background-color: var(--bg-color-second);
-  border-radius: 10px;
-  width: 100%;
-`;
-
-export const Table = styled.table`
-  width: 100%;
-
-  td {
-    padding: 10px;
-  }
-
-  .name {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-`;
-
-export const Avatart = styled(Image)`
-  object-fit: cover;
-  border-radius: 50%;
-`;
+export const Container = "w-full rounded-[10px] bg-[var(--bg-color-second)] p-5";
+export const Table = "w-full [&_td]:p-2.5 [&_.name]:flex [&_.name]:items-center [&_.name]:gap-2.5";
+export const Avatart = "rounded-full object-cover";
