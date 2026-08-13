@@ -18,7 +18,7 @@ import { DateTimePicker } from "@ui/dashboard/components/DateTimePicker/dateTime
 import { Team } from "services/types";
 import { useQueryClient } from "@tanstack/react-query";
 
-const CreateMatchDialog = ({ teams }: { teams: Team[] }) => {
+const CreateMatchDialog = ({ teams = [] }: { teams?: Team[] }) => {
   const queryClient = useQueryClient();
   const form = useForm<z.infer<typeof CreateMatchSchema>>({
     resolver: zodResolver(CreateMatchSchema),
@@ -31,18 +31,26 @@ const CreateMatchDialog = ({ teams }: { teams: Team[] }) => {
   const { isOpen, onClose } = useDialog();
   const [openTeamA, setOpenTeamA] = React.useState(false);
   const [openTeamB, setOpenTeamB] = React.useState(false);
+
   const handleSubmit = async (values: z.infer<typeof CreateMatchSchema>) => {
-    // Csak a nem üres, nem undefined és nem null értékű mezőket küldjük el
-    const filteredValues = Object.fromEntries(
-      Object.entries(values).filter(([, v]) => v !== undefined && v !== null && v !== ""),
-    );
-    await createMatchAction(filteredValues);
-    form.reset({ teamA: "", teamB: "", date: new Date() });
-    queryClient.invalidateQueries({ queryKey: ["matches"] });
-    onClose();
-    toast({
-      description: "A mérkőzés sikeresen létrejött",
-    });
+    try {
+      // Csak a nem üres, nem undefined és nem null értékű mezőket küldjük el
+      const filteredValues = Object.fromEntries(
+        Object.entries(values).filter(([, v]) => v !== undefined && v !== null && v !== ""),
+      );
+      await createMatchAction(filteredValues);
+      form.reset({ teamA: "", teamB: "", date: new Date() });
+      queryClient.invalidateQueries({ queryKey: ["matches"] });
+      onClose();
+      toast({
+        description: "A mérkőzés sikeresen létrejött",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        description: "A mérkőzés létrehozása sikertelen",
+      });
+    }
   };
 
   // Reset form fields when dialog closes

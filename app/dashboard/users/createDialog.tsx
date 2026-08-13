@@ -1,32 +1,14 @@
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useDialog } from "store/useDialog";
 import { useForm } from "react-hook-form";
 import { CreateMatchSchema, CreateUserSchema } from "lib/form-definitions";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { IoSaveOutline } from "react-icons/io5";
 import { toast } from "@/components/ui/use-toast";
 import { DateTimePicker } from "@ui/dashboard/components/DateTimePicker/dateTimePicker";
@@ -51,7 +33,7 @@ const CreateUserDialog = () => {
     console.log({ ...values });
     const { username, password, email, isAdmin } = values;
     await createUserAction({ username, password, email, isAdmin });
-    form.reset(form.getValues());
+    form.reset();
     onClose();
     toast({
       description: "Team creation successfully",
@@ -59,12 +41,7 @@ const CreateUserDialog = () => {
   };
 
   return (
-    <Dialog
-      onOpenChange={onClose}
-      open={isOpen}
-      modal={false}
-      defaultOpen={isOpen}
-    >
+    <Dialog onOpenChange={onClose} open={isOpen} modal={false} defaultOpen={isOpen}>
       {isOpen && <div className="fixed inset-0 bg-black/50 z-40"></div>}
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -140,21 +117,14 @@ const CreateUserDialog = () => {
                   <FormItem className="mb-3 flex gap-3 items-center">
                     <FormLabel className="mt-2">Admin</FormLabel>
                     <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 );
               }}
             />
-            <Button
-              className="mt-5 float-end bg-emerald-700 hover:bg-emerald-600"
-              variant="outline"
-              type="submit"
-            >
+            <Button className="mt-5 float-end bg-emerald-700 hover:bg-emerald-600" variant="outline" type="submit">
               <IoSaveOutline className="mr-2 h-4 w-4" />
               Create
             </Button>

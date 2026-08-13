@@ -1,25 +1,13 @@
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDialog } from "store/useDialog";
 import { useForm } from "react-hook-form";
 import { CreatGroupSchema } from "lib/form-definitions";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { IoSaveOutline } from "react-icons/io5";
 import { createGroupAction } from "services/actions";
 import { toast } from "@/components/ui/use-toast";
@@ -32,14 +20,22 @@ const CreateGroupDialog = () => {
     },
   });
   const { isOpen, onClose } = useDialog();
+  const queryClient = useQueryClient();
 
   const handleSubmit = async (values: z.infer<typeof CreatGroupSchema>) => {
-    await createGroupAction(values.groupname);
-    form.reset(form.getValues());
-    onClose();
-    toast({
-      description: "Group creation successfully",
-    });
+    try {
+      await createGroupAction(values.groupname);
+      await queryClient.invalidateQueries({ queryKey: ["groups"] });
+      form.reset();
+      onClose();
+      toast({
+        description: "Group creation successfully",
+      });
+    } catch (error) {
+      toast({
+        description: "Group creation error",
+      });
+    }
   };
 
   return (
@@ -65,11 +61,7 @@ const CreateGroupDialog = () => {
                 );
               }}
             />
-            <Button
-              className="mt-5 float-end bg-emerald-700 hover:bg-emerald-600"
-              variant="outline"
-              type="submit"
-            >
+            <Button className="mt-5 float-end bg-emerald-700 hover:bg-emerald-600" variant="outline" type="submit">
               <IoSaveOutline className="mr-2 h-4 w-4" />
               Create
             </Button>

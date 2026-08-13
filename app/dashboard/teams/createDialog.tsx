@@ -2,10 +2,10 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDialog } from "store/useDialog";
 import { useForm } from "react-hook-form";
-import { CreateTeamSchema, CreatGroupSchema } from "lib/form-definitions";
+import { CreateTeamSchema } from "lib/form-definitions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { IoSaveOutline } from "react-icons/io5";
@@ -18,6 +18,7 @@ import { useGetAllFlags } from "hooks/useTeams";
 
 const CreateTeamDialog = () => {
   const { isOpen, onClose } = useDialog();
+  const queryClient = useQueryClient();
   const form = useForm<z.infer<typeof CreateTeamSchema>>({
     resolver: zodResolver(CreateTeamSchema),
     defaultValues: {
@@ -34,12 +35,18 @@ const CreateTeamDialog = () => {
   const { data: flagsData, error: flagsError, isLoading: flagsLoading } = useGetAllFlags();
 
   const handleSubmit = async (values: z.infer<typeof CreateTeamSchema>) => {
-    await createTeamAction({ ...values, active: !!values.active });
-    form.reset(form.getValues());
-    onClose();
-    toast({
-      description: "Team creation successfully",
-    });
+    try {
+      await createTeamAction({ ...values, active: !!values.active });
+      await queryClient.invalidateQueries({ queryKey: ["teams"] });
+      form.reset();
+      onClose();
+      toast({ description: "Team creation successfully" });
+    } catch {
+      toast({
+        variant: "destructive",
+        description: "Team creation failed",
+      });
+    }
   };
 
   return (

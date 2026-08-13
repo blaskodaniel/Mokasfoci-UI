@@ -1,13 +1,11 @@
 "use client";
 
 import Card from "@ui/dashboard/card/card";
-import Chart from "@ui/dashboard/chart/chart";
 import { Container, Section } from "@ui/dashboard/dashboard.style";
 import LatestTable from "@ui/dashboard/latestTable";
-import { format, formatRelative } from "date-fns";
+import { formatRelative } from "date-fns";
 import { hu } from "date-fns/locale";
 import { useGetDasboardStats } from "hooks/useDashboard";
-import { Tag } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { formatNumber } from "util/commons";
 

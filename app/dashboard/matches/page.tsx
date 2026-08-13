@@ -72,7 +72,6 @@ const MatchesList = () => {
     data: teamsData,
     error: teamsError,
     isLoading: teamsLoading,
-    refetch: teamsRefetch,
   } = useQuery({
     queryKey: ["teams"],
     queryFn: () => teamService.getTeams().then((res) => res.data),
@@ -109,13 +108,14 @@ const MatchesList = () => {
       gameService.calculateScoreByMatch(matchId),
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["matches"] });
+      queryClient.invalidateQueries({ queryKey: ["coupons"] });
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => DeleteMatchAction(id, "/dashboard/matches"),
     onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ["teams"] });
+      queryClient.invalidateQueries({ queryKey: ["matches"] });
     },
   });
 
@@ -129,7 +129,6 @@ const MatchesList = () => {
 
   const onDelete = useCallback(
     async (id: string) => {
-      console.log("Delete match: ", id);
       deleteMutation.mutate(id, {
         onSuccess: () => {
           toast({
@@ -179,7 +178,15 @@ const MatchesList = () => {
     [reversCalculateMatchMutation, toast],
   );
 
-  const teams = teamsData as Team[];
+  const teams = teamsData ?? [];
+
+  if (matchesLoading || teamsLoading || schedulerStatusLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (matchesError || teamsError || schedulerStatusError) {
+    return <div>Hiba történt az adatok betöltése közben.</div>;
+  }
 
   return (
     <div>

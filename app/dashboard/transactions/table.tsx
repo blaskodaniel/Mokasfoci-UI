@@ -3,8 +3,7 @@
 import { useMemo, useState } from "react";
 import { PageTitle } from "@ui/global/CommonStyles";
 import DataTable from "@ui/dashboard/table/data-table";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useToast } from "@/components/ui/use-toast";
+import { useQuery } from "@tanstack/react-query";
 import { Transaction } from "services/types";
 import { useDialog } from "store/useDialog";
 import { TransactionsColumns } from "./columns";
@@ -17,7 +16,6 @@ import CreateTransactionDialog from "./createDialog";
 
 const TransactionTable = () => {
   const { onOpen } = useDialog();
-  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
 
   const [currentPage, setCurrentPage] = useState(0);

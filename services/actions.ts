@@ -19,16 +19,6 @@ import { removeUserTokenFromCookie } from "util/commons";
 import { redirect } from "next/navigation";
 import { SortOrder } from "util/enums";
 
-export async function GetGroupsAction() {
-  try {
-    const data = await groupService.getGroups();
-    return data.data;
-  } catch (error: unknown) {
-    const errorMsg = ErrorHandler(error);
-    return { error: errorMsg };
-  }
-}
-
 export async function DeleteGroupAction(groupId: string, refreshPath?: string) {
   try {
     await groupService.deleteGroup(groupId);
@@ -36,8 +26,8 @@ export async function DeleteGroupAction(groupId: string, refreshPath?: string) {
     refreshPath && revalidatePath(refreshPath);
     return true;
   } catch (error: unknown) {
-    const errorMsg = ErrorHandler(error);
-    return { error: errorMsg };
+    ErrorHandler(error);
+    throw error;
   }
 }
 
@@ -48,8 +38,8 @@ export async function DeleteTeamAction(id: string, refreshPath?: string) {
     refreshPath && revalidatePath(refreshPath);
     return true;
   } catch (error: unknown) {
-    const errorMsg = ErrorHandler(error);
-    return { error: errorMsg };
+    ErrorHandler(error);
+    throw error;
   }
 }
 
@@ -60,8 +50,8 @@ export async function DeleteUserAction(id: string, refreshPath?: string) {
     refreshPath && revalidatePath(refreshPath);
     return true;
   } catch (error: unknown) {
-    const errorMsg = ErrorHandler(error);
-    return { error: errorMsg };
+    ErrorHandler(error);
+    throw error;
   }
 }
 
@@ -72,8 +62,8 @@ export async function DeleteMatchAction(id: string, refreshPath?: string) {
     refreshPath && revalidatePath(refreshPath);
     return true;
   } catch (error: unknown) {
-    const errorMsg = ErrorHandler(error);
-    return { error: errorMsg };
+    ErrorHandler(error);
+    throw error;
   }
 }
 
@@ -136,18 +126,8 @@ export async function DeleteAction(
     refreshPath && revalidatePath(refreshPath);
     return true;
   } catch (error: unknown) {
-    const errorMsg = ErrorHandler(error);
-    return { error: errorMsg };
-  }
-}
-
-export async function GetTeamsAction() {
-  try {
-    const data = await teamService.getTeams();
-    return data.data;
-  } catch (error: unknown) {
-    const errorMsg = ErrorHandler(error);
-    return { error: errorMsg };
+    ErrorHandler(error);
+    throw error;
   }
 }
 
@@ -161,8 +141,8 @@ export async function GetMatchAction() {
     });
     return data.data;
   } catch (error: unknown) {
-    const errorMsg = ErrorHandler(error);
-    return { error: errorMsg };
+    ErrorHandler(error);
+    throw error;
   }
 }
 
@@ -171,8 +151,8 @@ export async function GetUsersAction() {
     const data = await userService.getUsers();
     return data.data;
   } catch (error: unknown) {
-    const errorMsg = ErrorHandler(error);
-    return { error: errorMsg };
+    ErrorHandler(error);
+    throw error;
   }
 }
 
@@ -181,8 +161,8 @@ export async function GetSettingsAction() {
     const { data } = await configService.getConfigs();
     return data;
   } catch (error: unknown) {
-    const errorMsg = ErrorHandler(error);
-    return { error: errorMsg };
+    ErrorHandler(error);
+    throw error;
   }
 }
 
@@ -200,7 +180,7 @@ export async function DeleteCouponAction(couponId: string) {
     await gameService.deleteCoupon(couponId);
     return true;
   } catch (error: unknown) {
-    const errorMsg = ErrorHandler(error);
-    return { error: errorMsg };
+    ErrorHandler(error);
+    throw error;
   }
 }

@@ -85,6 +85,14 @@ const UsersTable = () => {
     [isDesktop, onDelete, onEdit],
   );
 
+  if (usersLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (usersError && Object.keys(usersError).length > 0) {
+    return <div>Something went wrong. Please try again later.</div>;
+  }
+
   return (
     <>
       <h1 className={PageTitle}>Users</h1>
