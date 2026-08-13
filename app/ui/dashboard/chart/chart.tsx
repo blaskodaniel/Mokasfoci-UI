@@ -2,15 +2,7 @@
 
 import { Container } from "@ui/global.style";
 import { Title } from "@ui/global/CommonStyles";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { CartWrapper } from "./chart.style";
 
 const data = [
@@ -79,12 +71,7 @@ const Chart = () => {
             <YAxis />
             <Tooltip contentStyle={{ background: "var(--bg-color-second)" }} />
             <Legend />
-            <Line
-              type="monotone"
-              dataKey="pv"
-              stroke="#8884d8"
-              activeDot={{ r: 8 }}
-            />
+            <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
             <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
           </LineChart>
         </ResponsiveContainer>

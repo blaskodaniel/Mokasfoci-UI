@@ -6,23 +6,14 @@ import { PageTitle } from "@ui/global/CommonStyles";
 import DataTable from "@ui/dashboard/table/data-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  DeleteGroupAction,
-  GetGroupsAction,
-  GetTeamsAction,
-  updateGroupAction,
-} from "services/actions";
+import { DeleteGroupAction, GetGroupsAction, GetTeamsAction, updateGroupAction } from "services/actions";
 import { Group, Team } from "services/types";
 import CreateGroupDialog from "./createDialog";
 import { useDialog } from "store/useDialog";
 import { useMediaQuery } from "hooks/useMediaQuery";
 import { Breakpoints } from "util/responsive";
 
-const GroupTable = ({
-  filteredColumnNames,
-}: {
-  filteredColumnNames: string[];
-}) => {
+const GroupTable = ({ filteredColumnNames }: { filteredColumnNames: string[] }) => {
   const isDesktop = useMediaQuery(`(min-width: ${Breakpoints.tablet})`);
   const { onOpen } = useDialog();
   const { toast } = useToast();
@@ -47,21 +38,15 @@ const GroupTable = ({
   });
 
   const deleteMutation = useMutation({
-    mutationFn: ({
-      groupId,
-      refreshPath,
-    }: {
-      groupId: string;
-      refreshPath?: string;
-    }) => DeleteGroupAction(groupId, refreshPath),
+    mutationFn: ({ groupId, refreshPath }: { groupId: string; refreshPath?: string }) =>
+      DeleteGroupAction(groupId, refreshPath),
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["groups"] });
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ groupId, body }: { groupId: string; body: Group }) =>
-      updateGroupAction(groupId, body),
+    mutationFn: ({ groupId, body }: { groupId: string; body: Group }) => updateGroupAction(groupId, body),
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["groups"] });
     },
@@ -81,10 +66,10 @@ const GroupTable = ({
               description: "Update successfully",
             });
           },
-        }
+        },
       );
     },
-    [toast, updateMutation]
+    [toast, updateMutation],
   );
 
   const onDelete = useCallback(
@@ -99,15 +84,15 @@ const GroupTable = ({
               description: "Group deleted successfully",
             });
           },
-        }
+        },
       );
     },
-    [deleteMutation, toast]
+    [deleteMutation, toast],
   );
 
   const columns = useMemo(
     () => GroupColumns({ onEdit, onDelete, isMobile: !isDesktop }),
-    [onDelete, onEdit, isDesktop]
+    [onDelete, onEdit, isDesktop],
   );
 
   if (groupsLoading || teamsLoading) {

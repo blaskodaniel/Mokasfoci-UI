@@ -3,10 +3,7 @@
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { Category, List } from "./sidebar.style";
 import MenuLink from "./sidebar-menu-link";
-import {
-  SideBarCategory as SideBarCategoryType,
-  SideBarElement,
-} from "./sidebar-types";
+import { SideBarCategory as SideBarCategoryType, SideBarElement } from "./sidebar-types";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -22,7 +19,7 @@ const SideBarCategory = ({ menuItem }: { menuItem: SideBarElement }) => {
         setIsOpen(!isOpen);
       }
     },
-    [isOpen, push]
+    [isOpen, push],
   );
 
   return (
@@ -34,9 +31,7 @@ const SideBarCategory = ({ menuItem }: { menuItem: SideBarElement }) => {
             {menuItem.category?.title}
           </div>
 
-          {!menuItem.category?.path && (
-            <div>{isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}</div>
-          )}
+          {!menuItem.category?.path && <div>{isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}</div>}
         </span>
       )}
       <div className={`${List} ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}>

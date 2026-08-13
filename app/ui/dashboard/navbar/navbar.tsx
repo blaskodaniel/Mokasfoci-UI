@@ -7,11 +7,7 @@ import { IoIosMenu } from "react-icons/io";
 import { Dispatch, SetStateAction } from "react";
 import { IconInMobile } from "../sidebar/sidebar.style";
 
-const Navbar = ({
-  setIsOpenSidebar,
-}: {
-  setIsOpenSidebar: Dispatch<SetStateAction<string>>;
-}) => {
+const Navbar = ({ setIsOpenSidebar }: { setIsOpenSidebar: Dispatch<SetStateAction<string>> }) => {
   const pathname = usePathname();
   return (
     <div className={Container}>

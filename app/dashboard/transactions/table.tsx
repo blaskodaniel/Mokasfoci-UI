@@ -30,30 +30,27 @@ const TransactionTable = () => {
     refetch: transactionsRefetch,
   } = useQuery({
     queryKey: ["transactions", currentPage, size, searchTerm],
-    queryFn: () => 
-      gameService.getAllTransactions({ 
-        page: currentPage + 1, 
-        limit: size, 
-        sort: "date", 
-        order: SortOrder.desc,
-        search: searchTerm
-      })
-    .then((res) => res.data),
+    queryFn: () =>
+      gameService
+        .getAllTransactions({
+          page: currentPage + 1,
+          limit: size,
+          sort: "date",
+          order: SortOrder.desc,
+          search: searchTerm,
+        })
+        .then((res) => res.data),
     placeholderData: (previousData) => previousData,
   });
 
+  const columns = useMemo(() => TransactionsColumns(), []);
 
-  const columns = useMemo(
-    () => TransactionsColumns(),
-    []
-  );
-  
   const transactions = useMemo(() => {
     return transactionsData?.data?.items || [];
   }, [transactionsData]);
 
-  const {limit, page, total} = useMemo(() => {
-    return transactionsData?.data || {limit: 10, page: 1, total: 0};
+  const { limit, page, total } = useMemo(() => {
+    return transactionsData?.data || { limit: 10, page: 1, total: 0 };
   }, [transactionsData]);
 
   const totalPages = Math.ceil(total / limit);
@@ -85,9 +82,9 @@ const TransactionTable = () => {
             setCurrentPage(0);
             transactionsRefetch();
           }}
-        > 
-        <IoSearchOutline className="mr-2 h-4 w-4" /> Search
-      </Button>
+        >
+          <IoSearchOutline className="mr-2 h-4 w-4" /> Search
+        </Button>
       </div>
 
       <div className="py-5">

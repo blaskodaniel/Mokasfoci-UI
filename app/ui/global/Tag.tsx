@@ -2,13 +2,7 @@
 
 import { TransactionType } from "enums/transactions";
 
-const Tag = ({
-  children,
-  type,
-}: {
-  children: React.ReactNode;
-  type: TransactionType;
-}) => {
+const Tag = ({ children, type }: { children: React.ReactNode; type: TransactionType }) => {
   const getBackgroundClass = (type: TransactionType) => {
     switch (type) {
       case TransactionType.create:
