@@ -1,38 +1,112 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Mokasfoci Admin UI
 
-https://ui.shadcn.com/
+Admin dashboard for **Mokasfoci** — a World Cup 2026 football prediction / betting game. This app is the back-office panel used to manage teams, groups, matches, users, coupons, transactions and system operations for the game.
+
+Built with [Next.js](https://nextjs.org/) (App Router), TypeScript, Tailwind CSS, and [shadcn/ui](https://ui.shadcn.com/) components.
+
+## Features
+
+- **Authentication** — cookie-based session, protected `/dashboard/*` routes via [middleware.ts](middleware.ts)
+- **Teams** — manage World Cup teams
+- **Groups** — manage tournament groups
+- **Matches** — create, update and track match fixtures and results
+- **Users** — manage player accounts and validate user scores
+- **Coupons** — manage prediction coupons
+- **Transactions** — view and manage user transactions
+- **Statistics** — dashboard stats and reporting
+- **Notifications** — send system chat messages / notifications to specific users or all players
+- **Operations** — administrative tools such as game reset and scheduler status
+- **Logs** — view system/audit logs
+- **Settings** — application configuration
+
+## Tech Stack
+
+- [Next.js 14](https://nextjs.org/) (App Router)
+- [React 18](https://react.dev/) + TypeScript
+- [Tailwind CSS](https://tailwindcss.com/) with [shadcn/ui](https://ui.shadcn.com/) (Radix UI primitives)
+- [TanStack Query](https://tanstack.com/query) for server state
+- [TanStack Table](https://tanstack.com/table) for data tables
+- [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) for forms and validation
+- [Zustand](https://zustand-demo.pmnd.rs/) for client state
+- [Axios](https://axios-http.com/) for API requests
+- [Recharts](https://recharts.org/) for charts
+- [Playwright](https://playwright.dev/) for end-to-end tests
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- A running instance of the Mokasfoci API backend
+
+### Installation
+
+```bash
+npm install
+# or
+yarn install
+```
+
+### Environment Variables
+
+Create a `.env.local` file in the project root with the following variable:
+
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:PORT   # Base URL of the Mokasfoci API
+```
+
+### Development
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+| Script            | Description                                  |
+| ------------------ | --------------------------------------------- |
+| `npm run dev`      | Start the development server                  |
+| `npm run build`    | Create a production build                      |
+| `npm run start`    | Start the production server                     |
+| `npm run lint`     | Run ESLint                                      |
+| `npm run test`     | Run Playwright end-to-end tests                 |
+| `npm run deploy`   | Build and deploy to the configured host (see [deploy.sh](deploy.sh)) |
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/
+  dashboard/        # Protected admin pages (teams, groups, matches, users, coupons, transactions, statistics, operations, logs, settings)
+  login/             # Login page
+  ui/                # Shared UI building blocks (dashboard, global, login)
+components/          # Reusable shadcn/ui-based components
+services/            # API service layer (axios calls per domain) and types
+store/               # Zustand stores
+hooks/               # Custom React hooks
+lib/                 # Shared utilities
+util/                # App config, axios instance, enums, responsive helpers
+enums/               # Shared enums
+types/               # Shared TypeScript types
+tests/               # Playwright end-to-end tests
+middleware.ts        # Route protection for /dashboard/*
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+The [deploy.sh](deploy.sh) script builds the project and deploys it to a remote host over `rsync`/`ssh`, restarting the app with [PM2](https://pm2.keymetrics.io/). Update the `REMOTE_USER`, `REMOTE_HOST` and `REMOTE_PATH` variables in the script to match your environment before running:
 
-## Deploy on Vercel
+```bash
+npm run deploy
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Testing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+End-to-end tests are written with Playwright:
+
+```bash
+npm run test
+```
