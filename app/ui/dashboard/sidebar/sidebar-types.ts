@@ -1,3 +1,5 @@
+import type { ReactElement } from "react";
+
 export type SideBarElement = {
   category: SideBarCategory;
   list: SideBarListElemet[];
@@ -5,12 +7,12 @@ export type SideBarElement = {
 
 export type SideBarCategory = {
   title: string;
-  icon: JSX.Element;
+  icon: ReactElement;
   path?: string;
 };
 
 export type SideBarListElemet = {
   title: string;
   path: string;
-  icon: JSX.Element;
+  icon: ReactElement;
 };

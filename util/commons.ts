@@ -4,7 +4,7 @@ import { MatchOutcome, MatchStatus, MatchType } from "./enums";
 
 export async function setUserTokenToCookie(token: string) {
   const { cookies } = await import("next/headers");
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   cookieStore.set({
     name: COOKIE_NAME,
@@ -19,7 +19,7 @@ export async function setUserTokenToCookie(token: string) {
 // Server-side cookie getter
 export const getServerTokenFromCookie = cache(async () => {
   const { cookies } = await import("next/headers");
-  return cookies().get(COOKIE_NAME)?.value ?? null;
+  return (await cookies()).get(COOKIE_NAME)?.value ?? null;
 });
 
 // Client-side cookie getter
@@ -47,7 +47,7 @@ export const getUserTokenFromCookie = cache(async () => {
 
 export async function removeUserTokenFromCookie() {
   const { cookies } = await import("next/headers");
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   cookieStore.delete(COOKIE_NAME);
 }
