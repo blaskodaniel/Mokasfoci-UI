@@ -11,7 +11,7 @@ import { Breakpoints } from "util/responsive";
 import { useDialog } from "store/useDialog";
 import { ConfigColumns } from "./columns";
 
-const SettingsTable = ({ filteredColumnNames }: { filteredColumnNames?: string[] }) => {
+const SettingsTable = () => {
   const { onOpen } = useDialog();
   const isDesktop = useMediaQuery(`(min-width: ${Breakpoints.tablet})`);
   const { toast } = useToast();
@@ -20,7 +20,6 @@ const SettingsTable = ({ filteredColumnNames }: { filteredColumnNames?: string[]
     data: settingsData,
     error: settingsError,
     isLoading: settingsLoading,
-    refetch: settingsRefetch,
   } = useQuery({
     queryKey: ["settings"],
     queryFn: GetSettingsAction,

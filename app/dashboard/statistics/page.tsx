@@ -1,8 +1,8 @@
 const StatisticsPage = () => {
   return (
     <>
-      <h1>Statistics</h1>
-      <div>Statistics page</div>
+      <h1>Statisztikák</h1>
+      <div>Fejlesztés alatt...</div>
     </>
   );
 };
