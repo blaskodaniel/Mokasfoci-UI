@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { COOKIE_NAME } from "./config";
-import { MatchOutcome, MatchStatus, MatchType } from "./enums";
+import { MatchStatus, MatchType } from "./enums";
 
 export async function setUserTokenToCookie(token: string) {
   const { cookies } = await import("next/headers");

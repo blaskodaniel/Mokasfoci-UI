@@ -5,11 +5,13 @@ import { Category, List } from "./sidebar.style";
 import MenuLink from "./sidebar-menu-link";
 import { SideBarCategory as SideBarCategoryType, SideBarElement } from "./sidebar-types";
 import { useCallback, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const SideBarCategory = ({ menuItem }: { menuItem: SideBarElement }) => {
   const { push } = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const isCategoryActive = menuItem.list.some((x) => x.path === pathname);
+  const [isOpen, setIsOpen] = useState(isCategoryActive);
 
   const clickHandler = useCallback(
     (category: SideBarCategoryType) => {

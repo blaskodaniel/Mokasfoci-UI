@@ -2,11 +2,11 @@
 
 import { LoginForm, LoginInput, LoginTitle, LoginError, LoginLabel } from "@ui/login/login.style";
 import { loginAction } from "./actions";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import SubmitButton from "./submitBtn";
 
 const LoginPanel = () => {
-  const [state, action, pending] = useFormState(loginAction, undefined);
+  const [state, action, pending] = useActionState(loginAction, undefined);
   return (
     <form className={LoginForm} action={action}>
       <h1 className={LoginTitle}>Login</h1>

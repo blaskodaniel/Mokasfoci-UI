@@ -19,16 +19,11 @@ export async function loginAction(state: unknown, formData: FormData) {
   const { username, password } = validationResult.data;
 
   try {
-    const response = await authService.login(
-      username as string,
-      password as string
-    );
+    const response = await authService.login(username as string, password as string);
 
-    setUserTokenToCookie(response?.data?.token);
+    await setUserTokenToCookie(response?.data?.token);
   } catch (error: unknown) {
-    const errorMsg =
-      ((error as AxiosError)?.response?.data as { message: string })?.message ||
-      "Login error";
+    const errorMsg = ((error as AxiosError)?.response?.data as { message: string })?.message || "Login error";
     return { errors: { form: errorMsg } };
   }
 
