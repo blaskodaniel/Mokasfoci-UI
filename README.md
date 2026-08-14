@@ -4,6 +4,16 @@ Admin dashboard for **Mokasfoci** — a World Cup 2026 football prediction / bet
 
 Built with [Next.js](https://nextjs.org/) (App Router), TypeScript, Tailwind CSS, and [shadcn/ui](https://ui.shadcn.com/) components.
 
+## Screenshots
+
+| Dashboard | Matches |
+| --- | --- |
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Matches](docs/screenshots/matches.png) |
+
+| Users | Coupons |
+| --- | --- |
+| ![Create new user](docs/screenshots/create-new-player.png) | ![Coupons](docs/screenshots/coupons.png) |
+
 ## Features
 
 - **Authentication** — cookie-based session, protected `/dashboard/*` routes via [middleware.ts](middleware.ts)
@@ -21,8 +31,8 @@ Built with [Next.js](https://nextjs.org/) (App Router), TypeScript, Tailwind CSS
 
 ## Tech Stack
 
-- [Next.js 14](https://nextjs.org/) (App Router)
-- [React 18](https://react.dev/) + TypeScript
+- [Next.js 16](https://nextjs.org/) (App Router)
+- [React 19](https://react.dev/) + TypeScript
 - [Tailwind CSS](https://tailwindcss.com/) with [shadcn/ui](https://ui.shadcn.com/) (Radix UI primitives)
 - [TanStack Query](https://tanstack.com/query) for server state
 - [TanStack Table](https://tanstack.com/table) for data tables
@@ -92,6 +102,7 @@ util/                # App config, axios instance, enums, responsive helpers
 enums/               # Shared enums
 types/               # Shared TypeScript types
 tests/               # Playwright end-to-end tests
+docs/                # Documentation assets (e.g. screenshots)
 middleware.ts        # Route protection for /dashboard/*
 ```
 
