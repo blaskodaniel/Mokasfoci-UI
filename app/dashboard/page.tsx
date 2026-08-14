@@ -10,12 +10,8 @@ import { useEffect, useMemo } from "react";
 import { formatNumber } from "util/commons";
 
 const DashboardPage = () => {
-  const { data, isLoading, refetch } = useGetDasboardStats();
-  const stats = useMemo(() => data?.data, [data]);
-
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
+  const { data, isLoading } = useGetDasboardStats();
+  const stats = data?.data;
 
   if (isLoading) {
     return <div>Betöltés...</div>;

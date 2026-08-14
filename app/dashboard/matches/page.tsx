@@ -113,7 +113,7 @@ const MatchesList = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => DeleteMatchAction(id, "/dashboard/matches"),
+    mutationFn: (id: string) => DeleteMatchAction(id),
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["matches"] });
     },

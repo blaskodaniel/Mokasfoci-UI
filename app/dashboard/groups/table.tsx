@@ -38,8 +38,7 @@ const GroupTable = ({ filteredColumnNames }: { filteredColumnNames: string[] }) 
   });
 
   const deleteMutation = useMutation({
-    mutationFn: ({ groupId, refreshPath }: { groupId: string; refreshPath?: string }) =>
-      DeleteGroupAction(groupId, refreshPath),
+    mutationFn: (groupId: string) => DeleteGroupAction(groupId),
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["groups"] });
     },
@@ -87,7 +86,7 @@ const GroupTable = ({ filteredColumnNames }: { filteredColumnNames: string[] }) 
   const onDelete = useCallback(
     async (groupId: string) => {
       deleteMutation.mutate(
-        { groupId, refreshPath: "/dashboard/groups" },
+        groupId,
         {
           onSuccess: () => {
             console.log("onDelete successfully");

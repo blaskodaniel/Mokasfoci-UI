@@ -37,7 +37,7 @@ const TeamsTable = ({ filteredColumnNames }: { filteredColumnNames?: string[] })
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => DeleteTeamAction(id, "/dashboard/teams"),
+    mutationFn: (id: string) => DeleteTeamAction(id),
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
     },

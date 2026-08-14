@@ -2,21 +2,19 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useDialog } from "store/useDialog";
 import { useForm } from "react-hook-form";
-import { CreateMatchSchema, CreateUserSchema } from "lib/form-definitions";
+import { CreateUserSchema } from "lib/form-definitions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { IoSaveOutline } from "react-icons/io5";
 import { toast } from "@/components/ui/use-toast";
-import { DateTimePicker } from "@ui/dashboard/components/DateTimePicker/dateTimePicker";
-import { Team } from "services/types";
 import { createUserAction } from "services/actions";
 import { Switch } from "@/components/ui/switch";
+import { useQueryClient } from "node_modules/@tanstack/react-query/build/modern";
 
 const CreateUserDialog = () => {
+  const queryClient = useQueryClient();
   const form = useForm<z.infer<typeof CreateUserSchema>>({
     resolver: zodResolver(CreateUserSchema),
     defaultValues: {
@@ -30,14 +28,21 @@ const CreateUserDialog = () => {
   const { isOpen, onClose } = useDialog();
 
   const handleSubmit = async (values: z.infer<typeof CreateUserSchema>) => {
-    console.log({ ...values });
-    const { username, password, email, isAdmin } = values;
-    await createUserAction({ username, password, email, isAdmin });
-    form.reset();
-    onClose();
-    toast({
-      description: "Team creation successfully",
-    });
+    try {
+      const { username, password, email, isAdmin } = values;
+      await createUserAction({ username, password, email, isAdmin });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      form.reset();
+      onClose();
+      toast({
+        description: "Sikeresen létrehoztas a játékost",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        description: "Nem sikerült lérehozni a játékost!",
+      });
+    }
   };
 
   return (

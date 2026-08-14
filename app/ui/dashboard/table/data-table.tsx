@@ -14,14 +14,7 @@ import {
   PaginationState,
 } from "@tanstack/react-table";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { HiOutlinePlus } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { Group, Team } from "services/types";
@@ -34,10 +27,8 @@ import AddButton from "./add-button";
 declare module "@tanstack/table-core" {
   interface TableMeta<TData extends RowData> {
     updateData: (rowIndex: number, columnIndex: string, value: any) => void;
-    teams: Team[];
-    groups: Group[];
-    matchTypes: String[];
-    matchStatuses: String[];
+    teams?: Team[];
+    groups?: Group[];
   }
 }
 
@@ -105,8 +96,6 @@ function DataTable<TData, TValue>({
     meta: {
       teams: teams || [],
       groups: groups || [],
-      matchTypes: Object.keys(MatchType),
-      matchStatuses: Object.keys(MatchStatus),
       updateData: (rowIndex: number, columnIndex: string, value: any) => {
         if (columnIndex.split(".").length > 1) {
           const [first, second] = columnIndex.split(".");
@@ -120,16 +109,12 @@ function DataTable<TData, TValue>({
                       [second]: value,
                     },
                   }
-                : row
-            )
+                : row,
+            ),
           );
         } else {
           setTableData((prev) =>
-            prev.map((row, index) =>
-              index === rowIndex
-                ? { ...prev[rowIndex], [columnIndex]: value }
-                : row
-            )
+            prev.map((row, index) => (index === rowIndex ? { ...prev[rowIndex], [columnIndex]: value } : row)),
           );
         }
       },
@@ -153,20 +138,21 @@ function DataTable<TData, TValue>({
   return (
     <>
       <div className="flex flex-wrap gap-3 mb-4">
-        {filteredColumnNames && filteredColumnNames?.length > 0 &&filteredColumnNames?.map((filter) => {
-          return (
-            <Filter
-              key={filter}
-              columnFilters={columnFilters}
-              setColumnFilters={setColumnFilters}
-              columnName={filter}
-            />
-          );
-        })}
+        {filteredColumnNames &&
+          filteredColumnNames?.length > 0 &&
+          filteredColumnNames?.map((filter) => {
+            return (
+              <Filter
+                key={filter}
+                columnFilters={columnFilters}
+                setColumnFilters={setColumnFilters}
+                columnName={filter}
+              />
+            );
+          })}
         <HideColumnsDropdown table={table} />
         {onOpenDialog && <AddButton onDialog={onDialog} />}
       </div>
-      
 
       <div className="rounded-md border">
         <Table>
@@ -176,23 +162,12 @@ function DataTable<TData, TValue>({
                 {headerGroup.headers.map((header) => {
                   const headerName = header.isPlaceholder
                     ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      );
-                  const headerId =
-                    header.getContext().header.id !== "actions"
-                      ? header.getContext().header.id
-                      : null;
+                    : flexRender(header.column.columnDef.header, header.getContext());
+                  const headerId = header.getContext().header.id !== "actions" ? header.getContext().header.id : null;
 
                   return (
-                    <TableHead
-                      key={header.id}
-                      className="bg-[var(--bg-color-second)]"
-                    >
-                      <div className="flex items-center gap-3">
-                        {headerName}
-                      </div>
+                    <TableHead key={header.id} className="bg-[var(--bg-color-second)]">
+                      <div className="flex items-center gap-3">{headerName}</div>
                     </TableHead>
                   );
                 })}
@@ -202,26 +177,15 @@ function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
+                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -233,8 +197,7 @@ function DataTable<TData, TValue>({
       {enablePagination && (
         <div className="flex items-center justify-between px-2 py-4">
           <div className="flex-1 text-sm text-muted-foreground">
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
+            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
           </div>
           <div className="flex items-center space-x-6 lg:space-x-8">
             <div className="flex items-center space-x-2">
@@ -254,16 +217,12 @@ function DataTable<TData, TValue>({
               </select>
             </div>
             <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-              {table.getState().pagination.pageIndex *
-                table.getState().pagination.pageSize +
-                1}{" "}
-              -{" "}
+              {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} -{" "}
               {Math.min(
-                (table.getState().pagination.pageIndex + 1) *
-                  table.getState().pagination.pageSize,
-                manualPagination ? totalCount ?? 0 : table.getFilteredRowModel().rows.length
+                (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
+                manualPagination ? (totalCount ?? 0) : table.getFilteredRowModel().rows.length,
               )}{" "}
-              of {manualPagination ? totalCount ?? 0 : table.getFilteredRowModel().rows.length}
+              of {manualPagination ? (totalCount ?? 0) : table.getFilteredRowModel().rows.length}
             </div>
             <div className="flex items-center space-x-2">
               <Button
@@ -272,8 +231,7 @@ function DataTable<TData, TValue>({
                 onClick={() => table.setPageIndex(0)}
                 disabled={!table.getCanPreviousPage()}
               >
-                <span className="sr-only">Go to first page</span>
-                «
+                <span className="sr-only">Go to first page</span>«
               </Button>
               <Button
                 variant="outline"
@@ -281,8 +239,7 @@ function DataTable<TData, TValue>({
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
               >
-                <span className="sr-only">Go to previous page</span>
-                ‹
+                <span className="sr-only">Go to previous page</span>‹
               </Button>
               <Button
                 variant="outline"
@@ -290,8 +247,7 @@ function DataTable<TData, TValue>({
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
               >
-                <span className="sr-only">Go to next page</span>
-                ›
+                <span className="sr-only">Go to next page</span>›
               </Button>
               <Button
                 variant="outline"
@@ -299,8 +255,7 @@ function DataTable<TData, TValue>({
                 onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                 disabled={!table.getCanNextPage()}
               >
-                <span className="sr-only">Go to last page</span>
-                »
+                <span className="sr-only">Go to last page</span>»
               </Button>
             </div>
           </div>

@@ -19,20 +19,20 @@ const UsersTable = () => {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const queryClient = useQueryClient();
   const { onOpen } = useDialog();
+
   const {
     data: usersData,
     error: usersError,
     isLoading: usersLoading,
-    refetch: usersRefetch,
   } = useQuery({
     queryKey: ["users"],
     queryFn: GetUsersAction,
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => DeleteUserAction(id, "/dashboard/teams"),
+    mutationFn: (id: string) => DeleteUserAction(id),
     onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ["teams"] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   });
 
@@ -45,7 +45,6 @@ const UsersTable = () => {
 
   const onEdit = useCallback(
     async (user: User) => {
-      console.log("onEdit: ", user);
       updateMutation.mutate(
         {
           id: user._id,
@@ -82,7 +81,7 @@ const UsersTable = () => {
 
   const columns = useMemo(
     () => UsersColumns({ onEdit, onDelete, isMobile: !isDesktop, onValidation }),
-    [isDesktop, onDelete, onEdit],
+    [isDesktop, onDelete, onEdit, onValidation],
   );
 
   if (usersLoading) {
