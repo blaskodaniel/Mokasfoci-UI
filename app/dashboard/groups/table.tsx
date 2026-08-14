@@ -6,23 +6,15 @@ import { PageTitle } from "@ui/global/CommonStyles";
 import DataTable from "@ui/dashboard/table/data-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  DeleteGroupAction,
-  GetGroupsAction,
-  GetTeamsAction,
-  updateGroupAction,
-} from "services/actions";
+import { DeleteGroupAction, updateGroupAction } from "services/actions";
 import { Group, Team } from "services/types";
 import CreateGroupDialog from "./createDialog";
 import { useDialog } from "store/useDialog";
 import { useMediaQuery } from "hooks/useMediaQuery";
 import { Breakpoints } from "util/responsive";
+import { groupService, teamService } from "services/services";
 
-const GroupTable = ({
-  filteredColumnNames,
-}: {
-  filteredColumnNames: string[];
-}) => {
+const GroupTable = ({ filteredColumnNames }: { filteredColumnNames: string[] }) => {
   const isDesktop = useMediaQuery(`(min-width: ${Breakpoints.tablet})`);
   const { onOpen } = useDialog();
   const { toast } = useToast();
@@ -33,37 +25,41 @@ const GroupTable = ({
     isLoading: teamsLoading,
   } = useQuery({
     queryKey: ["teams"],
-    queryFn: GetTeamsAction,
+    queryFn: () => teamService.getTeams().then((res) => res.data),
   });
 
   const {
     data: groupsData,
     error: groupsError,
     isLoading: groupsLoading,
-    refetch: groupsRefetch,
   } = useQuery({
     queryKey: ["groups"],
-    queryFn: GetGroupsAction,
+    queryFn: () => groupService.getGroups().then((res) => res.data),
   });
 
   const deleteMutation = useMutation({
-    mutationFn: ({
-      groupId,
-      refreshPath,
-    }: {
-      groupId: string;
-      refreshPath?: string;
-    }) => DeleteGroupAction(groupId, refreshPath),
+    mutationFn: (groupId: string) => DeleteGroupAction(groupId),
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["groups"] });
+    },
+    onError: () => {
+      toast({
+        variant: "destructive",
+        description: "Group deletion failed",
+      });
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ groupId, body }: { groupId: string; body: Group }) =>
-      updateGroupAction(groupId, body),
+    mutationFn: ({ groupId, body }: { groupId: string; body: Group }) => updateGroupAction(groupId, body),
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["groups"] });
+    },
+    onError: () => {
+      toast({
+        variant: "destructive",
+        description: "Group update failed",
+      });
     },
   });
 
@@ -81,49 +77,48 @@ const GroupTable = ({
               description: "Update successfully",
             });
           },
-        }
+        },
       );
     },
-    [toast, updateMutation]
+    [toast, updateMutation],
   );
 
   const onDelete = useCallback(
     async (groupId: string) => {
       deleteMutation.mutate(
-        { groupId, refreshPath: "/dashboard/groups" },
+        groupId,
         {
           onSuccess: () => {
             console.log("onDelete successfully");
             toast({
-              variant: "destructive",
               description: "Group deleted successfully",
             });
           },
-        }
+        },
       );
     },
-    [deleteMutation, toast]
+    [deleteMutation, toast],
   );
 
   const columns = useMemo(
     () => GroupColumns({ onEdit, onDelete, isMobile: !isDesktop }),
-    [onDelete, onEdit, isDesktop]
+    [onDelete, onEdit, isDesktop],
   );
 
   if (groupsLoading || teamsLoading) {
     return <div>Loading...</div>;
   }
 
-  if (groupsError && Object.keys(groupsError).length > 0) {
+  if (groupsError || teamsError) {
     return <div>Something went wrong. Please try again later.</div>;
   }
 
   return (
     <>
-      <PageTitle>Groups</PageTitle>
+      <h1 className={PageTitle}>Groups</h1>
       <div className="py-5">
         <DataTable
-          data={groupsData as Group[]}
+          data={groupsData ?? []}
           columns={columns}
           teams={teamsData as Team[]}
           filteredColumnNames={filteredColumnNames}

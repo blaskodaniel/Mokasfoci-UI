@@ -9,16 +9,18 @@ import { ReactNode, useState } from "react";
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const [isOpenSidebar, setIsOpenSidebar] = useState("false");
   return (
-    <Layout>
-      <LayoutMenu isopen={isOpenSidebar}>
+    <div className={Layout}>
+      <aside
+        className={`${LayoutMenu} ${isOpenSidebar === "true" ? "max-[800px]:w-[var(--sidebar-width)] max-[800px]:px-5" : "max-[800px]:w-0 max-[800px]:px-0"}`}
+      >
         <Sidebar setIsOpenSidebar={setIsOpenSidebar} />
-      </LayoutMenu>
-      <LayoutContent>
+      </aside>
+      <main className={LayoutContent}>
         <Navbar setIsOpenSidebar={setIsOpenSidebar} />
         {children}
         <Toaster />
-      </LayoutContent>
-    </Layout>
+      </main>
+    </div>
   );
 };
 

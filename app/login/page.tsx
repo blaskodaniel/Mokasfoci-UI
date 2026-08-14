@@ -4,16 +4,16 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { COOKIE_NAME } from "util/config";
 
-const LoginPage = () => {
-  const cookieStore = cookies();
+const LoginPage = async () => {
+  const cookieStore = await cookies();
   const tokenCookie = cookieStore.get(COOKIE_NAME);
 
   if (tokenCookie?.value) redirect("/dashboard");
 
   return (
-    <LoginWrapper>
+    <div className={LoginWrapper}>
       <LoginPanel />
-    </LoginWrapper>
+    </div>
   );
 };
 

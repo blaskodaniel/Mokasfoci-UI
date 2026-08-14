@@ -1,40 +1,5 @@
-"use client";
-
-import styled from "styled-components";
-
-export const Layout = styled.div`
-  display: grid;
-  grid-template-columns: var(--sidebar-width) 1fr;
-  grid-template-rows: auto;
-  grid-template-areas: "sidebar main";
-  min-height: 100vh;
-
-  @media (max-width: 800px) {
-    grid-template-columns: 1fr;
-  }
-`;
-export const LayoutMenu = styled.aside<{ isopen: string }>`
-  grid-area: sidebar;
-  background-color: var(--bg-color-second);
-  padding: 0 20px;
-  transition: width 0.3s ease-in-out;
-  width: var(--sidebar-width);
-
-  @media (max-width: 800px) {
-    position: fixed;
-    z-index: 1;
-    min-height: 100vh;
-    width: ${({ isopen }) => (isopen === "true" ? "var(--sidebar-width)" : "0")};
-    padding: ${({ isopen }) => (isopen === "true" ? "0 20" : 0)}px;
-    overflow: hidden;
-
-    .show {
-      width: var(--sidebar-width);
-      padding: 0 20px;
-    }
-  }
-`;
-export const LayoutContent = styled.div`
-  padding: 1rem 20px;
-  overflow-y: auto;
-`;
+export const Layout =
+  "grid min-h-screen grid-cols-[var(--sidebar-width)_1fr] grid-rows-[auto] [grid-template-areas:'sidebar_main'] max-[800px]:grid-cols-1";
+export const LayoutMenu =
+  "[grid-area:sidebar] w-[var(--sidebar-width)] bg-[var(--bg-color-second)] px-5 transition-all duration-300 ease-in-out max-[800px]:fixed max-[800px]:z-[1] max-[800px]:min-h-screen max-[800px]:overflow-hidden";
+export const LayoutContent = "overflow-y-auto px-5 py-4";

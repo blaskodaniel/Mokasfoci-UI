@@ -4,9 +4,9 @@ import { useFormStatus } from "react-dom";
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <LoginButton type="submit" disabled={pending}>
+    <button className={LoginButton} type="submit" disabled={pending}>
       {pending ? "Loading..." : "Login"}
-    </LoginButton>
+    </button>
   );
 }
 

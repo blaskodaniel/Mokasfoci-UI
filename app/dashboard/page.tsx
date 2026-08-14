@@ -1,23 +1,17 @@
 "use client";
 
 import Card from "@ui/dashboard/card/card";
-import Chart from "@ui/dashboard/chart/chart";
 import { Container, Section } from "@ui/dashboard/dashboard.style";
 import LatestTable from "@ui/dashboard/latestTable";
-import { format, formatRelative } from "date-fns";
+import { formatRelative } from "date-fns";
 import { hu } from "date-fns/locale";
 import { useGetDasboardStats } from "hooks/useDashboard";
-import { Tag } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { formatNumber } from "util/commons";
 
 const DashboardPage = () => {
-  const { data, isLoading, refetch } = useGetDasboardStats();
-  const stats = useMemo(() => data?.data, [data]);
-
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
+  const { data, isLoading } = useGetDasboardStats();
+  const stats = data?.data;
 
   if (isLoading) {
     return <div>Betöltés...</div>;
@@ -28,7 +22,7 @@ const DashboardPage = () => {
   }
 
   return (
-    <Container>
+    <div className={Container}>
       <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-3">
         <Card
           title="Error logok"
@@ -51,7 +45,7 @@ const DashboardPage = () => {
         <Card title="Mérkőzések száma" value={stats?.matchesCount.toString()} description="mérkőzések száma" />
       </div>
 
-      <Section>
+      <div className={Section}>
         <LatestTable
           title="Legutóbbi 24h tranzakciói"
           columns={[
@@ -67,9 +61,9 @@ const DashboardPage = () => {
           data={stats.recentTransactions}
         />
         {/* <Chart /> */}
-      </Section>
-      <Section>{/* <Chart /> */}</Section>
-    </Container>
+      </div>
+      <div className={Section}>{/* <Chart /> */}</div>
+    </div>
   );
 };
 

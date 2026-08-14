@@ -10,6 +10,7 @@ import { Roles } from "util/enums";
 import { mapEnumToObjectArray } from "util/commons";
 import { AvatarImg } from "@ui/global/CommonStyles";
 import EditableCell from "./editableCell";
+import Image from "next/image";
 
 interface IUsersColumnProps {
   onEdit: (team: User) => void;
@@ -26,7 +27,7 @@ export const UsersColumns = ({ onEdit, onDelete, onValidation, isMobile }: IUser
       const { avatar } = row.original;
       return (
         <div className="flex items-center justify-center">
-          <AvatarImg src="/avatar.png" alt="" width={40} height={40} />
+          <Image className={AvatarImg} src="/avatar.png" alt="" width={40} height={40} />
         </div>
       );
     },

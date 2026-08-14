@@ -5,14 +5,14 @@ import { CardProps } from "./type";
 
 const Card: FC<CardProps> = ({ title, value, icon, description }) => {
   return (
-    <Container>
+    <div className={Container}>
       {icon && icon}
-      <DataPart>
-        <DataTitle>{title || ""}</DataTitle>
-        <DataValue>{value || "-"}</DataValue>
-        <DataInfo className="text-sm font-thin text-gray-300">{description || ""}</DataInfo>
-      </DataPart>
-    </Container>
+      <div className={DataPart}>
+        <div className={DataTitle}>{title || ""}</div>
+        <div className={DataValue}>{value || "-"}</div>
+        <div className={`${DataInfo} text-sm text-gray-300`}>{description || ""}</div>
+      </div>
+    </div>
   );
 };
 

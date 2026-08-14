@@ -1,10 +1,10 @@
-import { ScheduleMatch, Team } from "services/types";
+import { Team } from "services/types";
 import { MatchTableItem } from "./types";
 import { MatchStatusBadge, SchedulerStatusBadge } from "./status-badges";
 import { format } from "date-fns";
 import { getMatchTypeText } from "util/commons";
-import { MatchOutcome, MatchStatus } from "util/enums";
-import { MdOutlineTimer, MdPriceCheck } from "react-icons/md";
+import { MatchStatus } from "util/enums";
+import { MdPriceCheck } from "react-icons/md";
 import MatchActionMenu from "./MatchActionMenu";
 
 interface MatchListProps {
@@ -47,6 +47,7 @@ const MatchList = ({
             <div>{match?.goalB ?? ""}</div>
           </div>
           <div
+            role="button"
             className={`font-bold flex-[2] transition-colors ${
               match.status !== MatchStatus.disabled ? "cursor-pointer hover:text-blue-500" : "cursor-default"
             }`}

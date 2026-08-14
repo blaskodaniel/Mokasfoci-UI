@@ -3,8 +3,7 @@
 import { useMemo, useState } from "react";
 import { PageTitle } from "@ui/global/CommonStyles";
 import DataTable from "@ui/dashboard/table/data-table";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useToast } from "@/components/ui/use-toast";
+import { useQuery } from "@tanstack/react-query";
 import { Transaction } from "services/types";
 import { useDialog } from "store/useDialog";
 import { TransactionsColumns } from "./columns";
@@ -17,7 +16,6 @@ import CreateTransactionDialog from "./createDialog";
 
 const TransactionTable = () => {
   const { onOpen } = useDialog();
-  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
 
   const [currentPage, setCurrentPage] = useState(0);
@@ -30,30 +28,27 @@ const TransactionTable = () => {
     refetch: transactionsRefetch,
   } = useQuery({
     queryKey: ["transactions", currentPage, size, searchTerm],
-    queryFn: () => 
-      gameService.getAllTransactions({ 
-        page: currentPage + 1, 
-        limit: size, 
-        sort: "date", 
-        order: SortOrder.desc,
-        search: searchTerm
-      })
-    .then((res) => res.data),
+    queryFn: () =>
+      gameService
+        .getAllTransactions({
+          page: currentPage + 1,
+          limit: size,
+          sort: "date",
+          order: SortOrder.desc,
+          search: searchTerm,
+        })
+        .then((res) => res.data),
     placeholderData: (previousData) => previousData,
   });
 
+  const columns = useMemo(() => TransactionsColumns(), []);
 
-  const columns = useMemo(
-    () => TransactionsColumns(),
-    []
-  );
-  
   const transactions = useMemo(() => {
     return transactionsData?.data?.items || [];
   }, [transactionsData]);
 
-  const {limit, page, total} = useMemo(() => {
-    return transactionsData?.data || {limit: 10, page: 1, total: 0};
+  const { limit, page, total } = useMemo(() => {
+    return transactionsData?.data || { limit: 10, page: 1, total: 0 };
   }, [transactionsData]);
 
   const totalPages = Math.ceil(total / limit);
@@ -68,7 +63,7 @@ const TransactionTable = () => {
 
   return (
     <>
-      <PageTitle>Játékosok fogadásai</PageTitle>
+      <h1 className={PageTitle}>Játékosok fogadásai</h1>
 
       {/* Search input */}
       <div className="mb-4 flex items-center gap-2">
@@ -85,9 +80,9 @@ const TransactionTable = () => {
             setCurrentPage(0);
             transactionsRefetch();
           }}
-        > 
-        <IoSearchOutline className="mr-2 h-4 w-4" /> Search
-      </Button>
+        >
+          <IoSearchOutline className="mr-2 h-4 w-4" /> Search
+        </Button>
       </div>
 
       <div className="py-5">

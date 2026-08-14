@@ -1,5 +1,3 @@
-"use client";
-
 import CouponList from "./couponList";
 
 const CouponsPage = () => {

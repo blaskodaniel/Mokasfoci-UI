@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { COOKIE_NAME } from "util/config";
 
-export default async function protectPagesMiddleware(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
   const cookieValue = req.cookies.get(COOKIE_NAME);
 
   if (!cookieValue?.value) {
@@ -12,5 +12,5 @@ export default async function protectPagesMiddleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: "/dashboard/:path*", // Match all routes starting with /dashboard
+  matcher: "/dashboard/:path*",
 };

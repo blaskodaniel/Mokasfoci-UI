@@ -50,7 +50,7 @@ const CreateTransactionDialog = () => {
       transactionBody: cleanedValues as any,
       isUpdateProfitScore: values.isUpdateProfitScore,
     });
-    form.reset(form.getValues());
+    form.reset();
     onClose();
     toast({
       description: "Transaction creation successfully",
